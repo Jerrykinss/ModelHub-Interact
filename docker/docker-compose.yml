@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  react:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile-react
+    ports:
+      - "3000:80"
+    depends_on:
+      - flask
+
+  flask:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-flask
+    volumes:
+      - ./backend:/app
+    ports:
+      - "5000:5000"
+
+  modelhub:
+    image: "modelhubai/model:latest"  # Assuming there's a ready-made image
+    ports:
+      - "8501:8501"
+
+networks:
+  default:
+    external:
+      name: modelhub_network
