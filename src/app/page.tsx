@@ -1,113 +1,196 @@
-import Image from "next/image";
+"use client";
+
+import { ChatLayout } from "@/components/chat/chat-layout";
+import { getSelectedModel } from "@/lib/model-helper";
+import { ChatOllama } from "@langchain/community/chat_models/ollama";
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
+import { BytesOutputParser } from "@langchain/core/output_parsers";
+import { ChatRequestOptions } from "ai";
+import { Message, useChat } from "ai/react";
+import React, { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
+  const {
+    messages = [],
+    input,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
+    error,
+    stop,
+    setMessages,
+    setInput,
+  } = useChat({
+    onResponse: (response) => {
+      if (response) {
+        setLoadingSubmit(false);
+      }
+    },
+    onError: (error) => {
+      setLoadingSubmit(false);
+      toast.error("An error occurred. Please try again.");
+    },
+  });
+  const [chatId, setChatId] = React.useState<string>("");
+  const [selectedModel, setSelectedModel] =
+    React.useState<string>(getSelectedModel());
+  const [open, setOpen] = React.useState(false);
+  const [ollama, setOllama] = useState<ChatOllama>();
+  const env = process.env.NODE_ENV;
+  const [loadingSubmit, setLoadingSubmit] = React.useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (messages.length < 1) {
+      // Generate a random id for the chat
+      console.log("Generating chat id");
+      const id = uuidv4();
+      setChatId(id);
+    }
+  }, [messages]);
+
+  React.useEffect(() => {
+    if (!isLoading && !error && chatId && messages.length > 0) {
+      // Save messages to local storage
+      localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
+      // Trigger the storage event to update the sidebar component
+      window.dispatchEvent(new Event("storage"));
+    }
+  }, [chatId, isLoading, error]);
+
+  useEffect(() => {
+    if (env === "production") {
+      const newOllama = new ChatOllama({
+        baseUrl: process.env.NEXT_PUBLIC_OLLAMA_URL || "http://localhost:11434",
+        model: selectedModel,
+      });
+      setOllama(newOllama);
+    }
+
+    if (!localStorage.getItem("ollama_user")) {
+      setOpen(true);
+    }
+  }, [selectedModel]);
+
+  const addMessage = (Message: any) => {
+    messages.push(Message);
+    window.dispatchEvent(new Event("storage"));
+    setMessages([...messages]);
+  };
+
+  // Function to handle chatting with Ollama in production (client side)
+  const handleSubmitProduction = async (
+    e: React.FormEvent<HTMLFormElement>,
+  ) => {
+    e.preventDefault();
+
+    addMessage({ role: "user", content: input, id: chatId });
+    setInput("");
+
+    if (ollama) {
+      try {
+        const parser = new BytesOutputParser();
+
+        const stream = await ollama
+          .pipe(parser)
+          .stream(
+            (messages as Message[]).map((m) =>
+              m.role == "user"
+                ? new HumanMessage(m.content)
+                : new AIMessage(m.content),
+            ),
+          );
+
+        const decoder = new TextDecoder();
+
+        let responseMessage = "";
+        for await (const chunk of stream) {
+          const decodedChunk = decoder.decode(chunk);
+          responseMessage += decodedChunk;
+          setLoadingSubmit(false);
+          setMessages([
+            ...messages,
+            { role: "assistant", content: responseMessage, id: chatId },
+          ]);
+        }
+        addMessage({ role: "assistant", content: responseMessage, id: chatId });
+        setMessages([...messages]);
+
+        localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
+        // Trigger the storage event to update the sidebar component
+        window.dispatchEvent(new Event("storage"));
+      } catch (error) {
+        toast.error("An error occurred. Please try again.");
+        setLoadingSubmit(false);
+      }
+    }
+  };
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoadingSubmit(true);
+
+    setMessages([...messages]);
+
+    // Prepare the options object with additional body data, to pass the model.
+    const requestOptions: ChatRequestOptions = {
+      options: {
+        body: {
+          selectedModel: selectedModel,
+        },
+      },
+    };
+
+    if (env === "production") {
+      handleSubmitProduction(e);
+    } else {
+      // Call the handleSubmit function with the options
+      handleSubmit(e, requestOptions);
+    }
+  };
+
+  const getLocalstorageChats = (): String[] => {
+    const chats = Object.keys(localStorage).filter((key) =>
+      key.startsWith("chat_"),
+    );
+    return chats;
+  };
+
+  useEffect(() => {
+    if (getLocalstorageChats().length < 2 && messages.length < 2) {
+      console.log("print messages");
+      addMessage({
+        role: "user",
+        content: "userMessage\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n",
+        id: chatId,
+      });
+      addMessage({
+        role: "assistant",
+        content: "responseMessage\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n",
+        id: chatId,
+      });
+    }
+  }, []);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+    <main className="flex h-[calc(100dvh)] flex-col items-center ">
+      <ChatLayout
+        chatId={chatId}
+        setSelectedModel={setSelectedModel}
+        messages={messages}
+        input={input}
+        handleInputChange={handleInputChange}
+        handleSubmit={handleSubmit}
+        isLoading={isLoading}
+        loadingSubmit={loadingSubmit}
+        error={error}
+        stop={stop}
+        formRef={formRef}
+        setInput={setInput}
+        setMessages={setMessages}
+      />
     </main>
   );
 }

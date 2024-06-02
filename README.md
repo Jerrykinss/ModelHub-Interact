@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div align="center">
+  <img src="ollama-nextjs-ui.gif">
+</div>
 
-## Getting Started
+<h1 align="center">
+  Fully-featured & beautiful web interface for Ollama LLMs
+</h1>
 
-First, run the development server:
+<div align="center">
+  
+![GitHub Repo stars](https://img.shields.io/github/stars/jakobhoeg/nextjs-ollama-llm-ui)
+  
+</div>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+Get up and running with Large Language Models **quickly**, **locally** and even **offline**.
+This project aims to be the easiest way for you to get started with LLMs. No tedious and annoying setup required!
+
+# Features ✨
+
+- **Beautiful & intuitive UI:** Inspired by ChatGPT, to enhance similarity in the user experience.
+- **Fully local:** Stores chats in localstorage for convenience. No need to run a database.
+- **Fully responsive:** Use your phone to chat, with the same ease as on desktop.
+- **Easy setup:** No tedious and annoying setup required. Just clone the repo and you're good to go!
+- **Code syntax highligting:** Messages that include code, will be highlighted for easy access.
+- **Copy codeblocks easily:** Easily copy the highlighted code with one click.
+- **Download/Pull & Delete models:** Easily download and delete models directly from the interface.
+- **Switch between models:** Switch between models fast with a click.
+- **Chat history:** Chats are saved and easily accessed.
+- **Light & Dark mode:** Switch between light & dark mode.
+
+# Preview
+
+https://github.com/jakobhoeg/nextjs-ollama-llm-ui/assets/114422072/08eaed4f-9deb-4e1b-b87a-ba17d81b9a02
+
+# Requisites ⚙️
+
+To use the web interface, these requisites must be met:
+
+1. Download [Ollama](https://ollama.com/download) and have it running. Or run it in a Docker container. Check the [docs](https://github.com/ollama/ollama) for instructions.
+2. Node.js (18+) and npm is required. [Download](https://nodejs.org/en/download)
+
+# Deploy your own to Vercel or Netlify in one click ✨
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjakobhoeg%2Fnextjs-ollama-llm-ui&env=NEXT_PUBLIC_OLLAMA_URL&envDescription=Your%20Ollama%20URL) [![Deploy to Netlify Button](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jakobhoeg/nextjs-ollama-llm-ui)
+
+You'll need to set your [OLLAMA_ORIGINS](https://github.com/ollama/ollama/blob/main/docs/faq.md) environment variable on your machine that is running Ollama:
+
+```
+OLLAMA_ORIGINS="https://your-app.vercel.app/"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Installation to run locally 📖
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To install and run a local environment of the web interface, follow the instructions below.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+**1. Clone the repository to a directory on your pc via command prompt:**
 
-## Learn More
+```
+git clone https://github.com/jakobhoeg/nextjs-ollama-llm-ui
+```
 
-To learn more about Next.js, take a look at the following resources:
+**2. Open the folder:**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+cd nextjs-ollama-llm-ui
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+**3. Rename the `.example.env` to `.env`:**
 
-## Deploy on Vercel
+```
+mv .example.env .env
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**4. If your instance of Ollama is NOT running on the default ip-address and port, change the variable in the .env file to fit your usecase:**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```
+NEXT_PUBLIC_OLLAMA_URL="http://localhost:11434"
+```
+
+**5. Install dependencies:**
+
+```
+npm install
+```
+
+**6. Start the development server:**
+
+```
+npm run dev
+```
+
+**5. Go to [localhost:3000](http://localhost:3000) and start chatting with your favourite model!**
+
+# Upcoming features
+
+This is a to-do list consisting of upcoming features.
+- ⬜️ Ability to send an image in the prompt to utilize vision language models.
+- ⬜️ Ability to regenerate responses
+- ⬜️ Import and export chats
+- ⬜️ Voice input support
+- ✅ Code syntax highlighting
+
+# Tech stack
+
+[NextJS](https://nextjs.org/) - React Framework for the Web
+
+[TailwindCSS](https://tailwindcss.com/) - Utility-first CSS framework
+
+[shadcn-ui](https://ui.shadcn.com/) - UI component built using Radix UI and Tailwind CSS
+
+[shadcn-chat](https://github.com/jakobhoeg/shadcn-chat) - Chat components for NextJS/React projects
+
+[Framer Motion](https://www.framer.com/motion/) - Motion/animation library for React
+
+[Lucide Icons](https://lucide.dev/) - Icon library
+
+# Helpful links
+
+[Medium Article](https://medium.com/@bartek.lewicz/launch-your-own-chatgpt-clone-for-free-on-colab-shareable-and-online-in-less-than-10-minutes-da19e44be5eb) - How to launch your own ChatGPT clone for free on Google Colab. By Bartek Lewicz.

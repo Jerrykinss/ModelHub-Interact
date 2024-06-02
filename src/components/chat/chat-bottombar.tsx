@@ -1,43 +1,26 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ChatProps } from "./chat";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { Button, buttonVariants } from "../ui/button";
+import { Button } from "../ui/button";
 import TextareaAutosize from "react-textarea-autosize";
-import { motion, AnimatePresence } from "framer-motion";
-import { ImageIcon, PaperPlaneIcon, StopIcon } from "@radix-ui/react-icons";
+import { StopIcon } from "@radix-ui/react-icons";
+import { Mic, SendHorizonal, Paperclip, X } from "lucide-react";
 
 export default function ChatBottombar({
-  messages,
   input,
   handleInputChange,
   handleSubmit,
   isLoading,
-  error,
   stop,
-  formRef,
 }: ChatProps) {
-  const [message, setMessage] = React.useState(input);
-  const [isMobile, setIsMobile] = React.useState(false);
+  const [attachedFiles, setAttachedFiles] = useState([]);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
-  React.useEffect(() => {
-    const checkScreenWidth = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    // Initial check
-    checkScreenWidth();
-
-    // Event listener for screen width changes
-    window.addEventListener("resize", checkScreenWidth);
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener("resize", checkScreenWidth);
-    };
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   }, []);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -47,73 +30,113 @@ export default function ChatBottombar({
     }
   };
 
-  return (
-    <div className="p-4 flex justify-between w-full items-center gap-2">
-      <AnimatePresence initial={false}>
-        <motion.div
-          key="input"
-          className="w-full relative mb-2 items-center"
-          layout
-          initial={{ opacity: 0, scale: 1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1 }}
-          transition={{
-            opacity: { duration: 0.05 },
-            layout: {
-              type: "spring",
-              bounce: 0.15,
-            },
-          }}
-        >
-          <form
-            ref={formRef}
-            onSubmit={handleSubmit}
-            className="w-full items-center flex relative gap-2"
-          >
-            <div className="flex">
-              <Link
-                href="#"
-                className={cn(
-                  buttonVariants({ variant: "secondary", size: "icon" })
-                )}
-              >
-                <ImageIcon className="w-6 h-6 text-muted-foreground" />
-              </Link>
-            </div>
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
+    setAttachedFiles((prevFiles) => [...prevFiles, ...files]);
+  };
 
-            <TextareaAutosize
-              autoComplete="off"
-              value={input}
-              ref={inputRef}
-              onKeyDown={handleKeyPress}
-              onChange={handleInputChange}
-              name="message"
-              placeholder="Ask Ollama anything..."
-              className="border-input max-h-20 px-5 py-4 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-full border rounded-full flex items-center h-14 resize-none overflow-hidden dark:bg-card/35"
+  const handleDetachFile = (fileName) => {
+    setAttachedFiles((prevFiles) =>
+      prevFiles.filter((file) => file.name !== fileName),
+    );
+  };
+
+  const handleButtonClick = () => {
+    document.getElementById("fileInput")?.click();
+  };
+
+  return (
+    <div className="p-4 pb-7 flex flex-col justify-between w-full items-center gap-2">
+      <div className="w-full flex flex-col relative gap-2">
+        {attachedFiles.length > 0 && (
+          <div className="w-full flex flex-col gap-1 text-sm max-h-24 py-[4px] items-center resize-none overflow-x-hiden overflow-y-auto">
+            {attachedFiles.map((file) => (
+              <div
+                key={file.name}
+                className="w-full flex justify-center items-center gap-1"
+              >
+                <p className="text-blue-500 underline">{file.name}</p>
+                <Button
+                  className="shrink-0 rounded-full p-1"
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => handleDetachFile(file.name)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+        <form
+          onSubmit={handleSubmit}
+          className="w-full items-center flex relative gap-2"
+        >
+          <div className="absolute left-3 z-10">
+            <Button
+              className="shrink-0 rounded-full"
+              variant="ghost"
+              size="icon"
+              onClick={handleButtonClick}
+            >
+              <Paperclip className="w-5 h-5" />
+            </Button>
+            <input
+              type="file"
+              id="fileInput"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+              multiple
             />
-            {!isLoading ? (
+          </div>
+          <TextareaAutosize
+            autoComplete="off"
+            ref={inputRef}
+            onKeyDown={handleKeyPress}
+            onChange={handleInputChange}
+            name="message"
+            placeholder="Enter your prompt here"
+            className="max-h-48 px-16 bg-accent py-[22px] text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-full rounded-md flex items-center h-16 resize-none overflow-w-hidden overflow-y-auto dark:bg-card"
+          />
+          {!isLoading ? (
+            <div className="flex absolute right-3 items-center">
               <Button
-                className="shrink-0"
-                variant="secondary"
+                className="shrink-0 rounded-full"
+                variant="ghost"
                 size="icon"
                 type="submit"
                 disabled={isLoading || !input.trim()}
               >
-                <PaperPlaneIcon className=" w-6 h-6 text-muted-foreground" />
+                <SendHorizonal className="w-5 h-5" />
               </Button>
-            ) : (
+            </div>
+          ) : (
+            <div className="flex absolute right-3 items-center">
               <Button
-                className="shrink-0"
-                variant="secondary"
+                className="shrink-0 rounded-full"
+                variant="ghost"
                 size="icon"
-                onClick={stop}
+                type="button"
+                disabled
               >
-                <StopIcon className="w-6 h-6  text-muted-foreground" />
+                <Mic className="w-5 h-5" />
               </Button>
-            )}
-          </form>
-        </motion.div>
-      </AnimatePresence>
+              <Button
+                className="shrink-0 rounded-full"
+                variant="ghost"
+                size="icon"
+                type="submit"
+                onClick={(e) => {
+                  e.preventDefault();
+                  stop();
+                }}
+              >
+                <StopIcon className="w-5 h-5" />
+              </Button>
+            </div>
+          )}
+        </form>
+      </div>
     </div>
   );
 }

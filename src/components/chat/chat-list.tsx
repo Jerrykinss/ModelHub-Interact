@@ -1,11 +1,10 @@
-import { Message, useChat } from "ai/react";
+import { Message } from "ai/react";
 import React, { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ChatProps } from "./chat";
 import Image from "next/image";
-import CodeDisplayBlock from "../code-display-block";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { INITIAL_QUESTIONS } from "@/utils/initial-questions";
@@ -13,15 +12,10 @@ import { Button } from "../ui/button";
 
 export default function ChatList({
   messages,
-  input,
   handleInputChange,
-  handleSubmit,
   isLoading,
-  error,
-  stop,
   loadingSubmit,
   formRef,
-  isMobile,
 }: ChatProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [name, setName] = React.useState<string>("");
@@ -48,21 +42,19 @@ export default function ChatList({
   useEffect(() => {
     // Fetch 4 initial questions
     if (messages.length === 0) {
-      const questionCount = isMobile ? 2 : 4;
-
       setInitialQuestions(
         INITIAL_QUESTIONS.sort(() => Math.random() - 0.5)
-          .slice(0, questionCount)
+          .slice(0, 2)
           .map((message) => {
             return {
               id: "1",
               role: "user",
               content: message.content,
             };
-          })
+          }),
       );
     }
-  }, [isMobile]);
+  }, [messages.length]);
 
   const onClickQuestion = (value: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -76,7 +68,7 @@ export default function ChatList({
         new Event("submit", {
           cancelable: true,
           bubbles: true,
-        })
+        }),
       );
     }, 1);
   };
@@ -138,27 +130,16 @@ export default function ChatList({
   return (
     <div
       id="scroller"
-      className="w-full overflow-y-scroll overflow-x-hidden h-full justify-end"
+      className="w-full overflow-y-auto overflow-x-hidden h-full justify-end"
     >
-      <div className="w-full flex flex-col overflow-x-hidden overflow-y-hidden min-h-full justify-end">
+      <div className="w-full flex flex-col overflow-x-hidden overflow-y-hidden justify-end">
         {messages.map((message, index) => (
           <motion.div
             key={index}
             layout
-            initial={{ opacity: 0, scale: 1, y: 20, x: 0 }}
-            animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-            exit={{ opacity: 0, scale: 1, y: 20, x: 0 }}
-            transition={{
-              opacity: { duration: 0.1 },
-              layout: {
-                type: "spring",
-                bounce: 0.3,
-                duration: messages.indexOf(message) * 0.05 + 0.2,
-              },
-            }}
             className={cn(
               "flex flex-col gap-2 p-4 whitespace-pre-wrap",
-              message.role === "user" ? "items-end" : "items-start"
+              message.role === "user" ? "items-end" : "items-start",
             )}
           >
             <div className="flex gap-3 items-center">
@@ -193,22 +174,7 @@ export default function ChatList({
                     />
                   </Avatar>
                   <span className="bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">
-                    {/* Check if the message content contains a code block */}
-                    {message.content.split("```").map((part, index) => {
-                      if (index % 2 === 0) {
-                        return (
-                          <Markdown key={index} remarkPlugins={[remarkGfm]}>
-                            {part}
-                          </Markdown>
-                        );
-                      } else {
-                        return (
-                          <pre className="whitespace-pre-wrap" key={index}>
-                            <CodeDisplayBlock code={part} lang="" />
-                          </pre>
-                        );
-                      }
-                    })}
+                    {message.content}
                     {isLoading &&
                       messages.indexOf(message) === messages.length - 1 && (
                         <span className="animate-pulse" aria-label="Typing">
