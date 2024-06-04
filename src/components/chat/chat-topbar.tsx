@@ -6,11 +6,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
 import { Button } from "../ui/button";
 import { CaretSortIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { Sidebar } from "../sidebar";
 import { Message } from "ai/react";
 import { getSelectedModel } from "@/lib/model-helper";
 
@@ -20,49 +17,21 @@ interface ChatTopbarProps {
   chatId?: string;
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<string>>;
+  toggleSidebar: () => void;
+  models: string[];
 }
 
 export default function ChatTopbar({
   setSelectedModel,
   isLoading,
-  chatId,
-  setMessages,
+  toggleSidebar,
+  models,
 }: ChatTopbarProps) {
-  const [models, setModels] = React.useState<string[]>([]);
   const [open, setOpen] = React.useState(false);
   const [currentModel, setCurrentModel] = React.useState<string | null>(null);
-  const [isChatListCollapsed, setIsChatListCollapsed] = useState(false);
-  const [isModelListCollapsed, setIsModelListCollapsed] = useState(true);
-
-  useEffect(() => {
-    const fetchAndSetModels = async () => {
-      setCurrentModel(getSelectedModel());
-      const models = await fetchModels();
-      setModels(models);
-    };
-
-    fetchAndSetModels();
-  }, []);
-
-  const getModelIndex = async () => {
-    const indexUrl =
-      "https://raw.githubusercontent.com/modelhub-ai/modelhub/master/models.json";
-    const response = await fetch(indexUrl);
-    const data = await response.json();
-    return data;
-  };
-
-  const fetchModels = async () => {
-    const modelIndex = (await getModelIndex()).sort((a, b) =>
-      a.name.localeCompare(b.name),
-    );
-    const modelNames = modelIndex.map((element) => element.name);
-    return modelNames;
-  };
 
   const handleModelChange = (model: string) => {
     setCurrentModel(model);
-    setSelectedModel(model);
     if (typeof window !== "undefined") {
       localStorage.setItem("selectedModel", model);
     }
@@ -70,24 +39,10 @@ export default function ChatTopbar({
   };
 
   return (
-    <div className="w-full flex px-4 py-6  items-center justify-between lg:justify-center ">
-      <Sheet>
-        <SheetTrigger>
-          <HamburgerMenuIcon className="lg:hidden w-5 h-5" />
-        </SheetTrigger>
-        <SheetContent side="left">
-          <Sidebar
-            chatId={chatId || ""}
-            isSidebarCollapsed={false}
-            isChatListCollapsed={isChatListCollapsed}
-            setIsChatListCollapsed={setIsChatListCollapsed}
-            isModelListCollapsed={isModelListCollapsed}
-            setIsModelListCollapsed={setIsModelListCollapsed}
-            models={models}
-            setMessages={setMessages}
-          />
-        </SheetContent>
-      </Sheet>
+    <div className="w-full flex px-4 py-6 items-center justify-between">
+      <button onClick={toggleSidebar}>
+        <HamburgerMenuIcon className="w-5 h-5" />
+      </button>
 
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

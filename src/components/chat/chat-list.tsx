@@ -5,8 +5,6 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ChatProps } from "./chat";
 import Image from "next/image";
-import Markdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { INITIAL_QUESTIONS } from "@/utils/initial-questions";
 import { Button } from "../ui/button";
 
@@ -91,34 +89,20 @@ export default function ChatList({
             </p>
           </div>
 
-          <div className="absolute bottom-0 w-full px-4 sm:max-w-3xl grid gap-2 sm:grid-cols-2 sm:gap-4 text-sm">
+          <div className="absolute bottom-3 w-full px-4 sm:max-w-3xl grid gap-2 sm:grid-cols-2 sm:gap-4 text-sm">
             {/* Only display 4 random questions */}
             {initialQuestions.length > 0 &&
               initialQuestions.map((message) => {
-                const delay = Math.random() * 0.25;
-
                 return (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 1, y: 10, x: 0 }}
-                    animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-                    exit={{ opacity: 0, scale: 1, y: 10, x: 0 }}
-                    transition={{
-                      opacity: { duration: 0.1, delay },
-                      scale: { duration: 0.1, delay },
-                      y: { type: "spring", stiffness: 100, damping: 10, delay },
-                    }}
+                  <Button
                     key={message.content}
+                    type="button"
+                    variant="outline"
+                    className="sm:text-start px-4 py-8 flex w-full justify-center sm:justify-start items-center text-sm whitespace-pre-wrap"
+                    onClick={(e) => onClickQuestion(message.content, e)}
                   >
-                    <Button
-                      key={message.content}
-                      type="button"
-                      variant="outline"
-                      className="sm:text-start px-4 py-8 flex w-full justify-center sm:justify-start items-center text-sm whitespace-pre-wrap"
-                      onClick={(e) => onClickQuestion(message.content, e)}
-                    >
-                      {message.content}
-                    </Button>
-                  </motion.div>
+                    {message.content}
+                  </Button>
                 );
               })}
           </div>

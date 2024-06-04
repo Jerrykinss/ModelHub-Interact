@@ -96,7 +96,7 @@ export default function ChatBottombar({
             onChange={handleInputChange}
             name="message"
             placeholder="Enter your prompt here"
-            className="max-h-48 px-16 bg-accent py-[22px] text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-full rounded-md flex items-center h-16 resize-none overflow-w-hidden overflow-y-auto dark:bg-card"
+            className="max-h-48 px-16 bg-accent py-[22px] text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-full rounded-md flex items-center h-16 resize-none overflow-w-hidden overflow-y-auto"
           />
           {!isLoading ? (
             <div className="flex absolute right-3 items-center">
