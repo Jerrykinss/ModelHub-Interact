@@ -14,6 +14,8 @@ interface SidebarProps {
   isModelListCollapsed: boolean;
   setIsModelListCollapsed: (isCollapsed: boolean) => void;
   models: string[];
+  installedModels: string[];
+  setInstalledModels: (models: string[]) => void;
 }
 
 export default function Sidebar({
@@ -25,6 +27,8 @@ export default function Sidebar({
   isModelListCollapsed,
   setIsModelListCollapsed,
   models,
+  installedModels,
+  setInstalledModels,
 }: SidebarProps) {
   const router = useRouter();
   const [localChats, setLocalChats] = useState<
@@ -103,6 +107,8 @@ export default function Sidebar({
           selectedChatId={chatId}
           isModelListCollapsed={isModelListCollapsed}
           setIsModelListCollapsed={setIsModelListCollapsed}
+          installedModels={installedModels}
+          setInstalledModels={setInstalledModels}
         />
       </div>
     </div>

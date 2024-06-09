@@ -40,6 +40,13 @@ export default function ChatList({
     setLocalChats(getLocalStorageChats());
   };
 
+  useEffect(() => {
+    if (localChats && localChats[0]) {
+      console.log("local chats: " + localChats[0].chatId);
+      console.log("Selected Chat: " + selectedChatId);
+    }
+  }, [localChats, selectedChatId]);
+
   return (
     <div className="flex flex-col pt-10 gap-2">
       <div className="flex justify-between items-center">

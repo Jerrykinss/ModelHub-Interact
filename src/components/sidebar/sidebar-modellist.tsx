@@ -1,7 +1,12 @@
-import React, { useState } from "react";
-import { GetServerSideProps } from "next";
+import React, { useState, useEffect } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, MoreHorizontal, Trash2 } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  MoreHorizontal,
+  Trash2,
+  Download,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -16,14 +21,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import fs from "fs";
-import path from "path";
 
 interface ModelListProps {
   models: string[];
   selectedChatId: string;
   isModelListCollapsed: boolean;
   setIsModelListCollapsed: (isCollapsed: boolean) => void;
+  installedModels: string[];
+  setInstalledModels: (models: string[]) => void;
 }
 
 export default function ModelList({
@@ -31,12 +36,12 @@ export default function ModelList({
   selectedChatId,
   isModelListCollapsed,
   setIsModelListCollapsed,
+  installedModels,
+  setInstalledModels,
 }: ModelListProps) {
-  const [downloadedModels, setDownloadedModels] = useState<string[]>(models);
-  console.log(downloadedModels);
-
-  const handleUninstallModel = (model: string) => {
-    const dirPath = path.join("@/models", model);
+  const handleDownloadModel = (model: string) => {
+    // Add logic to download the model
+    console.log(`Downloading model: ${model}`);
   };
 
   return (
@@ -64,9 +69,12 @@ export default function ModelList({
                 className={cn(
                   {
                     [buttonVariants({ variant: "secondaryLink" })]:
-                      model === selectedChatId,
+                      model === selectedChatId &&
+                      installedModels.includes(model),
                     [buttonVariants({ variant: "ghost" })]:
-                      model !== selectedChatId,
+                      model !== selectedChatId &&
+                      installedModels.includes(model),
+                    "text-muted-foreground": !installedModels.includes(model),
                   },
                   "flex justify-between w-full h-10 text-base font-normal items-center",
                 )}
@@ -76,48 +84,58 @@ export default function ModelList({
                     <span className="text-xs font-normal">{model}</span>
                   </div>
                 </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="flex justify-end items-center"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <MoreHorizontal size={15} className="shrink-0" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          className="w-full flex gap-2 hover:text-red-500 text-red-500 justify-start items-center"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <Trash2 className="shrink-0 w-4 h-4" />
-                          Uninstall model
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader className="space-y-4">
-                          <DialogTitle>Delete chat?</DialogTitle>
-                          <DialogDescription>
-                            Are you sure you want to uninstall this model?
-                          </DialogDescription>
-                          <div className="flex justify-end gap-2">
-                            <Button variant="outline">Cancel</Button>
-                            <Button
-                              variant="destructive"
-                              onClick={() => handleDeleteChat(chatId)}
-                            >
-                              Uninstall
-                            </Button>
-                          </div>
-                        </DialogHeader>
-                      </DialogContent>
-                    </Dialog>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                {installedModels.includes(model) ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="flex justify-end items-center"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <MoreHorizontal size={15} className="shrink-0" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            className="w-full flex gap-2 hover:text-red-500 text-red-500 justify-start items-center"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Trash2 className="shrink-0 w-4 h-4" />
+                            Uninstall model
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader className="space-y-4">
+                            <DialogTitle>Delete chat?</DialogTitle>
+                            <DialogDescription>
+                              Are you sure you want to uninstall this model?
+                            </DialogDescription>
+                            <div className="flex justify-end gap-2">
+                              <Button variant="outline">Cancel</Button>
+                              <Button
+                                variant="destructive"
+                                onClick={() => handleDeleteChat(chatId)}
+                              >
+                                Uninstall
+                              </Button>
+                            </div>
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    className="flex justify-end items-center text-muted-foreground"
+                    onClick={() => handleDownloadModel(model)}
+                  >
+                    <Download size={15} className="shrink-0" />
+                  </Button>
+                )}
               </div>
             ))
           ) : (

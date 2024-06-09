@@ -77,13 +77,6 @@ export default function ChatList({
         <div className="relative flex flex-col gap-4 items-center justify-center w-full h-full">
           <div></div>
           <div className="flex flex-col gap-4 items-center">
-            <Image
-              src="/ollama.png"
-              alt="AI"
-              width={60}
-              height={60}
-              className="h-20 w-14 object-contain dark:invert"
-            />
             <p className="text-center text-lg text-muted-foreground">
               How can I help you today?
             </p>
@@ -150,7 +143,7 @@ export default function ChatList({
                 <div className="flex items-end gap-2">
                   <Avatar className="flex justify-start items-center">
                     <AvatarImage
-                      src="/ollama.png"
+                      src="/"
                       alt="AI"
                       width={6}
                       height={6}

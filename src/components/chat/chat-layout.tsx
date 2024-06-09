@@ -44,42 +44,40 @@ export function ChatLayout({
   const [isChatListCollapsed, setIsChatListCollapsed] = useState(false);
   const [isModelListCollapsed, setIsModelListCollapsed] = useState(true);
   const [models, setModels] = React.useState<string[]>([]);
+  const [installedModels, setInstalledModels] = useState<string[]>([]);
+  const [currentModel, setCurrentModel] = useState<string>();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
   useEffect(() => {
-    const fetchAndSetModels = async () => {
-      const models = await fetchModels();
-      setModels(models);
+    const fetchModels = async () => {
+      try {
+        const response = await fetch("/api/models");
+        if (response.ok) {
+          const data = await response.json();
+          const retrievedModels = Object.keys(data["models"]);
+          const retrievedInstalledModels = data["installedModels"];
+          setModels(retrievedModels);
+          setInstalledModels(retrievedInstalledModels);
+        } else {
+          console.error("Failed to fetch models");
+        }
+      } catch (error) {
+        console.error("Error fetching models");
+      }
     };
 
-    fetchAndSetModels();
-  }, []);
-
-  const getModelIndex = async () => {
-    const indexUrl =
-      "https://raw.githubusercontent.com/modelhub-ai/modelhub/master/models.json";
-    const response = await fetch(indexUrl);
-    const data = await response.json();
-    return data;
-  };
-
-  const fetchModels = async () => {
-    const modelIndex = (await getModelIndex()).sort((a, b) =>
-      a.name.localeCompare(b.name),
-    );
-    const modelNames = modelIndex.map((element) => element.name);
-    return modelNames;
-  };
+    fetchModels();
+  }, [isModelListCollapsed]);
 
   return (
     <div className="relative flex h-full w-full">
       <div
         className={`fixed top-0 left-0 h-full transition-transform duration-200 transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } w-[275px]`}
+        } w-[175px] md:w-[275px]`}
       >
         <Sidebar
           chatId={chatId}
@@ -90,14 +88,16 @@ export function ChatLayout({
           setIsModelListCollapsed={setIsModelListCollapsed}
           models={models}
           setMessages={setMessages}
+          installedModels={installedModels}
+          setInstalledModels={setInstalledModels}
         />
       </div>
       <div
         className={`flex flex-col justify-between w-full h-full transition-all duration-200 ${
-          isSidebarOpen ? "ml-[275px]" : "ml-0"
+          isSidebarOpen ? "ml-[175px] md:ml-[275px]" : "ml-0"
         }`}
       >
-        <div className="w-full max-w-9xl mx-auto">
+        <div className="w-full px-0 md:px-6 mx-auto">
           <ChatTopbar
             setSelectedModel={setSelectedModel}
             isLoading={isLoading}
@@ -120,6 +120,8 @@ export function ChatLayout({
             error={error}
             stop={stop}
             formRef={formRef}
+            currentModel={currentModel}
+            setCurrentModel={setCurrentModel}
           />
           <ChatBottombar
             setSelectedModel={setSelectedModel}
