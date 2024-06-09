@@ -16,6 +16,7 @@ interface SidebarProps {
   models: string[];
   installedModels: string[];
   setInstalledModels: (models: string[]) => void;
+  setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function Sidebar({
@@ -29,6 +30,7 @@ export default function Sidebar({
   models,
   installedModels,
   setInstalledModels,
+  setSelectedModel,
 }: SidebarProps) {
   const router = useRouter();
   const [localChats, setLocalChats] = useState<

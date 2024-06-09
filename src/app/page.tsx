@@ -10,6 +10,14 @@ import { Message, useChat } from "ai/react";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
+import {
+  Dialog,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogContent,
+} from "@/components/ui/dialog";
+import UserForm from "@/components/user-form";
 
 export default function Home() {
   const {
@@ -69,9 +77,7 @@ export default function Home() {
       setOllama(newOllama);
     }
 
-    if (!localStorage.getItem("ollama_user")) {
-      setOpen(true);
-    }
+    setOpen(true);
   }, [selectedModel]);
 
   const addMessage = (Message: any) => {
@@ -174,23 +180,41 @@ export default function Home() {
     }
   }, []);
 
+  const onOpenChange = (isOpen: boolean) => {
+    const username = localStorage.getItem("user");
+    if (username) return setOpen(isOpen);
+
+    localStorage.setItem("user", "Anonymous");
+    window.dispatchEvent(new Event("storage"));
+    setOpen(isOpen);
+  };
+
   return (
     <main className="flex h-[calc(100dvh)] flex-col items-center ">
-      <ChatLayout
-        chatId={chatId}
-        setSelectedModel={setSelectedModel}
-        messages={messages}
-        input={input}
-        handleInputChange={handleInputChange}
-        handleSubmit={handleSubmit}
-        isLoading={isLoading}
-        loadingSubmit={loadingSubmit}
-        error={error}
-        stop={stop}
-        formRef={formRef}
-        setInput={setInput}
-        setMessages={setMessages}
-      />
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <ChatLayout
+          chatId={chatId}
+          selectedModel={selectedModel}
+          setSelectedModel={setSelectedModel}
+          messages={messages}
+          input={input}
+          handleInputChange={handleInputChange}
+          handleSubmit={handleSubmit}
+          isLoading={isLoading}
+          loadingSubmit={loadingSubmit}
+          error={error}
+          stop={stop}
+          formRef={formRef}
+          setInput={setInput}
+          setMessages={setMessages}
+        />
+        <DialogContent className="flex flex-col space-y-4">
+          <DialogHeader className="space-y-2">
+            <DialogTitle>Welcome to ModelHub!</DialogTitle>
+            <UserForm setOpen={setOpen} />
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }

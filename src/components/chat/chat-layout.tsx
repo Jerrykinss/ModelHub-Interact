@@ -8,6 +8,7 @@ import Sidebar from "../sidebar/sidebar";
 
 export interface ChatProps {
   chatId?: string;
+  selectedModel: string;
   setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
   messages: Message[];
   input: string;
@@ -33,6 +34,7 @@ export function ChatLayout({
   isLoading,
   error,
   stop,
+  selectedModel,
   setSelectedModel,
   chatId,
   loadingSubmit,
@@ -45,7 +47,6 @@ export function ChatLayout({
   const [isModelListCollapsed, setIsModelListCollapsed] = useState(true);
   const [models, setModels] = React.useState<string[]>([]);
   const [installedModels, setInstalledModels] = useState<string[]>([]);
-  const [currentModel, setCurrentModel] = useState<string>();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -88,8 +89,7 @@ export function ChatLayout({
           setIsModelListCollapsed={setIsModelListCollapsed}
           models={models}
           setMessages={setMessages}
-          installedModels={installedModels}
-          setInstalledModels={setInstalledModels}
+          setSelectedModel={setSelectedModel}
         />
       </div>
       <div
@@ -99,13 +99,13 @@ export function ChatLayout({
       >
         <div className="w-full px-0 md:px-6 mx-auto">
           <ChatTopbar
+            selectedModel={selectedModel}
             setSelectedModel={setSelectedModel}
             isLoading={isLoading}
             chatId={chatId}
             messages={messages}
             setMessages={setMessages}
             toggleSidebar={toggleSidebar}
-            models={models}
           />
         </div>
         <div className="flex flex-col justify-between w-full max-w-4xl h-full mx-auto overflow-hidden">
@@ -120,8 +120,6 @@ export function ChatLayout({
             error={error}
             stop={stop}
             formRef={formRef}
-            currentModel={currentModel}
-            setCurrentModel={setCurrentModel}
           />
           <ChatBottombar
             setSelectedModel={setSelectedModel}
