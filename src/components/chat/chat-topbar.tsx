@@ -1,11 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "../ui/button";
 import { CaretSortIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { Message } from "ai/react";
@@ -13,11 +8,18 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Dialog,
+  DialogHeader,
+  DialogTitle,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { GearIcon } from "@radix-ui/react-icons";
+import UserForm from "@/components/user-form";
 
 interface ChatTopbarProps {
   selectedModel: string;
@@ -36,7 +38,8 @@ export default function ChatTopbar({
   isLoading,
   toggleSidebar,
 }: ChatTopbarProps) {
-  const [open, setOpen] = React.useState(false);
+  const [name, setName] = useState("");
+  const [open, setOpen] = useState(false);
 
   const handleModelChange = (model: string) => {
     setSelectedModel(model);
@@ -44,6 +47,25 @@ export default function ChatTopbar({
       localStorage.setItem("selectedModel", model);
     }
     setOpen(false);
+  };
+
+  useEffect(() => {
+    const fetchName = () => {
+      const username = localStorage.getItem("user");
+      if (username) {
+        setName(username);
+      }
+    };
+    fetchName();
+    window.addEventListener("storage", fetchName);
+
+    return () => {
+      window.removeEventListener("storage", fetchName);
+    };
+  }, []);
+
+  const onOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
   };
 
   const handleStopModel = async () => {
@@ -57,8 +79,7 @@ export default function ChatTopbar({
         body: JSON.stringify({
           action: "stop",
           modelName: selectedModel,
-          // Ensure you provide the containerId if required
-          containerId: "your-container-id", // Replace with actual container ID
+          containerId: "your-container-id",
         }),
       });
 
@@ -79,9 +100,15 @@ export default function ChatTopbar({
 
   return (
     <div className="w-full flex px-4 py-6 items-center justify-between">
-      <button onClick={toggleSidebar}>
-        <HamburgerMenuIcon className="w-5 h-5" />
-      </button>
+      <div className="md:pr-[136px]">
+        <Button
+          variant="ghost"
+          onClick={toggleSidebar}
+          className="w-12 h-10 p-2 rounded-full flex items-center justify-center"
+        >
+          <HamburgerMenuIcon className="w-5 h-5" />
+        </Button>
+      </div>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -97,9 +124,15 @@ export default function ChatTopbar({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-[250px] p-2">
-          <DropdownMenuItem onSelect={handleStopModel}>
-            Stop Model
-          </DropdownMenuItem>
+          {selectedModel ? (
+            <DropdownMenuItem onSelect={handleStopModel}>
+              Stop Model
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem onSelect={handleStopModel}>
+              Load a Model
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -130,6 +163,25 @@ export default function ChatTopbar({
             </div>
           </Button>
         </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-48 p-2">
+          <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogTrigger className="w-full">
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <div className="flex w-full gap-2 p-1 items-center cursor-pointer">
+                  <GearIcon className="w-4 h-4" />
+                  Settings
+                </div>
+              </DropdownMenuItem>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader className="space-y-4">
+                <DialogTitle>Settings</DialogTitle>
+                <UserForm setOpen={setOpen} />
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+          <Dialog></Dialog>
+        </DropdownMenuContent>
       </DropdownMenu>
     </div>
   );

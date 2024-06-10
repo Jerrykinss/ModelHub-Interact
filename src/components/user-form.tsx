@@ -1,13 +1,10 @@
 "use client";
 
-import { set, z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,29 +13,36 @@ import {
 import { Input } from "@/components/ui/input";
 import React from "react";
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-});
-
 interface UsernameFormProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function UserForm({ setOpen }: UsernameFormProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  // Retrieve stored values
+  const storedUsername =
+    typeof window !== "undefined" ? localStorage.getItem("user") || "" : "";
+  const storedApiKey =
+    typeof window !== "undefined" ? localStorage.getItem("key") || "" : "";
+
+  // Initialize form with default values
+  const form = useForm({
     defaultValues: {
-      username: "",
+      username: storedUsername,
+      apiKey: storedApiKey,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    localStorage.setItem("user", values.username);
-    window.dispatchEvent(new Event("storage"));
-    setOpen(false);
-  }
+  const onSubmit = async (values) => {
+    try {
+      localStorage.setItem("user", values.username);
+      localStorage.setItem("key", values.apiKey);
+      window.dispatchEvent(new Event("storage"));
+    } catch (error) {
+      console.error("Error saving to localStorage", error);
+    } finally {
+      setOpen(false);
+    }
+  };
 
   return (
     <Form {...form}>

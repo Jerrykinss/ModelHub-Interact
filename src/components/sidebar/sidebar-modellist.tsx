@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   ChevronDown,
@@ -6,6 +6,7 @@ import {
   MoreHorizontal,
   Trash2,
   Download,
+  ArrowUpFromLine,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -39,9 +40,123 @@ export default function ModelList({
   installedModels,
   setInstalledModels,
 }: ModelListProps) {
-  const handleDownloadModel = (model: string) => {
-    // Add logic to download the model
-    console.log(`Downloading model: ${model}`);
+  const [isLoadDialogOpen, setIsLoadDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isInstallDialogOpen, setIsInstallDialogOpen] = useState(false);
+  const [modelToLoad, setModelToLoad] = useState<string | null>(null);
+  const [modelToDelete, setModelToDelete] = useState<string | null>(null);
+  const [modelToInstall, setModelToInstall] = useState<string | null>(null);
+
+  const handleInstallModel = async (modelName: string): Promise<void> => {
+    try {
+      const response = await fetch("/api/models", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ action: "install", modelName }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to install model");
+      }
+
+      const data = await response.json();
+      console.log("Model installed successfully:", data.message);
+    } catch (error) {
+      console.error("Error installing model:", error);
+    }
+  };
+
+  const handleDeleteModel = async (modelName: string) => {
+    try {
+      const response = await fetch(`/api/models?modelName=${modelName}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to delete model");
+      }
+      const data = await response.json();
+      console.log("Model deleted successfully:", data.message);
+      setInstalledModels(
+        installedModels.filter((model) => model !== modelName),
+      );
+      return data;
+    } catch (error) {
+      console.error("Error deleting model:", error);
+      throw error;
+    }
+  };
+
+  async function handleLoadModel(modelName: string) {
+    const response = await fetch("/api/models", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ action: "run", modelName }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`Error: ${error.message}`);
+    }
+
+    const data = await response.json();
+    return data;
+  }
+
+  const openDeleteDialog = (modelName: string) => {
+    setModelToDelete(modelName);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setModelToDelete(null);
+    setIsDeleteDialogOpen(false);
+  };
+
+  const confirmDeleteModel = async () => {
+    if (modelToDelete) {
+      await handleDeleteModel(modelToDelete);
+      closeDeleteDialog();
+    }
+  };
+
+  const openLoadDialog = (modelName: string) => {
+    setModelToLoad(modelName);
+    setIsLoadDialogOpen(true);
+  };
+
+  const closeLoadDialog = () => {
+    setModelToLoad(null);
+    setIsLoadDialogOpen(false);
+  };
+
+  const confirmLoadModel = async () => {
+    if (modelToLoad) {
+      await handleLoadModel(modelToLoad);
+      closeLoadDialog();
+    }
+  };
+
+  const openInstallDialog = (modelName: string) => {
+    setModelToInstall(modelName);
+    setIsInstallDialogOpen(true);
+  };
+
+  const closeInstallDialog = () => {
+    setModelToInstall(null);
+    setIsInstallDialogOpen(false);
+  };
+
+  const confirmInstallModel = async () => {
+    if (modelToInstall) {
+      await handleInstallModel(modelToInstall);
+      closeInstallDialog();
+    }
   };
 
   return (
@@ -69,11 +184,9 @@ export default function ModelList({
                 className={cn(
                   {
                     [buttonVariants({ variant: "secondaryLink" })]:
-                      model === selectedChatId &&
-                      installedModels.includes(model),
+                      model === selectedChatId,
                     [buttonVariants({ variant: "ghost" })]:
-                      model !== selectedChatId &&
-                      installedModels.includes(model),
+                      model !== selectedChatId,
                     "text-muted-foreground": !installedModels.includes(model),
                   },
                   "flex justify-between w-full h-10 text-base font-normal items-center",
@@ -89,19 +202,59 @@ export default function ModelList({
                     <DropdownMenuTrigger asChild>
                       <Button
                         variant="ghost"
-                        className="flex justify-end items-center"
+                        className="flex justify-end items-center pr-0 pl-4"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <MoreHorizontal size={15} className="shrink-0" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <Dialog>
+                      <Dialog
+                        open={isLoadDialogOpen}
+                        onOpenChange={setIsLoadDialogOpen}
+                      >
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            className="w-full flex gap-2 justify-start items-center"
+                            onClick={() => openLoadDialog(model)}
+                          >
+                            <ArrowUpFromLine className="shrink-0 w-4 h-4" />
+                            Load model
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader className="space-y-4">
+                            <DialogTitle>Load model?</DialogTitle>
+                            <DialogDescription>
+                              Load this model to use?
+                            </DialogDescription>
+                            <div className="flex justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                onClick={closeLoadDialog}
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                variant="destructive"
+                                onClick={confirmLoadModel}
+                              >
+                                Load
+                              </Button>
+                            </div>
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
+                      <Dialog
+                        open={isDeleteDialogOpen}
+                        onOpenChange={setIsDeleteDialogOpen}
+                      >
                         <DialogTrigger asChild>
                           <Button
                             variant="ghost"
                             className="w-full flex gap-2 hover:text-red-500 text-red-500 justify-start items-center"
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={() => openDeleteDialog(model)}
                           >
                             <Trash2 className="shrink-0 w-4 h-4" />
                             Uninstall model
@@ -109,15 +262,20 @@ export default function ModelList({
                         </DialogTrigger>
                         <DialogContent>
                           <DialogHeader className="space-y-4">
-                            <DialogTitle>Delete chat?</DialogTitle>
+                            <DialogTitle>Delete model?</DialogTitle>
                             <DialogDescription>
                               Are you sure you want to uninstall this model?
                             </DialogDescription>
                             <div className="flex justify-end gap-2">
-                              <Button variant="outline">Cancel</Button>
+                              <Button
+                                variant="outline"
+                                onClick={closeDeleteDialog}
+                              >
+                                Cancel
+                              </Button>
                               <Button
                                 variant="destructive"
-                                onClick={() => handleDeleteChat(chatId)}
+                                onClick={confirmDeleteModel}
                               >
                                 Uninstall
                               </Button>
@@ -128,13 +286,42 @@ export default function ModelList({
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) : (
-                  <Button
-                    variant="ghost"
-                    className="flex justify-end items-center text-muted-foreground"
-                    onClick={() => handleDownloadModel(model)}
+                  <Dialog
+                    open={isInstallDialogOpen}
+                    onOpenChange={setIsInstallDialogOpen}
                   >
-                    <Download size={15} className="shrink-0" />
-                  </Button>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="flex justify-end items-center pr-0 pl-4"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Download size={15} className="shrink-0" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader className="space-y-4">
+                        <DialogTitle>Install model?</DialogTitle>
+                        <DialogDescription>
+                          Install this model and it's required files?
+                        </DialogDescription>
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            onClick={closeInstallDialog}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            onClick={confirmInstallModel}
+                          >
+                            Download
+                          </Button>
+                        </div>
+                      </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
                 )}
               </div>
             ))
