@@ -40,13 +40,6 @@ export default function ChatList({
     setLocalChats(getLocalStorageChats());
   };
 
-  useEffect(() => {
-    if (localChats && localChats[0]) {
-      console.log("local chats: " + localChats[0].chatId);
-      console.log("Selected Chat: " + selectedChatId);
-    }
-  }, [localChats, selectedChatId]);
-
   return (
     <div className="flex flex-col pt-10 gap-2">
       <div className="flex justify-between items-center">
@@ -91,7 +84,7 @@ export default function ChatList({
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="flex justify-end items-center"
+                      className="flex justify-end items-center pr-0 pl-4"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <MoreHorizontal size={15} className="shrink-0" />

@@ -24,6 +24,8 @@ export interface ChatProps {
   formRef: React.RefObject<HTMLFormElement>;
   setInput?: React.Dispatch<React.SetStateAction<string>>;
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function ChatLayout({
@@ -41,6 +43,8 @@ export function ChatLayout({
   formRef,
   setInput,
   setMessages,
+  open,
+  setOpen,
 }: ChatProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isChatListCollapsed, setIsChatListCollapsed] = useState(false);
@@ -78,7 +82,7 @@ export function ChatLayout({
       <div
         className={`fixed top-0 left-0 h-full transition-transform duration-200 transform ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } w-[175px] md:w-[275px]`}
+        } w-[175px] lg:w-[275px]`}
       >
         <Sidebar
           chatId={chatId}
@@ -89,12 +93,14 @@ export function ChatLayout({
           setIsModelListCollapsed={setIsModelListCollapsed}
           models={models}
           setMessages={setMessages}
+          installedModels={installedModels}
+          setInstalledModels={setInstalledModels}
           setSelectedModel={setSelectedModel}
         />
       </div>
       <div
         className={`flex flex-col justify-between w-full h-full transition-all duration-200 ${
-          isSidebarOpen ? "ml-[175px] md:ml-[275px]" : "ml-0"
+          isSidebarOpen ? "ml-[175px] lg:ml-[275px]" : "ml-0"
         }`}
       >
         <div className="w-full px-0 md:px-6 mx-auto">
@@ -106,6 +112,8 @@ export function ChatLayout({
             messages={messages}
             setMessages={setMessages}
             toggleSidebar={toggleSidebar}
+            open={open}
+            setOpen={setOpen}
           />
         </div>
         <div className="flex flex-col justify-between w-full max-w-4xl h-full mx-auto overflow-hidden">

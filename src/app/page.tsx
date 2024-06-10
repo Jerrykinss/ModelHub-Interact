@@ -2,7 +2,6 @@
 
 import { ChatLayout } from "@/components/chat/chat-layout";
 import { getSelectedModel } from "@/lib/model-helper";
-import { ChatOllama } from "@langchain/community/chat_models/ollama";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { BytesOutputParser } from "@langchain/core/output_parsers";
 import { ChatRequestOptions } from "ai";
@@ -12,7 +11,6 @@ import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import {
   Dialog,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogContent,
@@ -44,8 +42,7 @@ export default function Home() {
   const [chatId, setChatId] = React.useState<string>("");
   const [selectedModel, setSelectedModel] =
     React.useState<string>(getSelectedModel());
-  const [open, setOpen] = React.useState(false);
-  const [ollama, setOllama] = useState<ChatOllama>();
+  const [open, setOpen] = React.useState(true);
   const env = process.env.NODE_ENV;
   const [loadingSubmit, setLoadingSubmit] = React.useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -68,18 +65,6 @@ export default function Home() {
     }
   }, [chatId, isLoading, error]);
 
-  useEffect(() => {
-    if (env === "production") {
-      const newOllama = new ChatOllama({
-        baseUrl: process.env.NEXT_PUBLIC_OLLAMA_URL || "http://localhost:11434",
-        model: selectedModel,
-      });
-      setOllama(newOllama);
-    }
-
-    setOpen(true);
-  }, [selectedModel]);
-
   const addMessage = (Message: any) => {
     messages.push(Message);
     window.dispatchEvent(new Event("storage"));
@@ -95,42 +80,40 @@ export default function Home() {
     addMessage({ role: "user", content: input, id: chatId });
     setInput("");
 
-    if (ollama) {
-      try {
-        const parser = new BytesOutputParser();
+    try {
+      const parser = new BytesOutputParser();
 
-        const stream = await ollama
-          .pipe(parser)
-          .stream(
-            (messages as Message[]).map((m) =>
-              m.role == "user"
-                ? new HumanMessage(m.content)
-                : new AIMessage(m.content),
-            ),
-          );
+      const stream = await ollama
+        .pipe(parser)
+        .stream(
+          (messages as Message[]).map((m) =>
+            m.role == "user"
+              ? new HumanMessage(m.content)
+              : new AIMessage(m.content),
+          ),
+        );
 
-        const decoder = new TextDecoder();
+      const decoder = new TextDecoder();
 
-        let responseMessage = "";
-        for await (const chunk of stream) {
-          const decodedChunk = decoder.decode(chunk);
-          responseMessage += decodedChunk;
-          setLoadingSubmit(false);
-          setMessages([
-            ...messages,
-            { role: "assistant", content: responseMessage, id: chatId },
-          ]);
-        }
-        addMessage({ role: "assistant", content: responseMessage, id: chatId });
-        setMessages([...messages]);
-
-        localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
-        // Trigger the storage event to update the sidebar component
-        window.dispatchEvent(new Event("storage"));
-      } catch (error) {
-        toast.error("An error occurred. Please try again.");
+      let responseMessage = "";
+      for await (const chunk of stream) {
+        const decodedChunk = decoder.decode(chunk);
+        responseMessage += decodedChunk;
         setLoadingSubmit(false);
+        setMessages([
+          ...messages,
+          { role: "assistant", content: responseMessage, id: chatId },
+        ]);
       }
+      addMessage({ role: "assistant", content: responseMessage, id: chatId });
+      setMessages([...messages]);
+
+      localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
+      // Trigger the storage event to update the sidebar component
+      window.dispatchEvent(new Event("storage"));
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+      setLoadingSubmit(false);
     }
   };
 
@@ -181,11 +164,6 @@ export default function Home() {
   }, []);
 
   const onOpenChange = (isOpen: boolean) => {
-    const username = localStorage.getItem("user");
-    if (username) return setOpen(isOpen);
-
-    localStorage.setItem("user", "Anonymous");
-    window.dispatchEvent(new Event("storage"));
     setOpen(isOpen);
   };
 
@@ -207,6 +185,8 @@ export default function Home() {
           formRef={formRef}
           setInput={setInput}
           setMessages={setMessages}
+          open={open}
+          setOpen={setOpen}
         />
         <DialogContent className="flex flex-col space-y-4">
           <DialogHeader className="space-y-2">
