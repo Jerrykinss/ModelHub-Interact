@@ -6,6 +6,7 @@ import {
   MoreHorizontal,
   Trash2,
   Download,
+  ArrowUpFromLine,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -39,8 +40,10 @@ export default function ModelList({
   installedModels,
   setInstalledModels,
 }: ModelListProps) {
+  const [isLoadDialogOpen, setIsLoadDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isInstallDialogOpen, setIsInstallDialogOpen] = useState(false);
+  const [modelToLoad, setModelToLoad] = useState<string | null>(null);
   const [modelToDelete, setModelToDelete] = useState<string | null>(null);
   const [modelToInstall, setModelToInstall] = useState<string | null>(null);
 
@@ -87,6 +90,24 @@ export default function ModelList({
     }
   };
 
+  async function handleLoadModel(modelName: string) {
+    const response = await fetch("/api/models", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ action: "run", modelName }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`Error: ${error.message}`);
+    }
+
+    const data = await response.json();
+    return data;
+  }
+
   const openDeleteDialog = (modelName: string) => {
     setModelToDelete(modelName);
     setIsDeleteDialogOpen(true);
@@ -101,6 +122,23 @@ export default function ModelList({
     if (modelToDelete) {
       await handleDeleteModel(modelToDelete);
       closeDeleteDialog();
+    }
+  };
+
+  const openLoadDialog = (modelName: string) => {
+    setModelToLoad(modelName);
+    setIsLoadDialogOpen(true);
+  };
+
+  const closeLoadDialog = () => {
+    setModelToLoad(null);
+    setIsLoadDialogOpen(false);
+  };
+
+  const confirmLoadModel = async () => {
+    if (modelToLoad) {
+      await handleLoadModel(modelToLoad);
+      closeLoadDialog();
     }
   };
 
@@ -171,6 +209,43 @@ export default function ModelList({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
+                      <Dialog
+                        open={isLoadDialogOpen}
+                        onOpenChange={setIsLoadDialogOpen}
+                      >
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            className="w-full flex gap-2 justify-start items-center"
+                            onClick={() => openLoadDialog(model)}
+                          >
+                            <ArrowUpFromLine className="shrink-0 w-4 h-4" />
+                            Load model
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader className="space-y-4">
+                            <DialogTitle>Load model?</DialogTitle>
+                            <DialogDescription>
+                              Load this model to use?
+                            </DialogDescription>
+                            <div className="flex justify-end gap-2">
+                              <Button
+                                variant="outline"
+                                onClick={closeLoadDialog}
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                variant="destructive"
+                                onClick={confirmLoadModel}
+                              >
+                                Load
+                              </Button>
+                            </div>
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
                       <Dialog
                         open={isDeleteDialogOpen}
                         onOpenChange={setIsDeleteDialogOpen}
