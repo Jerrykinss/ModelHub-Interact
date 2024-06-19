@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import ChatList from "./sidebar-chatlist";
-import ModelList from "./sidebar-modellist";
 import { SquarePen } from "lucide-react";
+import ModelBar from "./sidebar-modelbar";
 
 interface SidebarProps {
   isSidebarCollapsed: boolean;
@@ -11,11 +11,10 @@ interface SidebarProps {
   setMessages: (messages: Message[]) => void;
   isChatListCollapsed: boolean;
   setIsChatListCollapsed: (isCollapsed: boolean) => void;
-  isModelListCollapsed: boolean;
-  setIsModelListCollapsed: (isCollapsed: boolean) => void;
   models: string[];
   installedModels: string[];
   setInstalledModels: (models: string[]) => void;
+  selectedModel: string;
   setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -25,11 +24,10 @@ export default function Sidebar({
   setMessages,
   isChatListCollapsed,
   setIsChatListCollapsed,
-  isModelListCollapsed,
-  setIsModelListCollapsed,
   models,
   installedModels,
   setInstalledModels,
+  selectedModel,
   setSelectedModel,
 }: SidebarProps) {
   const router = useRouter();
@@ -103,14 +101,14 @@ export default function Sidebar({
           setLocalChats={setLocalChats}
           getLocalStorageChats={getLocalStorageChats}
         />
-
-        <ModelList
+      </div>
+      <div className="justify-end px-2 py-2 w-full border-t">
+        <ModelBar
           models={models}
-          selectedChatId={chatId}
-          isModelListCollapsed={isModelListCollapsed}
-          setIsModelListCollapsed={setIsModelListCollapsed}
           installedModels={installedModels}
           setInstalledModels={setInstalledModels}
+          selectedModel={selectedModel}
+          setSelectedModel={setSelectedModel}
         />
       </div>
     </div>

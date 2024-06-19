@@ -1,7 +1,6 @@
 "use client";
 
 import { ChatLayout } from "@/components/chat/chat-layout";
-import { getSelectedModel } from "@/lib/model-helper";
 import { ChatOllama } from "@langchain/community/chat_models/ollama";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { BytesOutputParser } from "@langchain/core/output_parsers";
@@ -34,8 +33,9 @@ export default function Page({ params }: { params: { id: string } }) {
     },
   });
   const [chatId, setChatId] = React.useState<string>("");
-  const [selectedModel, setSelectedModel] =
-    React.useState<string>(getSelectedModel());
+  const [selectedModel, setSelectedModel] = React.useState<string>(
+    localStorage.getItem("selectedModel") || "No model loaded",
+  );
   const [ollama, setOllama] = React.useState<ChatOllama>();
   const env = process.env.NODE_ENV;
   const [loadingSubmit, setLoadingSubmit] = React.useState(false);

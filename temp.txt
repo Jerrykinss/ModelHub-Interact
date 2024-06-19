@@ -33,3 +33,15 @@
           )}
         </PopoverContent>
       </Popover>
+
+
+
+
+              <ModelList
+          models={models}
+          selectedChatId={chatId}
+          isModelListCollapsed={isModelListCollapsed}
+          setIsModelListCollapsed={setIsModelListCollapsed}
+          installedModels={installedModels}
+          setInstalledModels={setInstalledModels}
+        />

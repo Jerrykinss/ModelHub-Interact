@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { CaretSortIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
@@ -19,17 +17,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { GearIcon } from "@radix-ui/react-icons";
-import UserForm from "@/components/user-form";
+import UserForm from "@/components/windows/user-form";
+import ModelList from "@/components/windows/modellist";
 
 interface ChatTopbarProps {
   selectedModel: string;
   setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
   isLoading: boolean;
-  chatId?: string;
-  messages: Message[];
-  setMessages: React.Dispatch<React.SetStateAction<string>>;
   toggleSidebar: () => void;
   models: string[];
+  installedModels: string[];
+  setInstalledModels: (models: string[]) => void;
 }
 
 export default function ChatTopbar({
@@ -37,6 +35,9 @@ export default function ChatTopbar({
   setSelectedModel,
   isLoading,
   toggleSidebar,
+  models,
+  installedModels,
+  setInstalledModels,
 }: ChatTopbarProps) {
   const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
@@ -46,10 +47,10 @@ export default function ChatTopbar({
     if (typeof window !== "undefined") {
       localStorage.setItem("selectedModel", model);
     }
-    setOpen(false);
   };
 
   useEffect(() => {
+    localStorage.setItem("selectedModel", "alexnet");
     const fetchName = () => {
       const username = localStorage.getItem("user");
       if (username) {
@@ -69,6 +70,8 @@ export default function ChatTopbar({
   };
 
   const handleStopModel = async () => {
+    setSelectedModel(null);
+    localStorage.removeItem("selectedModel");
     if (!selectedModel) return;
     try {
       const response = await fetch("/api/models", {
@@ -100,7 +103,7 @@ export default function ChatTopbar({
 
   return (
     <div className="w-full flex px-4 py-6 items-center justify-between">
-      <div className="md:pr-[136px]">
+      <div className="md:pr-[116px]">
         <Button
           variant="ghost"
           onClick={toggleSidebar}
@@ -117,21 +120,41 @@ export default function ChatTopbar({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-[250px] justify-between"
+            className="w-[250px] h-9 justify-between"
           >
             {selectedModel || "No model loaded"}
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-[250px] p-2">
+        <DropdownMenuContent className="w-[250px]">
           {selectedModel ? (
             <DropdownMenuItem onSelect={handleStopModel}>
-              Stop Model
+              <div className="flex w-full gap-2 p-1 h-4 items-center cursor-pointer">
+                Stop Model
+              </div>
             </DropdownMenuItem>
           ) : (
-            <DropdownMenuItem onSelect={handleStopModel}>
-              Load a Model
-            </DropdownMenuItem>
+            <Dialog>
+              <DialogTrigger className="w-full">
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  <div className="flex w-full gap-2 p-1 h-4 items-center cursor-pointer">
+                    Load Model
+                  </div>
+                </DropdownMenuItem>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader className="space-y-2">
+                  <DialogTitle>Available Models</DialogTitle>
+                  <ModelList
+                    models={models}
+                    installedModels={installedModels}
+                    setInstalledModels={setInstalledModels}
+                    selectedModel={selectedModel}
+                    setSelectedModel={setSelectedModel}
+                  />
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
@@ -140,7 +163,7 @@ export default function ChatTopbar({
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="flex justify-start gap-3 w-[200px] h-14 text-base font-normal items-center "
+            className="flex justify-start gap-3 w-[180px] h-14 text-base font-normal items-center "
           >
             <Avatar className="flex justify-start items-center overflow-hidden">
               <AvatarImage

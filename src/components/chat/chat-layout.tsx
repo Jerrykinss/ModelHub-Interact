@@ -48,7 +48,6 @@ export function ChatLayout({
 }: ChatProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isChatListCollapsed, setIsChatListCollapsed] = useState(false);
-  const [isModelListCollapsed, setIsModelListCollapsed] = useState(true);
   const [models, setModels] = React.useState<string[]>([]);
   const [installedModels, setInstalledModels] = useState<string[]>([]);
 
@@ -75,7 +74,7 @@ export function ChatLayout({
     };
 
     fetchModels();
-  }, [isModelListCollapsed]);
+  }, []);
 
   return (
     <div className="relative flex h-full w-full">
@@ -89,12 +88,11 @@ export function ChatLayout({
           isSidebarCollapsed={false}
           isChatListCollapsed={isChatListCollapsed}
           setIsChatListCollapsed={setIsChatListCollapsed}
-          isModelListCollapsed={isModelListCollapsed}
-          setIsModelListCollapsed={setIsModelListCollapsed}
           models={models}
           setMessages={setMessages}
           installedModels={installedModels}
           setInstalledModels={setInstalledModels}
+          selectedModel={selectedModel}
           setSelectedModel={setSelectedModel}
         />
       </div>
@@ -108,12 +106,12 @@ export function ChatLayout({
             selectedModel={selectedModel}
             setSelectedModel={setSelectedModel}
             isLoading={isLoading}
-            chatId={chatId}
-            messages={messages}
-            setMessages={setMessages}
             toggleSidebar={toggleSidebar}
             open={open}
             setOpen={setOpen}
+            models={models}
+            installedModels={installedModels}
+            setInstalledModels={setInstalledModels}
           />
         </div>
         <div className="flex flex-col justify-between w-full max-w-4xl h-full mx-auto overflow-hidden">

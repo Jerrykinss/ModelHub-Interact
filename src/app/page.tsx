@@ -1,7 +1,6 @@
 "use client";
 
 import { ChatLayout } from "@/components/chat/chat-layout";
-import { getSelectedModel } from "@/lib/model-helper";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { BytesOutputParser } from "@langchain/core/output_parsers";
 import { ChatRequestOptions } from "ai";
@@ -15,7 +14,7 @@ import {
   DialogTitle,
   DialogContent,
 } from "@/components/ui/dialog";
-import UserForm from "@/components/user-form";
+import UserForm from "@/components/windows/user-form";
 
 export default function Home() {
   const {
@@ -40,8 +39,7 @@ export default function Home() {
     },
   });
   const [chatId, setChatId] = React.useState<string>("");
-  const [selectedModel, setSelectedModel] =
-    React.useState<string>(getSelectedModel());
+  const [selectedModel, setSelectedModel] = React.useState<string>("");
   const [open, setOpen] = React.useState(true);
   const env = process.env.NODE_ENV;
   const [loadingSubmit, setLoadingSubmit] = React.useState(false);
@@ -114,29 +112,6 @@ export default function Home() {
     } catch (error) {
       toast.error("An error occurred. Please try again.");
       setLoadingSubmit(false);
-    }
-  };
-
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoadingSubmit(true);
-
-    setMessages([...messages]);
-
-    // Prepare the options object with additional body data, to pass the model.
-    const requestOptions: ChatRequestOptions = {
-      options: {
-        body: {
-          selectedModel: selectedModel,
-        },
-      },
-    };
-
-    if (env === "production") {
-      handleSubmitProduction(e);
-    } else {
-      // Call the handleSubmit function with the options
-      handleSubmit(e, requestOptions);
     }
   };
 

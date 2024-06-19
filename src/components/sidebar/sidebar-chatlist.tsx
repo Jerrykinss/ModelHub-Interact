@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ChevronDown, ChevronUp, MoreHorizontal, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -35,9 +35,29 @@ export default function ChatList({
   setLocalChats,
   getLocalStorageChats,
 }: ChatListProps) {
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [chatToDelete, setChatToDelete] = useState<string | null>(null);
+
   const handleDeleteChat = (chatId: string) => {
     localStorage.removeItem(chatId);
     setLocalChats(getLocalStorageChats());
+  };
+
+  const openDeleteDialog = (chatName: string) => {
+    setChatToDelete(chatName);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const closeDeleteDialog = () => {
+    setChatToDelete(null);
+    setIsDeleteDialogOpen(false);
+  };
+
+  const confirmDeleteChat = async () => {
+    if (chatToDelete) {
+      await handleDeleteChat(chatToDelete);
+      closeDeleteDialog();
+    }
   };
 
   return (
@@ -91,12 +111,15 @@ export default function ChatList({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <Dialog>
+                    <Dialog
+                      open={isDeleteDialogOpen}
+                      onOpenChange={setIsDeleteDialogOpen}
+                    >
                       <DialogTrigger asChild>
                         <Button
                           variant="ghost"
                           className="w-full flex gap-2 hover:text-red-500 text-red-500 justify-start items-center"
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={() => openDeleteDialog(chatId)}
                         >
                           <Trash2 className="shrink-0 w-4 h-4" />
                           Delete chat
@@ -110,10 +133,15 @@ export default function ChatList({
                             action cannot be undone.
                           </DialogDescription>
                           <div className="flex justify-end gap-2">
-                            <Button variant="outline">Cancel</Button>
                             <Button
-                              variant="destructive"
-                              onClick={() => handleDeleteChat(chatId)}
+                              variant="outline"
+                              onClick={closeDeleteDialog}
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              variant="secondary"
+                              onClick={confirmDeleteChat}
                             >
                               Delete
                             </Button>
