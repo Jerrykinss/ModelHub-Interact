@@ -177,13 +177,7 @@ export default function ChatTopbar({
                 {name && name.substring(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div className="text-xs truncate">
-              {isLoading ? (
-                <Skeleton className="w-20 h-4" />
-              ) : (
-                name || "Anonymous"
-              )}
-            </div>
+            <div className="text-xs truncate">{name || "Anonymous"}</div>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48 p-2">
