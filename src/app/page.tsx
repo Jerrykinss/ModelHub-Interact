@@ -24,6 +24,7 @@ export default function Home() {
     stop,
     setMessages,
     setInput,
+    addToolResult,
   } = useChat({
     onResponse: (response) => {
       if (response) {
@@ -33,6 +34,20 @@ export default function Home() {
     onError: (error) => {
       setLoadingSubmit(false);
       toast.error("An error occurred. Please try again.");
+    },
+    async onToolCall({ toolCall }) {
+      if (toolCall.toolName === "loadModel") {
+        console.log(toolCall);
+        if (toolCall.args) {
+          try {
+            setSelectedModel(toolCall.args.modelName);
+            return "Success";
+          } catch (error) {
+            console.error("Error:", error);
+            return "Failure";
+          }
+        }
+      }
     },
   });
   const [chatId, setChatId] = useState<string>("");
@@ -60,29 +75,6 @@ export default function Home() {
     }
   }, [chatId, isLoading, error]);
 
-  // useEffect(() => {
-  //   const fetchKey = async () => {
-  //     const apikey = localStorage.getItem("key");
-  //     if (apikey) {
-  //       await fetch("/api/chat", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           "x-api-key": apikey,
-  //         },
-  //         body: JSON.stringify({ messages }),
-  //       });
-  //     }
-  //   };
-
-  //   fetchKey();
-  //   window.addEventListener("storage", fetchKey);
-
-  //   return () => {
-  //     window.removeEventListener("storage", fetchKey);
-  //   };
-  // }, []);
-
   const addMessage = (Message: any) => {
     messages.push(Message);
     window.dispatchEvent(new Event("storage"));
@@ -95,22 +87,6 @@ export default function Home() {
     );
     return chats;
   };
-
-  useEffect(() => {
-    if (getLocalstorageChats().length < 2 && messages.length < 2) {
-      console.log("print messages");
-      addMessage({
-        role: "user",
-        content: "userMessage\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n",
-        id: chatId,
-      });
-      addMessage({
-        role: "assistant",
-        content: "responseMessage\n\n\n\n\n\n\n\n\\n\n\n\n\n\n\n\n\n",
-        id: chatId,
-      });
-    }
-  }, []);
 
   const onOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
@@ -136,6 +112,7 @@ export default function Home() {
           setMessages={setMessages}
           open={open}
           setOpen={setOpen}
+          addToolResult={addToolResult}
         />
         <DialogContent className="flex flex-col space-y-4">
           <DialogHeader className="space-y-2">

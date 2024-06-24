@@ -1,12 +1,20 @@
 import { Message } from "ai/react";
+import { ToolInvocation } from "ai";
 import React, { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { ChatProps } from "./chat";
-import Image from "next/image";
 import { INITIAL_QUESTIONS } from "@/utils/initial-questions";
 import { Button } from "../ui/button";
+
+interface ChatListProps {
+  messages: Message[];
+  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  isLoading: boolean;
+  loadingSubmit?: boolean;
+  formRef: React.RefObject<HTMLFormElement>;
+  addToolResult: (result: { toolCallId: string; result: any }) => void;
+}
 
 export default function ChatList({
   messages,
@@ -14,7 +22,8 @@ export default function ChatList({
   isLoading,
   loadingSubmit,
   formRef,
-}: ChatProps) {
+  addToolResult,
+}: ChatListProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const [name, setName] = React.useState<string>("");
   const [localStorageIsLoading, setLocalStorageIsLoading] =
@@ -159,6 +168,62 @@ export default function ChatList({
                         </span>
                       )}
                   </span>
+                  {message.toolInvocations?.map(
+                    (toolInvocation: ToolInvocation) => {
+                      const toolCallId = toolInvocation.toolCallId;
+
+                      // render confirmation tool (client-side tool with user interaction)
+                      if (toolInvocation.toolName === "askForConfirmation") {
+                        return (
+                          <div key={toolCallId} className="text-gray-500">
+                            {toolInvocation.args.message}
+                            <div className="flex gap-2">
+                              {"result" in toolInvocation ? (
+                                <b>{toolInvocation.result}</b>
+                              ) : (
+                                <>
+                                  <button
+                                    className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+                                    onClick={() =>
+                                      addToolResult({
+                                        toolCallId,
+                                        result: "Yes, confirmed.",
+                                      })
+                                    }
+                                  >
+                                    Yes
+                                  </button>
+                                  <button
+                                    className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700"
+                                    onClick={() =>
+                                      addToolResult({
+                                        toolCallId,
+                                        result: "No, denied",
+                                      })
+                                    }
+                                  >
+                                    No
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      // other tools:
+                      return "result" in toolInvocation ? (
+                        <div key={toolCallId} className="text-gray-500">
+                          Tool call {`${toolInvocation.toolName}: `}
+                          {toolInvocation.result}
+                        </div>
+                      ) : (
+                        <div key={toolCallId} className="text-gray-500">
+                          Calling {toolInvocation.toolName}...
+                        </div>
+                      );
+                    },
+                  )}
                 </div>
               )}
             </div>

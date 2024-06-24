@@ -26,6 +26,7 @@ export interface ChatProps {
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  addToolResult: (result: { toolCallId: string; result: any }) => void;
 }
 
 export function ChatLayout({
@@ -45,6 +46,7 @@ export function ChatLayout({
   setMessages,
   open,
   setOpen,
+  addToolResult,
 }: ChatProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isChatListCollapsed, setIsChatListCollapsed] = useState(false);
@@ -126,6 +128,7 @@ export function ChatLayout({
             error={error}
             stop={stop}
             formRef={formRef}
+            addToolResult={addToolResult}
           />
           <ChatBottombar
             setSelectedModel={setSelectedModel}
