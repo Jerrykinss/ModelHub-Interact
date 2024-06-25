@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import InstalledModelList from "./modellist-installed";
 import UninstalledModelList from "./modellist-uninstalled";
+import { Button } from "@/components/ui/button";
 
 interface ModelListProps {
   models: string[];
@@ -63,6 +64,7 @@ export default function ModelList({
             <UninstalledModelList
               models={filteredModels}
               installedModels={installedModels}
+              setInstalledModels={setInstalledModels}
             />
           </>
         ) : (

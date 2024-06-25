@@ -27,6 +27,8 @@ export interface ChatProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   addToolResult: (result: { toolCallId: string; result: any }) => void;
+  installedModels: string[];
+  setInstalledModels: (models: string[]) => void;
 }
 
 export function ChatLayout({
@@ -47,11 +49,13 @@ export function ChatLayout({
   open,
   setOpen,
   addToolResult,
+  installedModels,
+  setInstalledModels,
 }: ChatProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isChatListCollapsed, setIsChatListCollapsed] = useState(false);
   const [models, setModels] = React.useState<string[]>([]);
-  const [installedModels, setInstalledModels] = useState<string[]>([]);
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);

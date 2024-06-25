@@ -2,40 +2,37 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription, DialogClose
 } from "@/components/ui/dialog";
 
 interface UninstalledModelListProps {
   models: string[];
   installedModels: string[];
+  setInstalledModels: (models: string[]) => void;
 }
 
 export default function UninstalledModelList({
   models,
   installedModels,
+  setInstalledModels,
 }: UninstalledModelListProps) {
-  const [isInstallDialogOpen, setIsInstallDialogOpen] = useState(false);
-  const [modelToInstall, setModelToInstall] = useState<string | null>(null);
+  const [modelToInstall, setModelToInstall] = useState<string>("");
 
-  const handleInstallModel = async (modelName: string): Promise<void> => {
+  const handleInstallModel = async () => {
     try {
       const response = await fetch("/api/models", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ action: "install", modelName }),
+        body: JSON.stringify({ action: "install", modelName: modelToInstall }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to install model");
       }
+      setInstalledModels([...installedModels, modelToInstall]);
 
       const data = await response.json();
       console.log("Model installed successfully:", data.message);
@@ -44,22 +41,6 @@ export default function UninstalledModelList({
     }
   };
 
-  const openInstallDialog = (modelName: string) => {
-    setModelToInstall(modelName);
-    setIsInstallDialogOpen(true);
-  };
-
-  const closeInstallDialog = () => {
-    setModelToInstall(null);
-    setIsInstallDialogOpen(false);
-  };
-
-  const confirmInstallModel = async () => {
-    if (modelToInstall) {
-      await handleInstallModel(modelToInstall);
-      closeInstallDialog();
-    }
-  };
 
   return (
     <>
@@ -77,15 +58,15 @@ export default function UninstalledModelList({
                 </span>
               </div>
             </div>
-            <Dialog
-              open={isInstallDialogOpen}
-              onOpenChange={setIsInstallDialogOpen}
-            >
+            <Dialog>
               <DialogTrigger asChild>
                 <Button
                   variant="ghost"
                   className="flex justify-end items-center"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setModelToInstall(model);
+                  }}
                 >
                   <Download size={15} className="shrink-0" />
                 </Button>
@@ -97,12 +78,16 @@ export default function UninstalledModelList({
                     Install this model and its required files?
                   </DialogDescription>
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={closeInstallDialog}>
-                      Cancel
-                    </Button>
-                    <Button variant="secondary" onClick={confirmInstallModel}>
-                      Download
-                    </Button>
+                    <DialogClose asChild>
+                      <Button variant="outline">
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button variant="secondary" onClick={handleInstallModel}>
+                        Download
+                      </Button>
+                    </DialogClose>
                   </div>
                 </DialogHeader>
               </DialogContent>

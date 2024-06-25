@@ -40,7 +40,41 @@ export default function Home() {
         console.log(toolCall);
         if (toolCall.args) {
           try {
-            setSelectedModel(toolCall.args.modelName);
+            const modelName = toolCall.args.modelName;
+            if (!installedModels.includes(modelName)) {
+              console.log("Installing Model");
+              const response = await fetch("/api/models", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ action: "install", modelName }),
+              });
+        
+              if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to install model");
+              }
+        
+              const data = await response.json();
+              console.log("Model installed successfully:", data.message);
+            }
+
+            console.log("Loading Model");
+            const response = await fetch("/api/models", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ action: "run", modelName }),
+            });
+        
+            if (!response.ok) {
+              const error = await response.json();
+              throw new Error(`Error: ${error.message}`);
+            }
+
+            setSelectedModel(modelName);
             return "Success";
           } catch (error) {
             console.error("Error:", error);
@@ -56,10 +90,10 @@ export default function Home() {
   const env = process.env.NODE_ENV;
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const [installedModels, setInstalledModels] = useState<string[]>([]);
 
   useEffect(() => {
     if (messages.length < 1) {
-      // Generate a random id for the chat
       console.log("Generating chat id");
       const id = uuidv4();
       setChatId(id);
@@ -68,25 +102,10 @@ export default function Home() {
 
   React.useEffect(() => {
     if (!isLoading && !error && chatId && messages.length > 0) {
-      // Save messages to local storage
       localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
-      // Trigger the storage event to update the sidebar component
       window.dispatchEvent(new Event("storage"));
     }
   }, [chatId, isLoading, error]);
-
-  const addMessage = (Message: any) => {
-    messages.push(Message);
-    window.dispatchEvent(new Event("storage"));
-    setMessages([...messages]);
-  };
-
-  const getLocalstorageChats = (): String[] => {
-    const chats = Object.keys(localStorage).filter((key) =>
-      key.startsWith("chat_"),
-    );
-    return chats;
-  };
 
   const onOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
@@ -113,6 +132,8 @@ export default function Home() {
           open={open}
           setOpen={setOpen}
           addToolResult={addToolResult}
+          installedModels={installedModels}
+          setInstalledModels={setInstalledModels}
         />
         <DialogContent className="flex flex-col space-y-4">
           <DialogHeader className="space-y-2">

@@ -22,12 +22,12 @@ export async function POST(req: Request) {
       },
       loadModel: {
         description:
-          "Loads a model to use. Always ask for confirmation before using this tool.",
+          "Loads a model to use. Always ask for confirmation before using this tool using the askForConfirmation tool.",
         parameters: z.object({ modelName: z.string() }),
       },
       makeModelPrediction: {
         description:
-          "Make a prediction. You must have used loadModel first in order to use this tool. Always ask for confirmation before using this tool.",
+          "Make a prediction. You must have used loadModel first in order to use this tool. Always ask for confirmation before using this tool using the askForConfirmation tool.",
         parameters: z.object({}),
       },
     },

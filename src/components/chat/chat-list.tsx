@@ -175,15 +175,16 @@ export default function ChatList({
                       // render confirmation tool (client-side tool with user interaction)
                       if (toolInvocation.toolName === "askForConfirmation") {
                         return (
-                          <div key={toolCallId} className="text-gray-500">
+                          <div key={toolCallId} className="text-muted-foreground">
                             {toolInvocation.args.message}
-                            <div className="flex gap-2">
+                            <div className="flex flex-col gap-2 mt-4"> {/* Added flex-col and mt-4 for spacing */}
                               {"result" in toolInvocation ? (
                                 <b>{toolInvocation.result}</b>
                               ) : (
-                                <>
-                                  <button
-                                    className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+                                <div className="flex gap-2">
+                                  <Button
+                                    className="px-4 py-2 font-bold"
+                                    variant="secondary"
                                     onClick={() =>
                                       addToolResult({
                                         toolCallId,
@@ -192,19 +193,20 @@ export default function ChatList({
                                     }
                                   >
                                     Yes
-                                  </button>
-                                  <button
-                                    className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700"
+                                  </Button>
+                                  <Button
+                                    className="px-4 py-2 font-bold"
+                                    variant="outline"
                                     onClick={() =>
                                       addToolResult({
                                         toolCallId,
-                                        result: "No, denied",
+                                        result: "No, denied.",
                                       })
                                     }
                                   >
                                     No
-                                  </button>
-                                </>
+                                  </Button>
+                                </div>
                               )}
                             </div>
                           </div>
@@ -213,12 +215,12 @@ export default function ChatList({
 
                       // other tools:
                       return "result" in toolInvocation ? (
-                        <div key={toolCallId} className="text-gray-500">
+                        <div key={toolCallId} className="text-muted-foreground">
                           Tool call {`${toolInvocation.toolName}: `}
                           {toolInvocation.result}
                         </div>
                       ) : (
-                        <div key={toolCallId} className="text-gray-500">
+                        <div key={toolCallId} className="text-muted-foreground">
                           Calling {toolInvocation.toolName}...
                         </div>
                       );

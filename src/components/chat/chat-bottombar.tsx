@@ -13,6 +13,7 @@ export default function ChatBottombar({
   handleSubmit,
   isLoading,
   stop,
+  setInput, // Add this prop to handle clearing the input
 }: ChatProps) {
   const [attachedFiles, setAttachedFiles] = useState([]);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
@@ -27,6 +28,7 @@ export default function ChatBottombar({
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
+      setInput(''); // Clear the input after submit
     }
   };
 
@@ -43,6 +45,11 @@ export default function ChatBottombar({
 
   const handleButtonClick = () => {
     document.getElementById("fileInput")?.click();
+  };
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    handleSubmit(e);
+    setInput(''); // Clear the input after submit
   };
 
   return (
@@ -69,7 +76,7 @@ export default function ChatBottombar({
           </div>
         )}
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleFormSubmit}
           className="w-full items-center flex relative gap-2"
         >
           <div className="absolute left-3 z-10">
@@ -94,6 +101,7 @@ export default function ChatBottombar({
             ref={inputRef}
             onKeyDown={handleKeyPress}
             onChange={handleInputChange}
+            value={input} // Bind the input value
             name="message"
             placeholder="Enter your prompt here"
             className="max-h-48 px-16 bg-accent py-[22px] text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-full rounded-md flex items-center h-16 resize-none overflow-w-hidden overflow-y-auto"

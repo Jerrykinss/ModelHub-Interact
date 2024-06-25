@@ -51,28 +51,12 @@ export async function DELETE(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const { action, modelName, containerId } = await req.json();
 
-  if (!modelName || !action) {
-    return NextResponse.json(
-      { message: 'Model name and action are required' },
-      { status: 400 }
-    );
-  }
-
   try {
     if (action === 'run') {
-      const process = runModel(modelName);
-      return NextResponse.json({
-        message: 'Model is running',
-        stdout: process.stdout,
-        stderr: process.stderr,
-      });
+      const result = await runModel(modelName);
+      console.log(result);
+      return NextResponse.json({ result }, { status: 200 });
     } else if (action === 'stop') {
-      if (!containerId) {
-        return NextResponse.json(
-          { message: 'Container ID is required to stop the model' },
-          { status: 400 }
-        );
-      }
       stopModel(containerId);
       return NextResponse.json({ message: 'Model stopped successfully' });
     } else if (action === 'install') {
@@ -86,6 +70,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Invalid action' }, { status: 400 });
     }
   } catch (error) {
+    console.log('Error:', error);
     return NextResponse.json(
       { message: `Failed to ${action} model`, error },
       { status: 500 }

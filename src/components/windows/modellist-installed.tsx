@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 
 interface InstalledModelListProps {
@@ -30,13 +31,12 @@ export default function InstalledModelList({
   selectedModel,
   setSelectedModel,
 }: InstalledModelListProps) {
-  const [isLoadDialogOpen, setIsLoadDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [modelToDelete, setModelToDelete] = useState<string | null>(null);
+  const [modelToDelete, setModelToDelete] = useState<string>("");
+  const [modelToLoad, setModelToLoad] = useState<string>("");
 
-  const handleDeleteModel = async (modelName: string) => {
+  const handleDeleteModel = async () => {
     try {
-      const response = await fetch(`/api/models?modelName=${modelName}`, {
+      const response = await fetch(`/api/models?modelName=${modelToDelete}`, {
         method: "DELETE",
       });
       if (!response.ok) {
@@ -46,7 +46,7 @@ export default function InstalledModelList({
       const data = await response.json();
       console.log("Model deleted successfully:", data.message);
       setInstalledModels(
-        installedModels.filter((model) => model !== modelName),
+        installedModels.filter((model) => model !== modelToDelete),
       );
       return data;
     } catch (error) {
@@ -55,13 +55,13 @@ export default function InstalledModelList({
     }
   };
 
-  const handleLoadModel = async (modelName: string) => {
+  const handleLoadModel = async () => {
     const response = await fetch("/api/models", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ action: "run", modelName }),
+      body: JSON.stringify({ action: "run", modelName: modelToLoad }),
     });
 
     if (!response.ok) {
@@ -69,43 +69,11 @@ export default function InstalledModelList({
       throw new Error(`Error: ${error.message}`);
     }
 
+    setSelectedModel(modelToLoad);
     const data = await response.json();
     return data;
   };
 
-  const openDeleteDialog = (modelName: string) => {
-    setModelToDelete(modelName);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const closeDeleteDialog = () => {
-    setModelToDelete(null);
-    setIsDeleteDialogOpen(false);
-  };
-
-  const confirmDeleteModel = async () => {
-    if (modelToDelete) {
-      await handleDeleteModel(modelToDelete);
-      closeDeleteDialog();
-    }
-  };
-
-  const openLoadDialog = (modelName: string) => {
-    setSelectedModel(modelName);
-    setIsLoadDialogOpen(true);
-  };
-
-  const closeLoadDialog = () => {
-    setSelectedModel("");
-    setIsLoadDialogOpen(false);
-  };
-
-  const confirmLoadModel = async () => {
-    if (selectedModel) {
-      await handleLoadModel(selectedModel);
-      closeLoadDialog();
-    }
-  };
 
   return (
     <>
@@ -130,15 +98,15 @@ export default function InstalledModelList({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <Dialog
-                open={isLoadDialogOpen}
-                onOpenChange={setIsLoadDialogOpen}
-              >
+              <Dialog>
                 <DialogTrigger asChild>
                   <Button
                     variant="ghost"
                     className="w-full flex gap-2 justify-start items-center"
-                    onClick={() => openLoadDialog(model)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModelToLoad(model);
+                    }}
                   >
                     <ArrowUpFromLine className="shrink-0 w-4 h-4" />
                     Load model
@@ -151,25 +119,29 @@ export default function InstalledModelList({
                       Load this model to use?
                     </DialogDescription>
                     <div className="flex justify-end gap-2">
-                      <Button variant="outline" onClick={closeLoadDialog}>
+                    <DialogClose asChild>
+                      <Button variant="outline">
                         Cancel
                       </Button>
-                      <Button variant="secondary" onClick={confirmLoadModel}>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button variant="secondary" onClick={handleLoadModel}>
                         Load
                       </Button>
+                    </DialogClose>
                     </div>
                   </DialogHeader>
                 </DialogContent>
               </Dialog>
-              <Dialog
-                open={isDeleteDialogOpen}
-                onOpenChange={setIsDeleteDialogOpen}
-              >
+              <Dialog>
                 <DialogTrigger asChild>
                   <Button
                     variant="ghost"
                     className="w-full flex gap-2 hover:text-red-500 text-red-500 justify-start items-center"
-                    onClick={() => openDeleteDialog(model)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModelToDelete(model);
+                    }}
                   >
                     <Trash2 className="shrink-0 w-4 h-4" />
                     Uninstall model
@@ -182,12 +154,16 @@ export default function InstalledModelList({
                       Are you sure you want to uninstall this model?
                     </DialogDescription>
                     <div className="flex justify-end gap-2">
-                      <Button variant="outline" onClick={closeDeleteDialog}>
+                    <DialogClose asChild>
+                      <Button variant="outline">
                         Cancel
                       </Button>
-                      <Button variant="secondary" onClick={confirmDeleteModel}>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button variant="secondary" onClick={handleDeleteModel}>
                         Uninstall
                       </Button>
+                    </DialogClose>
                     </div>
                   </DialogHeader>
                 </DialogContent>
