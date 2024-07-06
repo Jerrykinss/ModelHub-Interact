@@ -1,20 +1,48 @@
 import axios from "axios";
 import fs from "fs";
 import path from "path";
-import { promisify } from "util";
 import { exec, execSync } from "child_process";
 
-const mkdir = promisify(fs.mkdir);
-const writeFile = promisify(fs.writeFile);
+export const getModelIndex = async (): Promise<any[]> => {
+  const indexUrl = "https://raw.githubusercontent.com/modelhub-ai/modelhub/master/models.json";
+  try {
+      const response = await axios.get(indexUrl);
+      return response.data;
+  } catch (error) {
+      console.error(`Error fetching model index:`, error);
+      throw error;
+  }
+};
 
 export const listModels = async () => {
   const modelIndex = (await getModelIndex()).sort((a, b) =>
     a.name.localeCompare(b.name),
   );
-  const modelList: { [key: string]: string } = {};
-  modelIndex.forEach((element) => {
-    modelList[element.name] = element.task_extended;
-  });
+  const modelList: { [key: string]: { description: string; input: string } } = {};
+
+  for (const element of modelIndex.slice(0, 5)) {
+    const github = element.github;
+    const githubUrlSplit = github.split("github.com");
+    const repoParts = githubUrlSplit[1].trim().split("/");
+
+    let url = `${githubUrlSplit[0]}api.github.com/repos/${repoParts[1]}/${repoParts[2]}/contents/contrib_src/model/config.json`;
+    try {
+      const response = await fetch(url);
+      const responseData = await response.json();
+
+      const content = atob(responseData.content);
+      const configData = JSON.parse(content);
+
+      modelList[element.name] = {
+        description: configData["model"]["description"],
+        input: JSON.stringify(configData["model"]["io"]["input"]),
+      };
+    } catch (error) {
+      console.log(error);
+      modelList[element.name] = { description: "", input: "" };
+    }
+  }
+
   return modelList;
 };
 
@@ -28,44 +56,6 @@ export const getInstalledModels = () => {
     .filter((file) =>
       fs.statSync(path.join(modelDirectory, file)).isDirectory(),
     );
-};
-
-export const deleteModel = (modelName: string) => {
-  const modelDirectory = process.env.MODEL_DIRECTORY;
-  if (!modelDirectory) {
-    throw new Error("MODEL_DIRECTORY environment variable is not set");
-  }
-  const modelPath = path.join(modelDirectory, modelName);
-  if (fs.existsSync(modelPath)) {
-    fs.rmdirSync(modelPath, { recursive: true });
-    return true;
-  }
-  return false;
-};
-
-export const runModel = (modelName: string) => {
-  const modelDirectory = process.env.MODEL_DIRECTORY;
-  if (!modelDirectory) {
-    throw new Error("MODEL_DIRECTORY environment variable is not set");
-  }
-
-  const port = "-p 80:80 -p 8080:8080";
-  const modelPath = path.join(modelDirectory, modelName);
-  const contribSrcPath = path.resolve(modelPath, "contrib_src");
-  const contribSrc = `-v "${contribSrcPath.replace(/\\/g, "/")}:/contrib_src"`;
-  const dockerId = getInitValue(modelName, "docker_id", modelDirectory);
-
-  const command = `docker run --rm ${port} ${contribSrc} ${dockerId}`;
-
-  return new Promise((resolve, reject) => {
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        reject(stderr);
-      } else {
-        resolve(stdout);
-      }
-    });
-  });
 };
 
 export const stopModel = (containerId: string) => {
@@ -109,17 +99,6 @@ export const downloadGithubDir = async (srcDirUrl: string, branchId: string, des
       const nextDestDir = path.join(destDir, element.name);
       await downloadGithubDir(nextSrcDirUrl, branchId, nextDestDir);
     }
-  }
-};
-
-export const getModelIndex = async (): Promise<any[]> => {
-  const indexUrl = "https://raw.githubusercontent.com/modelhub-ai/modelhub/master/models.json";
-  try {
-      const response = await axios.get(indexUrl);
-      return response.data;
-  } catch (error) {
-      console.error(`Error fetching model index:`, error);
-      throw error;
   }
 };
 
@@ -190,4 +169,42 @@ export const downloadModel = async (modelName: string, modelDir: string): Promis
       console.error(`Error downloading model ${modelName}:`, error);
       throw error; // Re-throw the error or handle it as needed
   }
+};
+
+export const deleteModel = (modelName: string) => {
+  const modelDirectory = process.env.MODEL_DIRECTORY;
+  if (!modelDirectory) {
+    throw new Error("MODEL_DIRECTORY environment variable is not set");
+  }
+  const modelPath = path.join(modelDirectory, modelName);
+  if (fs.existsSync(modelPath)) {
+    fs.rmdirSync(modelPath, { recursive: true });
+    return true;
+  }
+  return false;
+};
+
+export const runModel = (modelName: string) => {
+  const modelDirectory = process.env.MODEL_DIRECTORY;
+  if (!modelDirectory) {
+    throw new Error("MODEL_DIRECTORY environment variable is not set");
+  }
+
+  const port = "-p 80:80 -p 8080:8080";
+  const modelPath = path.join(modelDirectory, modelName);
+  const contribSrcPath = path.resolve(modelPath, "contrib_src");
+  const contribSrc = `-v "${contribSrcPath.replace(/\\/g, "/")}:/contrib_src"`;
+  const dockerId = getInitValue(modelName, "docker_id", modelDirectory);
+
+  const command = `docker run --rm ${port} ${contribSrc} ${dockerId}`;
+
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        reject(stderr);
+      } else {
+        resolve(stdout);
+      }
+    });
+  });
 };

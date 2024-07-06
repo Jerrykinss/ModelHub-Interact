@@ -7,7 +7,7 @@ import { ChatRequestOptions } from "ai";
 import Sidebar from "../sidebar/sidebar";
 
 export interface ChatProps {
-  chatId?: string;
+  chatId: string;
   selectedModel: string;
   setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
   messages: Message[];

@@ -13,9 +13,9 @@ export default function ChatBottombar({
   handleSubmit,
   isLoading,
   stop,
-  setInput, // Add this prop to handle clearing the input
+  setInput,
 }: ChatProps) {
-  const [attachedFiles, setAttachedFiles] = useState([]);
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -27,8 +27,7 @@ export default function ChatBottombar({
   const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
-      setInput(''); // Clear the input after submit
+      handleFormSubmit(e as unknown as React.FormEvent<HTMLFormElement>);
     }
   };
 
@@ -47,9 +46,38 @@ export default function ChatBottombar({
     document.getElementById("fileInput")?.click();
   };
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const uploadFiles = async () => {
+    const formData = new FormData();
+    attachedFiles.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json();
+    return data.filePaths;
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  
+    let updatedInput = input;
+  
+    if (attachedFiles.length > 0) {
+      const filePaths = await uploadFiles();
+      updatedInput += `\nAttached files:\n${filePaths.join('\n')}`;
+    }
+  
+    setInput(updatedInput);
+  
     handleSubmit(e);
-    setInput(''); // Clear the input after submit
+  
+    // Clear the input and attached files after submission
+    setInput('');
+    setAttachedFiles([]);
   };
 
   return (
@@ -101,7 +129,7 @@ export default function ChatBottombar({
             ref={inputRef}
             onKeyDown={handleKeyPress}
             onChange={handleInputChange}
-            value={input} // Bind the input value
+            value={input}
             name="message"
             placeholder="Enter your prompt here"
             className="max-h-48 px-16 bg-accent py-[22px] text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 w-full rounded-md flex items-center h-16 resize-none overflow-w-hidden overflow-y-auto"

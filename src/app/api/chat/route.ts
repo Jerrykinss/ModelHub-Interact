@@ -3,15 +3,25 @@ import { convertToCoreMessages, streamText } from "ai";
 import { listModels } from "../services/modelService";
 import { z } from "zod";
 
+// Initialize a global variable to store the models
+let cachedModels = null;
+
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
+  console.log(messages);
 
-  const models = await listModels();
+  // Check if models are already loaded
+  if (!cachedModels) {
+    cachedModels = await listModels();
+  }
+
+  console.log(`You are ModelHub, an LLM chatbot that has been provided with tools that allow you to utilize other machine learning models. The following are your provided models and their descriptions:\n${JSON.stringify(cachedModels, null, 2)}`);
+  
   const result = await streamText({
     model: openai("gpt-4o"),
-    system: `You are ModelHub, an LLM chatbot that has been provided with tools that allow you to utilize other machine learning models. The following are your provided models and their descriptions:\n${JSON.stringify(models, null, 2)}`,
+    system: `You are ModelHub, an LLM chatbot that has been provided with tools that allow you to utilize other machine learning models. The following are your provided models and their descriptions:\n${JSON.stringify(cachedModels, null, 2)}`,
     messages: convertToCoreMessages(messages),
     tools: {
       askForConfirmation: {

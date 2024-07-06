@@ -82,6 +82,39 @@ export default function Home() {
           }
         }
       }
+      if (toolCall.toolName === "predict") {
+        console.log(toolCall);
+        if (toolCall.args) {
+          if (!selectedModel) {
+            return "No models loaded";
+          }
+          try {
+            const modelName = toolCall.args.modelName;
+            if (!installedModels.includes(modelName)) {
+              console.log("Installing Model");
+              const response = await fetch("/api/models", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ action: "install", modelName }),
+              });
+        
+              if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Failed to install model");
+              }
+        
+              const data = await response.json();
+              console.log("Model installed successfully:", data.message);
+            }
+            return "Success";
+          } catch (error) {
+            console.error("Error:", error);
+            return "Failure";
+          }
+        }
+      }
     },
   });
   const [chatId, setChatId] = useState<string>("");
