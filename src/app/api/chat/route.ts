@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     cachedModels = await listModels();
   }
 
-  console.log(`You are ModelHub, an LLM chatbot that has been provided with tools that allow you to utilize other machine learning models. The following are your provided models and their descriptions:\n${JSON.stringify(cachedModels, null, 2)}`);
+  // console.log(`You are ModelHub, an LLM chatbot that has been provided with tools that allow you to utilize other machine learning models. The following are your provided models and their descriptions:\n${JSON.stringify(cachedModels, null, 2)}`);
   
   const result = await streamText({
     model: openai("gpt-4o"),

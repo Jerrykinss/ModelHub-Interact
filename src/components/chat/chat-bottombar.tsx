@@ -1,11 +1,22 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { ChatProps } from "./chat";
+import React, { useEffect, useState, useRef } from "react";
 import { Button } from "../ui/button";
 import TextareaAutosize from "react-textarea-autosize";
 import { StopIcon } from "@radix-ui/react-icons";
 import { Mic, SendHorizonal, Paperclip, X } from "lucide-react";
+
+export interface ChatBottombarProps {
+  input: string;
+  handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleSubmit: (
+    e: React.FormEvent<HTMLFormElement>,
+    chatRequestOptions?: ChatRequestOptions,
+  ) => void;
+  isLoading: boolean;
+  stop: () => void;
+  setInput: React.Dispatch<React.SetStateAction<string>>;
+}
 
 export default function ChatBottombar({
   input,
@@ -14,9 +25,10 @@ export default function ChatBottombar({
   isLoading,
   stop,
   setInput,
-}: ChatProps) {
+}: ChatBottombarProps) {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
+  const updatedInputRef = useRef('');
 
   useEffect(() => {
     if (inputRef.current) {
@@ -61,6 +73,16 @@ export default function ChatBottombar({
     return data.filePaths;
   };
 
+  useEffect(() => {
+    if (updatedInputRef.current !== '') {
+      handleSubmit({ preventDefault: () => {} } as React.FormEvent<HTMLFormElement>);
+      // Clear the input and attached files after submission
+      setInput('');
+      setAttachedFiles([]);
+      updatedInputRef.current = '';
+    }
+  }, [input]);
+  
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   
@@ -69,15 +91,18 @@ export default function ChatBottombar({
     if (attachedFiles.length > 0) {
       const filePaths = await uploadFiles();
       updatedInput += `\nAttached files:\n${filePaths.join('\n')}`;
+      console.log(updatedInput);
+  
+      // Store the updated input in the ref
+      updatedInputRef.current = updatedInput;
+      setInput(updatedInput);
+    } else {
+      handleSubmit(e);
+  
+      // Clear the input and attached files after submission
+      setInput('');
+      setAttachedFiles([]);
     }
-  
-    setInput(updatedInput);
-  
-    handleSubmit(e);
-  
-    // Clear the input and attached files after submission
-    setInput('');
-    setAttachedFiles([]);
   };
 
   return (
