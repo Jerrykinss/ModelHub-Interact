@@ -1,10 +1,8 @@
 import { openai } from "@ai-sdk/openai";
 import { convertToCoreMessages, streamText } from "ai";
-import { listModels } from "../services/modelService";
 import { z } from "zod";
 
 // Initialize a global variable to store the models
-let cachedModels = null;
 
 export const maxDuration = 30;
 
@@ -12,16 +10,20 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
   console.log(messages);
 
-  // Check if models are already loaded
-  if (!cachedModels) {
-    cachedModels = await listModels();
+  const response = await fetch("/api/models");
+  let modelInfo;
+  if (response.ok) {
+    modelInfo = await response.json();
+  } else {
+    modelInfo = {"Models": "Error fetching models"};
+    console.error("Failed to fetch models");
   }
 
-  // console.log(`You are ModelHub, an LLM chatbot that has been provided with tools that allow you to utilize other machine learning models. The following are your provided models and their descriptions:\n${JSON.stringify(cachedModels, null, 2)}`);
+  // console.log(`You are ModelHub, an LLM chatbot that has been provided with tools that allow you to utilize other machine learning models. The following are your provided models and their descriptions:\n${JSON.stringify(modelInfo, null, 2)}`);
   
   const result = await streamText({
     model: openai("gpt-4o"),
-    system: `You are ModelHub, an LLM chatbot that has been provided with tools that allow you to utilize other machine learning models. The following are your provided models and their descriptions:\n${JSON.stringify(cachedModels, null, 2)}`,
+    system: `You are ModelHub, an LLM chatbot that has been provided with tools that allow you to utilize other machine learning models. The following are your provided models and their descriptions:\n${JSON.stringify(modelInfo, null, 2)}`,
     messages: convertToCoreMessages(messages),
     tools: {
       askForConfirmation: {

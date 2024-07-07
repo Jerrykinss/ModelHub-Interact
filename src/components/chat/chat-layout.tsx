@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import ChatTopbar from "./chat-topbar";
 import ChatList from "./chat-list";
 import ChatBottombar from "./chat-bottombar";
@@ -64,13 +64,10 @@ export function ChatLayout({
   useEffect(() => {
     const fetchModels = async () => {
       try {
-        const response = await fetch("/api/models");
-        if (response.ok) {
-          const data = await response.json();
-          const retrievedModels = Object.keys(data["models"]);
-          const retrievedInstalledModels = data["installedModels"];
-          setModels(retrievedModels);
-          setInstalledModels(retrievedInstalledModels);
+        const modelsResponse = await fetch("/api/models");
+        if (modelsResponse.ok) {
+          const modelInfo = await modelsResponse.json();
+          setModels(Object.keys(modelInfo));
         } else {
           console.error("Failed to fetch models");
         }
@@ -81,6 +78,25 @@ export function ChatLayout({
 
     fetchModels();
   }, []);
+
+  useEffect(() => {
+    const fetchInstalledModels = async () => {
+      try {
+        const installedResponse = await fetch("/api/installed-models");
+        if (installedResponse.ok) {
+          const installedModels = await installedResponse.json();
+          setInstalledModels(installedModels);
+        } else {
+          console.error("Failed to fetch models");
+        }
+      } catch (error) {
+        console.error("Error fetching installed models");
+      }
+    };
+
+    fetchInstalledModels();
+  }, []);
+
 
   return (
     <div className="relative flex h-full w-full">

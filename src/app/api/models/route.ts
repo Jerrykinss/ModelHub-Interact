@@ -1,48 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {
-  listModels,
-  getInstalledModels,
-  deleteModel,
   runModel,
   stopModel,
-  downloadModel
 } from '../services/modelService';
+import fs from 'fs';
 
 export async function GET(req: NextRequest) {
   try {
-    const models = await listModels();
-    const installedModels = getInstalledModels();
-    return NextResponse.json({ models, installedModels });
+    const filePath = './public/model-data.json';
+    const jsonData = fs.readFileSync(filePath, 'utf8');
+    let modelInfo = JSON.parse(jsonData);
+    return NextResponse.json(modelInfo);
   } catch (error) {
     console.error('Error fetching models:', error);
     return NextResponse.json(
-      { message: 'Failed to fetch model index', error },
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const modelName = searchParams.get('modelName');
-
-  if (!modelName) {
-    return NextResponse.json(
-      { message: 'Model name is required' },
-      { status: 400 }
-    );
-  }
-
-  try {
-    const success = deleteModel(modelName);
-    if (success) {
-      return NextResponse.json({ message: 'Model deleted successfully' });
-    } else {
-      return NextResponse.json({ message: 'Model not found' }, { status: 404 });
-    }
-  } catch (error) {
-    return NextResponse.json(
-      { message: 'Failed to delete model', error },
+      { message: 'Failed to fetch models', error },
       { status: 500 }
     );
   }
@@ -59,13 +31,6 @@ export async function POST(req: NextRequest) {
     } else if (action === 'stop') {
       stopModel(containerId);
       return NextResponse.json({ message: 'Model stopped successfully' });
-    } else if (action === 'install') {
-      const modelDirectory = process.env.MODEL_DIRECTORY;
-      if (!modelDirectory) {
-        throw new Error('MODEL_DIRECTORY environment variable is not set');
-      }
-      await downloadModel(modelName, modelDirectory);
-      return NextResponse.json({ message: 'Model installed successfully' });
     } else {
       return NextResponse.json({ message: 'Invalid action' }, { status: 400 });
     }

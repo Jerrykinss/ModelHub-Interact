@@ -20,7 +20,7 @@ export default function UninstalledModelList({
 
   const handleInstallModel = async () => {
     try {
-      const response = await fetch("/api/models", {
+      const response = await fetch("/api/installed-models", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

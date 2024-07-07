@@ -1,9 +1,8 @@
 const fs = require('fs');
-const path = require('path');
 const axios = require('axios');
 
 console.log('Script started');
-const filePath = path.resolve(__dirname, '../public/model-data.json');
+const filePath = './public/model-data.json';
 
 // Function to get model index
 const getModelIndex = async () => {
@@ -32,7 +31,7 @@ const getModelData = async (model) => {
     const content = Buffer.from(responseData.content, 'base64').toString('utf8');
     const configData = JSON.parse(content);
 
-    return [configData["model"]["description"], JSON.stringify(configData["model"]["io"]["input"]).replace(/"/g, "'")];
+    return [configData["model"]["description"], configData["model"]["io"]["input"]];
   } catch (error) {
     console.log(error);
     return ["", ""];
@@ -55,7 +54,6 @@ const updateModelData = async () => {
             inputFormat
           };
         }
-        console.log(data);
       }
 
       // Write the updated data back to the file

@@ -38,82 +38,11 @@ export default function Home() {
     async onToolCall({ toolCall }) {
       if (toolCall.toolName === "loadModel") {
         console.log(toolCall);
-        if (toolCall.args) {
-          try {
-            const modelName = toolCall.args.modelName;
-            if (!installedModels.includes(modelName)) {
-              console.log("Installing Model");
-              const response = await fetch("/api/models", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ action: "install", modelName }),
-              });
-        
-              if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Failed to install model");
-              }
-        
-              const data = await response.json();
-              console.log("Model installed successfully:", data.message);
-            }
-
-            console.log("Loading Model");
-            const response = await fetch("/api/models", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ action: "run", modelName }),
-            });
-        
-            if (!response.ok) {
-              const error = await response.json();
-              throw new Error(`Error: ${error.message}`);
-            }
-
-            setSelectedModel(modelName);
-            return "Success";
-          } catch (error) {
-            console.error("Error:", error);
-            return "Failure";
-          }
-        }
+        loadModels(toolCall);
       }
       if (toolCall.toolName === "predict") {
         console.log(toolCall);
-        if (toolCall.args) {
-          if (!selectedModel) {
-            return "No models loaded";
-          }
-          try {
-            const modelName = toolCall.args.modelName;
-            if (!installedModels.includes(modelName)) {
-              console.log("Installing Model");
-              const response = await fetch("/api/models", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ action: "install", modelName }),
-              });
-        
-              if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Failed to install model");
-              }
-        
-              const data = await response.json();
-              console.log("Model installed successfully:", data.message);
-            }
-            return "Success";
-          } catch (error) {
-            console.error("Error:", error);
-            return "Failure";
-          }
-        }
+        predict(toolCall);
       }
     },
   });
@@ -143,6 +72,85 @@ export default function Home() {
   const onOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
   };
+
+  const loadModels = async (toolCall: any) => {
+    if (toolCall.args) {
+      try {
+        const modelName = toolCall.args.modelName;
+        if (!installedModels.includes(modelName)) {
+          console.log("Installing Model");
+          const response = await fetch("/api/models", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ action: "install", modelName }),
+          });
+    
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to install model");
+          }
+    
+          const data = await response.json();
+          console.log("Model installed successfully:", data.message);
+        }
+
+        console.log("Loading Model");
+        const response = await fetch("/api/models", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ action: "run", modelName }),
+        });
+    
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(`Error: ${error.message}`);
+        }
+
+        setSelectedModel(modelName);
+        return "Success";
+      } catch (error) {
+        console.error("Error:", error);
+        return "Failure";
+      }
+    }
+  }
+
+  const predict = async (toolCall: any) => {
+    if (toolCall.args) {
+      if (!selectedModel) {
+        return "No models loaded";
+      }
+      try {
+        const modelName = toolCall.args.modelName;
+        if (!installedModels.includes(modelName)) {
+          console.log("Installing Model");
+          const response = await fetch("/api/models", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ action: "install", modelName }),
+          });
+    
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to install model");
+          }
+    
+          const data = await response.json();
+          console.log("Model installed successfully:", data.message);
+        }
+        return "Success";
+      } catch (error) {
+        console.error("Error:", error);
+        return "Failure";
+      }
+    }
+  }
 
   return (
     <main className="flex h-[calc(100dvh)] flex-col items-center ">

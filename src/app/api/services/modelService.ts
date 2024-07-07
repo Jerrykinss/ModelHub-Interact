@@ -14,38 +14,6 @@ export const getModelIndex = async (): Promise<any[]> => {
   }
 };
 
-export const listModels = async () => {
-  const modelIndex = (await getModelIndex()).sort((a, b) =>
-    a.name.localeCompare(b.name),
-  );
-  const modelList: { [key: string]: { description: string; input: string } } = {};
-
-  for (const element of modelIndex.slice(0, 5)) {
-    const github = element.github;
-    const githubUrlSplit = github.split("github.com");
-    const repoParts = githubUrlSplit[1].trim().split("/");
-
-    let url = `${githubUrlSplit[0]}api.github.com/repos/${repoParts[1]}/${repoParts[2]}/contents/contrib_src/model/config.json`;
-    try {
-      const response = await fetch(url);
-      const responseData = await response.json();
-
-      const content = atob(responseData.content);
-      const configData = JSON.parse(content);
-
-      modelList[element.name] = {
-        description: configData["model"]["description"],
-        input: JSON.stringify(configData["model"]["io"]["input"]),
-      };
-    } catch (error) {
-      console.log(error);
-      modelList[element.name] = { description: "", input: "" };
-    }
-  }
-
-  return modelList;
-};
-
 export const getInstalledModels = () => {
   const modelDirectory = process.env.MODEL_DIRECTORY;
   if (!modelDirectory) {
@@ -153,7 +121,7 @@ export const downloadExternalFiles = async (externalFiles: ExternalFile[], model
   }
 };
 
-export const downloadModel = async (modelName: string, modelDir: string): Promise<void> => {
+export const installModel = async (modelName: string, modelDir: string): Promise<void> => {
   try {
       const destDir = path.join(modelDir, modelName);
       const modelInfo = await getModelInfoFromIndex(modelName);

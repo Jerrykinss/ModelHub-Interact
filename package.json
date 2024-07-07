@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "check-data": "node scripts/update-model-data.js",
+    "predev": "npm run check-data",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

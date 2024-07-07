@@ -36,7 +36,7 @@ export default function InstalledModelList({
 
   const handleDeleteModel = async () => {
     try {
-      const response = await fetch(`/api/models?modelName=${modelToDelete}`, {
+      const response = await fetch(`/api/installed-models?modelName=${modelToDelete}`, {
         method: "DELETE",
       });
       if (!response.ok) {
