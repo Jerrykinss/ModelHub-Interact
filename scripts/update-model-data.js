@@ -31,7 +31,7 @@ const getModelData = async (model) => {
     const content = Buffer.from(responseData.content, 'base64').toString('utf8');
     const configData = JSON.parse(content);
 
-    return [configData["model"]["description"], configData["model"]["io"]["input"]];
+    return configData;
   } catch (error) {
     console.log(error);
     return ["", ""];
@@ -48,10 +48,9 @@ const updateModelData = async () => {
       const models = await getModelIndex();
       for (const model of models) {
         if (!data.hasOwnProperty(model.name)) {
-          const [description, inputFormat] = await getModelData(model);
+          const configData = await getModelData(model);
           data[model.name] = {
-            description,
-            inputFormat
+            configData
           };
         }
       }

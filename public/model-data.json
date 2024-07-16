@@ -1,937 +1,2231 @@
 {
   "alexnet": {
-    "description": "AlexNet is the name of a convolutional neural network for classification, which competed in the ImageNet Large Scale Visual Recognition Challenge in 2012.",
-    "inputFormat": {
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 4
-        },
-        {
-          "min": 32
-        },
-        {
-          "min": 32
+    "configData": {
+      "id": "6c7d087b-ad67-4e36-8210-28b445d4d11b",
+      "meta": {
+        "name": "alexnet",
+        "application_area": "ImageNet",
+        "task": "Classification",
+        "task_extended": "ImageNet classification",
+        "data_type": "Image/Photo",
+        "data_source": "http://www.image-net.org/challenges/LSVRC/2012/"
+      },
+      "publication": {
+        "title": "ImageNet Classification with Deep Convolutional Neural Networks",
+        "source": "Advances in Neural Information Processing Systems",
+        "year": 2012,
+        "authors": "Alex Krizhevsky, Ilya Sutskever, Geoffrey E. Hinton",
+        "abstract": "We trained a large, deep convolutional neural network to classify the 1.2 million high-resolution images in the ImageNet LSVRC-2010 contest into the 1000 different classes. On the test data, we achieved top-1 and top-5 error rates of 37.5% and 17.0% which is considerably better than the previous state-of-the-art. The neural network, which has 60 million parameters and 650,000 neurons, consists of five convolutional layers, some of which are followed by max-pooling layers, and three fully-connected layers with a final 1000-way softmax. To make training faster, we used non-saturating neurons and a very efficient GPU implementation of the convolution operation. To reduce overfitting in the fully-connected layers we employed a recently developed regularization method called 'dropout' that proved to be very effective. We also entered a variant of this model in the ILSVRC-2012 competition and achieved a winning top-5 test error rate of 15.3%, compared to 26.2% achieved by the second-best entry.",
+        "url": "http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf",
+        "google_scholar": "https://scholar.google.com/scholar?cites=2071317309766942398&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@incollection{NIPS2012_4824, title = {ImageNet Classification with Deep Convolutional Neural Networks}, author = {Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E}, booktitle = {Advances in Neural Information Processing Systems 25}, editor = {F. Pereira and C. J. C. Burges and L. Bottou and K. Q. Weinberger}, pages = {1097--1105}, year = {2012}, publisher = {Curran Associates, Inc.}, url = {http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf} }"
+      },
+      "model": {
+        "description": "AlexNet is the name of a convolutional neural network for classification, which competed in the ImageNet Large Scale Visual Recognition Challenge in 2012.",
+        "provenance": "https://github.com/BVLC/caffe/tree/master/models/bvlc_alexnet",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".prototxt",
+        "io": {
+          "input": {
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 4
+              },
+              {
+                "min": 32
+              },
+              {
+                "min": 32
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "probabilities",
+              "type": "label_list",
+              "description": "Probabilities of the 1000 classes in the ImageNet dataset."
+            }
+          ]
         }
-      ]
+      },
+      "modelhub": {
+        "top": 5,
+        "sort": true
+      }
     }
   },
   "arc-face": {
-    "description": "ArcFace is a CNN based model for face recognition which learns discriminative features of faces and produces embeddings for input face images. To enhance the discriminative power of softmax loss, a novel supervisor signal called additive angular margin (ArcFace) is used here as an additive term in the softmax loss.",
-    "inputFormat": {
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 3,
-          "max": 4
-        },
-        {
-          "min": 32
-        },
-        {
-          "min": 32
+    "configData": {
+      "id": "02f2f15c-3285-44a4-8119-b298623b7acf",
+      "meta": {
+        "name": "arc-face",
+        "application_area": "Computer Vision",
+        "task": "Recognition",
+        "task_extended": "Facial Detection & Recognition",
+        "data_type": "Image/Photo",
+        "data_source": "https://www.msceleb.org/"
+      },
+      "publication": {
+        "title": "ArcFace: Additive Angular Margin Loss for Deep Face Recognition",
+        "source": "arxiv",
+        "year": 2018,
+        "authors": "Jiankang Deng, Jia Guo, Niannan Xue, Stefanos Zafeiriou",
+        "email": "j.deng16@imperial.ac.uk",
+        "abstract": "One of the main challenges in feature learning using Deep Convolutional Neural Networks (DCNNs) for large-scale face recognition is the design of appropriate loss functions that enhance discriminative power. Centre loss penalises the distance between the deep features and their corresponding class centres in the Euclidean space to achieve intra-class compactness. SphereFace assumes that the linear transformation matrix in the last fully connected layer can be used as a representation of the class centres in an angular space and penalises the angles between the deep features and their corresponding weights in a multiplicative way. Recently, a popular line of research is to incorporate margins in well-established loss functions in order to maximise face class separability. In this paper, we propose an Additive Angular Margin Loss (ArcFace) to obtain highly discriminative features for face recognition. The proposed ArcFace has a clear geometric interpretation due to the exact correspondence to the geodesic distance on the hypersphere. We present arguably the most extensive experimental evaluation of all the recent state-of-the-art face recognition methods on over 10 face recognition benchmarks including a new large-scale image database with trillion level of pairs and a large-scale video dataset. We show that ArcFace consistently outperforms the state-of-the-art and can be easily implemented with negligible computational overhead. We release all refined training data, training codes, pre-trained models and training logs, which will help reproduce the results in this paper.",
+        "url": "https://arxiv.org/abs/1801.07698",
+        "google_scholar": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=13816119281473749224",
+        "bibtex": "@article{DBLP:journals/corr/abs-1801-07698, author= {Jiankang Deng and Jia Guo and Stefanos Zafeiriou}, title = {ArcFace: Additive Angular Margin Loss for Deep Face Recognition}, journal = {CoRR}, volume = {abs/1801.07698}, year = {2018}, url = {http://arxiv.org/abs/1801.07698}, archivePrefix = {arXiv}, eprint = {1801.07698}, timestamp = {Mon, 13 Aug 2018 16:46:52 +0200}, biburl = {https://dblp.org/rec/bib/journals/corr/abs-1801-07698}, bibsource = {dblp computer science bibliography, https://dblp.org}}"
+      },
+      "model": {
+        "description": "ArcFace is a CNN based model for face recognition which learns discriminative features of faces and produces embeddings for input face images. To enhance the discriminative power of softmax loss, a novel supervisor signal called additive angular margin (ArcFace) is used here as an additive term in the softmax loss.",
+        "provenance": "https://github.com/onnx/models/tree/master/models/face_recognition/ArcFace",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".onnx",
+        "io": {
+          "input": {
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 3,
+                "max": 4
+              },
+              {
+                "min": 32
+              },
+              {
+                "min": 32
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "embedding vector",
+              "type": "vector",
+              "description": "This is a fixed length embedding vector corresponding to the face in the image. The vectors from face images of a single person have a higher similarity than that from different persons. Therefore, the vector is primarily used for face recognition/verification. It can also be used in other applications like facial feature-based clustering."
+            }
+          ]
         }
-      ]
+      },
+      "modelhub": {}
     }
   },
   "cardiac-fcn": {
-    "description": "The proposed FCN architecture is efficiently trained end-to-end on a graphics processing unit (GPU) in a single learning stage from whole image inputs and ground truths to make inference at every pixel, a task commonly known as pixel-wise labeling or per-pixel classification.",
-    "inputFormat": {
-      "format": [
-        "application/dicom"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 1
-        },
-        {
-          "min": 100,
-          "max": 500
-        },
-        {
-          "min": 100,
-          "max": 500
+    "configData": {
+      "id": "985c8604-1381-4ebf-85af-bfe32080fb55",
+      "meta": {
+        "name": "cardiac-fcn",
+        "application_area": "Cardiac Imaging",
+        "task": "Segmentation",
+        "task_extended": "Segmenting the right ventricle in MRI",
+        "data_type": "Magnetic Resonance (MRI)",
+        "data_source": "http://www.litislab.fr/?projet=1rvsc"
+      },
+      "publication": {
+        "title": "A Fully Convolutional Neural Network for Cardiac Segmentation in Short-Axis MRI",
+        "source": "arXiv",
+        "year": 2016,
+        "authors": "Phi Vu Tran",
+        "email": "tran_phi@bah.com",
+        "abstract": "Automated cardiac segmentation from magnetic resonance imaging datasets is an essential step in the timely diagnosis and management of cardiac pathologies. We propose to tackle the problem of automated left and right ventricle segmentation through the application of a deep fully convolutional neural network architecture. Our model is efficiently trained end-to-end in a single learning stage from wholeimage inputs and ground truths to make inference at every pixel. To our knowledge, this is the first application of a fully convolutional neural network architecture for pixel-wise labeling in cardiac magnetic resonance imaging. Numerical experiments demonstrate that our model is robust to outperform previous fully automated methods across multiple evaluation measures on a range of cardiac datasets. Moreover, our model is fast and can leverage commodity compute resources such as the graphics processing unit to enable state-of-the-art cardiac segmentation at massive scales. The models and code are available at https://github.com/vuptran/cardiac-segmentation.",
+        "url": "https://arxiv.org/abs/1604.00494",
+        "google_scholar": "https://scholar.google.com/scholar?um=1&ie=UTF-8&lr&cites=6323192966698785729",
+        "bibtex": "@article{DBLP:journals/corr/Tran16,   author    = {Phi Vu Tran},   title     = {A Fully Convolutional Neural Network for Cardiac Segmentation in Short-Axis                {MRI}},   journal   = {CoRR},   volume    = {abs/1604.00494},   year      = {2016},   url       = {http://arxiv.org/abs/1604.00494},   archivePrefix = {arXiv},   eprint    = {1604.00494},   timestamp = {Wed, 07 Jun 2017 14:41:57 +0200},   biburl    = {http://dblp.org/rec/bib/journals/corr/Tran16},   bibsource = {dblp computer science bibliography, http://dblp.org} }"
+      },
+      "model": {
+        "description": "The proposed FCN architecture is efficiently trained end-to-end on a graphics processing unit (GPU) in a single learning stage from whole image inputs and ground truths to make inference at every pixel, a task commonly known as pixel-wise labeling or per-pixel classification.",
+        "provenance": "contributed by author",
+        "architecture": "Fully Convolutional Neural Network (FCN)",
+        "learning_type": "Supervised learning",
+        "format": ".h5",
+        "io": {
+          "input": {
+            "format": [
+              "application/dicom"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 1
+              },
+              {
+                "min": 100,
+                "max": 500
+              },
+              {
+                "min": 100,
+                "max": 500
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "right ventricle mask",
+              "type": "mask_image"
+            }
+          ]
         }
-      ]
+      },
+      "modelhub": {}
     }
   },
   "cascaded-fcn-liver": {
-    "description": "This model showcases the first step of the Automatic Liver and Lesion Segmentation. It segments the liver on a single slice CT image. The trained model for the second step (lesion segmentation) is included but not executed in the demo.",
-    "inputFormat": {
-      "format": [
-        "application/dicom"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 1
-        },
-        {
-          "min": 0,
-          "max": 600
-        },
-        {
-          "min": 0,
-          "max": 600
+    "configData": {
+      "id": "ccc16d36-d788-43eb-9e53-2125c97888df",
+      "meta": {
+        "name": "cascaded-fcn-liver",
+        "application_area": "CT Abdomen",
+        "task": "Segmentation",
+        "task_extended": "Liver and liver lesion segmentation",
+        "data_type": "Computed Tomography (CT)",
+        "data_source": "https://www.ircad.fr/research/3dircadb/"
+      },
+      "publication": {
+        "title": "Automatic Liver and Lesion Segmentation in CT Using Cascaded Fully Convolutional Neural Networks and 3D Conditional Random Fields",
+        "source": "arXiv",
+        "year": 2016,
+        "authors": "Patrick Ferdinand Christ, Mohamed Ezzeldin A. Elshaer, Florian Ettlinger, Sunil Tatavarty, Marc Bickel, Patrick Bilic, Markus Rempfler, Marco Armbruster, Felix Hofmann, Melvin D'Anastasi, Wieland H. Sommer, Seyed-Ahmad Ahmadi, Bjoern H. Menze",
+        "email": "Patrick.Christ@tum.de",
+        "abstract": "Automatic segmentation of the liver and its lesion is an important step towards deriving quantitative biomarkers for accurate clinical diagnosis and computer-aided decision support systems. This paper presents a method to automatically segment liver and lesions in CT abdomen images using cascaded fully convolutional neural networks (CFCNs) and dense 3D conditional random fields (CRFs). We train and cascade two FCNs for a combined segmentation of the liver and its lesions. In the first step, we train a FCN to segment the liver as ROI input for a second FCN. The second FCN solely segments lesions from the predicted liver ROIs of step 1. We refine the segmentations of the CFCN using a dense 3D CRF that accounts for both spatial coherence and appearance. CFCN models were trained in a 2-fold cross-validation on the abdominal CT dataset 3DIRCAD comprising 15 hepatic tumor volumes. Our results show that CFCN-based semantic liver and lesion segmentation achieves Dice scores over 94% for liver with computation times below 100s per volume. We experimentally demonstrate the robustness of the proposed method as a decision support system with a high accuracy and speed for usage in daily clinical routine.",
+        "url": "https://arxiv.org/abs/1610.02177",
+        "google_scholar": "https://scholar.google.com/scholar?cites=16449972357705639728&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@inproceedings{christ2016automatic, title={Automatic liver and lesion segmentation in CT using cascaded fully convolutional neural networks and 3D conditional random fields}, author={Christ, Patrick Ferdinand and Elshaer, Mohamed Ezzeldin A and Ettlinger, Florian and Tatavarty, Sunil and Bickel, Marc and Bilic, Patrick and Rempfler, Markus and Armbruster, Marco and Hofmann, Felix and D’Anastasi, Melvin and others}, booktitle={Medical Image Computing and Computer-Assisted Intervention -- MICCAI 2016}, pages={415--423}, year={2016}, organization={Springer International Publishing}, isbn={978-3-319-46723-8}, doi={10.1007/978-3-319-46723-8_48}, url={http://dx.doi.org/10.1007/978-3-319-46723-8_48}}"
+      },
+      "model": {
+        "description": "This model showcases the first step of the Automatic Liver and Lesion Segmentation. It segments the liver on a single slice CT image. The trained model for the second step (lesion segmentation) is included but not executed in the demo.",
+        "provenance": "https://github.com/IBBM/Cascaded-FCN",
+        "architecture": "Fully Convolutional Network (FCN)",
+        "learning_type": "Supervised learning",
+        "format": ".caffemodel",
+        "io": {
+          "input": {
+            "format": [
+              "application/dicom"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 1
+              },
+              {
+                "min": 0,
+                "max": 600
+              },
+              {
+                "min": 0,
+                "max": 600
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "liver contour",
+              "type": "contour"
+            }
+          ]
         }
-      ]
+      },
+      "modelhub": {}
     }
   },
   "colab_deepcontrast": {
-    "description": "This notebook provides a minimal working example of a Deep Learning model for the detection of intravenous contrast enhancement in head and neck or lung CT scans. The model was trained using 1979 contrast and non-contrast head and neck and chest CT images from six different datasets acquired at multiple sites. The dataset is composed of images with variable volume sizes, field of view, and slice thickness. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the presence of the contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
-    "inputFormat": {
-      "format": [],
-      "single": {
-        "format": [],
-        "dim_limits": [
-          {
-            "min": 0,
-            "max": 0
-          },
-          {
-            "min": 0
-          },
-          {
-            "min": 0
-          }
-        ],
-        "description": ""
+    "configData": {
+      "id": "0000",
+      "meta": {
+        "name": "colab_deepcontrast",
+        "application_area": "Google CoLab",
+        "task": "Classification",
+        "task_extended": "Contrast detection - Google CoLab Notebook - Classification",
+        "data_type": "Image/CT scan",
+        "data_source": "Private",
+        "framework": "colab",
+        "colab_link": "https://github.com/modelhub-ai/colab_deepcontrast/blob/master/contrast_detection_mwe.ipynb",
+        "github_link": "https://github.com/AIM-Harvard/DeepContrast"
       },
-      "description": ""
+      "publication": {
+        "title": "Deep Learning–based Detection of Intravenous Contrast Enhancement on CT Scans",
+        "source": "https://doi.org/10.1148/ryai.210285",
+        "year": 2022,
+        "authors": "Ye, Z., Qian, J.M., Hosny, A., Zeleznik, R., Plana, D., Likitlersuang, J., Zhang, Z., Mak, R.H., Aerts, H.J. and Kann, B.H.",
+        "email": "Benjamin_Kann@dfci.harvard.edu",
+        "abstract": "Identifying the presence of intravenous contrast material on CT scans is an important component of data curation for medical imaging–based artificial intelligence model development and deployment. Use of intravenous contrast material is often poorly documented in imaging metadata, necessitating impractical manual annotation by clinician experts. Authors developed a convolutional neural network (CNN)–based deep learning platform to identify intravenous contrast enhancement on CT scans. For model development and validation, authors used six independent datasets of head and neck (HN) and chest CT scans, totaling 133 480 axial two-dimensional sections from 1979 scans, which were manually annotated by clinical experts. Five CNN models were trained first on HN scans for contrast enhancement detection. Model performances were evaluated at the patient level on a holdout set and external test set. Models were then fine-tuned on chest CT data and externally validated. This study found that Digital Imaging and Communications in Medicine metadata tags for intravenous contrast material were missing or erroneous for 1496 scans (75.6%). An EfficientNetB4-based model showed the best performance, with areas under the curve (AUCs) of 0.996 and 1.0 in HN holdout (n = 216) and external (n = 595) sets, respectively, and AUCs of 1.0 and 0.980 in the chest holdout (n = 53) and external (n = 402) sets, respectively. This automated, scan-to-prediction platform is highly accurate at CT contrast enhancement detection and may be helpful for artificial intelligence model development and clinical application.",
+        "url": "https://doi.org/10.1148/ryai.210285",
+        "google_scholar": "https://scholar.google.com/scholar?cites=4993190987271886763&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@article{ye2022deep, title={Deep Learning--based Detection of Intravenous Contrast Enhancement on CT Scans}, author={Ye, Zezhong and Qian, Jack M and Hosny, Ahmed and Zeleznik, Roman and Plana, Deborah and Likitlersuang, Jirapat and Zhang, Zhongyi and Mak, Raymond H and Aerts, Hugo JWL and Kann, Benjamin H}, journal={Radiology: Artificial Intelligence}, volume={4}, number={3}, pages={e210285}, year={2022}, publisher={Radiological Society of North America}}"
+      },
+      "model": {
+        "description": "This notebook provides a minimal working example of a Deep Learning model for the detection of intravenous contrast enhancement in head and neck or lung CT scans. The model was trained using 1979 contrast and non-contrast head and neck and chest CT images from six different datasets acquired at multiple sites. The dataset is composed of images with variable volume sizes, field of view, and slice thickness. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the presence of the contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
+        "provenance": "",
+        "architecture": "",
+        "learning_type": "",
+        "format": "",
+        "io": {
+          "input": {
+            "format": [],
+            "single": {
+              "format": [],
+              "dim_limits": [
+                {
+                  "min": 0,
+                  "max": 0
+                },
+                {
+                  "min": 0
+                },
+                {
+                  "min": 0
+                }
+              ],
+              "description": ""
+            },
+            "description": ""
+          },
+          "output": [
+            {
+              "name": "",
+              "type": "",
+              "description": ""
+            }
+          ]
+        }
+      },
+      "modelhub": {}
     }
   },
   "colab_liver": {
-    "description": "This notebook provides a minimal working example of the liver and liver cancer segmentation nnU-Net models, a series of tools for the segmentation of such anatomies from contrast-enhanced CT images. The model was trained using 201 contrast-enhanced CT images from several clinical sites. The dataset included a variety of primary cancers, pre- and post-therapy images, with variable volume size, field of view, slice thickness, and the presence of metal artefacts. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the phase of the contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
-    "inputFormat": {
-      "format": [],
-      "single": {
-        "format": [],
-        "dim_limits": [
-          {
-            "min": 0,
-            "max": 0
-          },
-          {
-            "min": 0
-          },
-          {
-            "min": 0
-          }
-        ],
-        "description": ""
+    "configData": {
+      "id": "0003",
+      "meta": {
+        "name": "colab_liver",
+        "application_area": "Google CoLab",
+        "task": "Segmentation",
+        "task_extended": "Liver and liver cancer segmentation",
+        "data_type": "Image/CT scan",
+        "framework": "Google CoLab, nnUnet and PyTorch",
+        "colab_link": "https://github.com/modelhub-ai/colab_liver/blob/main/nnunet_liver_mwe.ipynb",
+        "github_link": "https://github.com/MIC-DKFZ/nnUNet"
       },
-      "description": ""
+      "publication": {
+        "title": "nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation",
+        "source": "https://doi.org/10.1038/s41592-020-01008-z",
+        "year": 2021,
+        "authors": "Isensee, F., Jaeger, P.F., Kohl, S.A., Petersen, J. and Maier-Hein, K.H.",
+        "abstract": "Biomedical imaging is a driver of scientific discovery and a core component of medical care and is being stimulated by the field of deep learning. While semantic segmentation algorithms enable image analysis and quantification in many applications, the design of respective specialized solutions is non-trivial and highly dependent on dataset properties and hardware conditions. We developed nnU-Net, a deep learning-based segmentation method that automatically configures itself, including preprocessing, network architecture, training and post-processing for any new task. The key design choices in this process are modeled as a set of fixed parameters, interdependent rules and empirical decisions. Without manual intervention, nnU-Net surpasses most existing approaches, including highly specialized solutions on 23 public datasets used in international biomedical segmentation competitions. We make nnU-Net publicly available as an out-of-the-box tool, rendering state-of-the-art segmentation accessible to a broad audience by requiring neither expert knowledge nor computing resources beyond standard network training.",
+        "url": "https://doi.org/10.1038/s41592-020-01008-z",
+        "google_scholar": "https://scholar.google.com/scholar?cites=9470755338057003085&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@article{isensee2021nnu, title={nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation}, author={Isensee, Fabian and Jaeger, Paul F and Kohl, Simon AA and Petersen, Jens and Maier-Hein, Klaus H}, journal={Nature methods}, volume={18}, number={2}, pages={203--211}, year={2021}, publisher={Nature Publishing Group}}"
+      },
+      "model": {
+        "description": "This notebook provides a minimal working example of the liver and liver cancer segmentation nnU-Net models, a series of tools for the segmentation of such anatomies from contrast-enhanced CT images. The model was trained using 201 contrast-enhanced CT images from several clinical sites. The dataset included a variety of primary cancers, pre- and post-therapy images, with variable volume size, field of view, slice thickness, and the presence of metal artefacts. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the phase of the contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
+        "provenance": "",
+        "architecture": "pyTorch, nnUnet",
+        "learning_type": "",
+        "format": "",
+        "io": {
+          "input": {
+            "format": [],
+            "single": {
+              "format": [],
+              "dim_limits": [
+                {
+                  "min": 0,
+                  "max": 0
+                },
+                {
+                  "min": 0
+                },
+                {
+                  "min": 0
+                }
+              ],
+              "description": ""
+            },
+            "description": ""
+          },
+          "output": [
+            {
+              "name": "",
+              "type": "",
+              "description": ""
+            }
+          ]
+        }
+      },
+      "modelhub": {}
     }
   },
   "colab_lungmask": {
-    "description": "This notebook provides a minimal working example of LungMask, a tool for the segmentation of the the lungs and the lung lobes from non-contrast CT images robust to the presence of severe pathologies. In particular, in this notebook we make use the fusion between the results of the R231 and LTRCLobes models. We test LungMask by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI model. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the presence of a contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
-    "inputFormat": {
-      "format": [],
-      "single": {
-        "format": [],
-        "dim_limits": [
-          {
-            "min": 0,
-            "max": 0
-          },
-          {
-            "min": 0
-          },
-          {
-            "min": 0
-          }
-        ],
-        "description": ""
+    "configData": {
+      "id": "0002",
+      "meta": {
+        "name": "colab_lungmask",
+        "application_area": "Google CoLab",
+        "task": "Segmentation",
+        "task_extended": "Lung segmentation - Google CoLab Notebook - Segmentation",
+        "data_type": "Image/CT scan",
+        "framework": "colab",
+        "colab_link": "https://github.com/modelhub-ai/colab_lungmask/blob/main/lungmask_mwe.ipynb",
+        "github_link": "https://github.com/JoHof/lungmask"
       },
-      "description": ""
+      "publication": {
+        "title": "Automatic lung segmentation in routine imaging is primarily a data diversity problem, not a methodology problem",
+        "source": "https://doi.org/10.1186/s41747-020-00173-2",
+        "year": 2020,
+        "authors": "Hofmanninger, J., Prayer, F., Pan, J., Röhrich, S., Prosch, H., & Langs, G.",
+        "abstract": "Background: Automated segmentation of anatomical structures is a crucial step in image analysis. For lung segmentation in computed tomography, a variety of approaches exists, involving sophisticated pipelines trained and validated on different datasets. However, the clinical applicability of these approaches across diseases remains limited. Methods: We compared four generic deep learning approaches trained on various datasets and two readily available lung segmentation algorithms. We performed evaluation on routine imaging data with more than six different disease patterns and three published data sets. Results: Using different deep learning approaches, mean Dice similarity coefficients (DSCs) on test datasets varied not over 0.02. When trained on a diverse routine dataset (n = 36), a standard approach (U-net) yields a higher DSC (0.97 ± 0.05) compared to training on public datasets such as the Lung Tissue Research Consortium (0.94 ± 0.13, p = 0.024) or Anatomy 3 (0.92 ± 0.15, p = 0.001). Trained on routine data (n = 231) covering multiple diseases, U-net compared to reference methods yields a DSC of 0.98 ± 0.03 versus 0.94 ± 0.12 (p = 0.024). Conclusions: The accuracy and reliability of lung segmentation algorithms on demanding cases primarily relies on the diversity of the training data, highlighting the importance of data diversity compared to model choice. Efforts in developing new datasets and providing trained models to the public are critical. By releasing the trained model under General Public License 3.0, we aim to foster research on lung diseases by providing a readily available tool for segmentation of pathological lungs.",
+        "url": "https://doi.org/10.1186/s41747-020-00173-2",
+        "google_scholar": "https://scholar.google.com/scholar?cites=70004818277158591&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@article{hofmanninger2020automatic, title={Automatic lung segmentation in routine imaging is primarily a data diversity problem, not a methodology problem}, author={Hofmanninger, Johannes and Prayer, Forian and Pan, Jeanny and Rohrich, Sebastian and Prosch, Helmut and Langs, Georg}, journal={European Radiology Experimental}, volume={4}, number={1}, pages={1--13}, year={2020}, publisher={SpringerOpen}}"
+      },
+      "model": {
+        "description": "This notebook provides a minimal working example of LungMask, a tool for the segmentation of the the lungs and the lung lobes from non-contrast CT images robust to the presence of severe pathologies. In particular, in this notebook we make use the fusion between the results of the R231 and LTRCLobes models. We test LungMask by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI model. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the presence of a contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
+        "provenance": "",
+        "architecture": "",
+        "learning_type": "",
+        "format": "",
+        "io": {
+          "input": {
+            "format": [],
+            "single": {
+              "format": [],
+              "dim_limits": [
+                {
+                  "min": 0,
+                  "max": 0
+                },
+                {
+                  "min": 0
+                },
+                {
+                  "min": 0
+                }
+              ],
+              "description": ""
+            },
+            "description": ""
+          },
+          "output": [
+            {
+              "name": "",
+              "type": "",
+              "description": ""
+            }
+          ]
+        }
+      },
+      "modelhub": {}
     }
   },
   "colab_nsclc": {
-    "description": "This notebook provides a minimal working example of the non-small cell lung cancer segmentation nnU-Net models, a series of tools for the segmentation of such masses from chest CT images. The model was trained using 96 contrast and non-contrast chest CT images. The dataset is composed of pre-operative images, with variable volume sizes, field of view, and slice thickness. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the presence of the contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
-    "inputFormat": {
-      "format": [],
-      "single": {
-        "format": [],
-        "dim_limits": [
-          {
-            "min": 0,
-            "max": 0
-          },
-          {
-            "min": 0
-          },
-          {
-            "min": 0
-          }
-        ],
-        "description": ""
+    "configData": {
+      "id": "0008",
+      "meta": {
+        "name": "colab_nsclc",
+        "application_area": "Google CoLab",
+        "task": "Segmentation",
+        "task_extended": "Nsclc segmentation",
+        "data_type": "Image/CT scan",
+        "framework": "Google CoLab, nnUnet and PyTorch",
+        "colab_link": "https://github.com/modelhub-ai/colab_nsclc/blob/main/nnunet_nsclc_mwe.ipynb",
+        "github_link": "https://github.com/MIC-DKFZ/nnUNet"
       },
-      "description": ""
+      "publication": {
+        "title": "nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation",
+        "source": "https://doi.org/10.1038/s41592-020-01008-z",
+        "year": 2021,
+        "authors": "Isensee, F., Jaeger, P.F., Kohl, S.A., Petersen, J. and Maier-Hein, K.H.",
+        "abstract": "Biomedical imaging is a driver of scientific discovery and a core component of medical care and is being stimulated by the field of deep learning. While semantic segmentation algorithms enable image analysis and quantification in many applications, the design of respective specialized solutions is non-trivial and highly dependent on dataset properties and hardware conditions. We developed nnU-Net, a deep learning-based segmentation method that automatically configures itself, including preprocessing, network architecture, training and post-processing for any new task. The key design choices in this process are modeled as a set of fixed parameters, interdependent rules and empirical decisions. Without manual intervention, nnU-Net surpasses most existing approaches, including highly specialized solutions on 23 public datasets used in international biomedical segmentation competitions. We make nnU-Net publicly available as an out-of-the-box tool, rendering state-of-the-art segmentation accessible to a broad audience by requiring neither expert knowledge nor computing resources beyond standard network training.",
+        "url": "https://doi.org/10.1038/s41592-020-01008-z",
+        "google_scholar": "https://scholar.google.com/scholar?cites=9470755338057003085&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@article{isensee2021nnu, title={nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation}, author={Isensee, Fabian and Jaeger, Paul F and Kohl, Simon AA and Petersen, Jens and Maier-Hein, Klaus H}, journal={Nature methods}, volume={18}, number={2}, pages={203--211}, year={2021}, publisher={Nature Publishing Group}}"
+      },
+      "model": {
+        "description": "This notebook provides a minimal working example of the non-small cell lung cancer segmentation nnU-Net models, a series of tools for the segmentation of such masses from chest CT images. The model was trained using 96 contrast and non-contrast chest CT images. The dataset is composed of pre-operative images, with variable volume sizes, field of view, and slice thickness. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the presence of the contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
+        "provenance": "",
+        "architecture": "pyTorch, nnUnet",
+        "learning_type": "",
+        "format": "",
+        "io": {
+          "input": {
+            "format": [],
+            "single": {
+              "format": [],
+              "dim_limits": [
+                {
+                  "min": 0,
+                  "max": 0
+                },
+                {
+                  "min": 0
+                },
+                {
+                  "min": 0
+                }
+              ],
+              "description": ""
+            },
+            "description": ""
+          },
+          "output": [
+            {
+              "name": "",
+              "type": "",
+              "description": ""
+            }
+          ]
+        }
+      },
+      "modelhub": {}
     }
   },
   "colab_organsatrisk": {
-    "description": "This notebook provides a minimal working example of the abdominal organs at risk segmentation nnU-Net models, a series of tools for the segmentation of 13 abdominal organs from contrast-enhanced CT images. The model was trained using 50 abdomen CT scans of selected from various clinical trials. The scans were captured during portal venous contrast phase, with variable volume size, field of view, and slice thickness. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the phase of the contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
-    "inputFormat": {
-      "format": [],
-      "single": {
-        "format": [],
-        "dim_limits": [
-          {
-            "min": 0,
-            "max": 0
-          },
-          {
-            "min": 0
-          },
-          {
-            "min": 0
-          }
-        ],
-        "description": ""
+    "configData": {
+      "id": "0005",
+      "meta": {
+        "name": "colab_organsatrisk",
+        "application_area": "Google CoLab",
+        "task": "Segmentation",
+        "task_extended": "Abdominal organ segmentation",
+        "data_type": "Image/CT scan",
+        "framework": "Google CoLab, nnUnet and PyTorch",
+        "colab_link": "https://github.com/modelhub-ai/colab_organsatrisk/blob/main/nnunet_abdominal_oar_mwe.ipynb",
+        "github_link": "https://github.com/MIC-DKFZ/nnUNet"
       },
-      "description": ""
+      "publication": {
+        "title": "nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation",
+        "source": "https://doi.org/10.1038/s41592-020-01008-z",
+        "year": 2021,
+        "authors": "Isensee, F., Jaeger, P.F., Kohl, S.A., Petersen, J. and Maier-Hein, K.H.",
+        "abstract": "Biomedical imaging is a driver of scientific discovery and a core component of medical care and is being stimulated by the field of deep learning. While semantic segmentation algorithms enable image analysis and quantification in many applications, the design of respective specialized solutions is non-trivial and highly dependent on dataset properties and hardware conditions. We developed nnU-Net, a deep learning-based segmentation method that automatically configures itself, including preprocessing, network architecture, training and post-processing for any new task. The key design choices in this process are modeled as a set of fixed parameters, interdependent rules and empirical decisions. Without manual intervention, nnU-Net surpasses most existing approaches, including highly specialized solutions on 23 public datasets used in international biomedical segmentation competitions. We make nnU-Net publicly available as an out-of-the-box tool, rendering state-of-the-art segmentation accessible to a broad audience by requiring neither expert knowledge nor computing resources beyond standard network training.",
+        "url": "https://doi.org/10.1038/s41592-020-01008-z",
+        "google_scholar": "https://scholar.google.com/scholar?cites=9470755338057003085&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@article{isensee2021nnu, title={nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation}, author={Isensee, Fabian and Jaeger, Paul F and Kohl, Simon AA and Petersen, Jens and Maier-Hein, Klaus H}, journal={Nature methods}, volume={18}, number={2}, pages={203--211}, year={2021}, publisher={Nature Publishing Group}}"
+      },
+      "model": {
+        "description": "This notebook provides a minimal working example of the abdominal organs at risk segmentation nnU-Net models, a series of tools for the segmentation of 13 abdominal organs from contrast-enhanced CT images. The model was trained using 50 abdomen CT scans of selected from various clinical trials. The scans were captured during portal venous contrast phase, with variable volume size, field of view, and slice thickness. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the phase of the contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
+        "provenance": "",
+        "architecture": "pyTorch, nnUnet",
+        "learning_type": "",
+        "format": "",
+        "io": {
+          "input": {
+            "format": [],
+            "single": {
+              "format": [],
+              "dim_limits": [
+                {
+                  "min": 0,
+                  "max": 0
+                },
+                {
+                  "min": 0
+                },
+                {
+                  "min": 0
+                }
+              ],
+              "description": ""
+            },
+            "description": ""
+          },
+          "output": [
+            {
+              "name": "",
+              "type": "",
+              "description": ""
+            }
+          ]
+        }
+      },
+      "modelhub": {}
     }
   },
   "colab_pancreas": {
-    "description": "This notebook provides a minimal working example of the non-small cell lung cancer segmentation nnU-Net models, a series of tools for the segmentation of such masses from chest CT images. The model was trained using 420 portal venous phase CT scans. The dataset is composed of images with variable volume sizes, field of view, and image acquisition settings. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the presence of the contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
-    "inputFormat": {
-      "format": [],
-      "single": {
-        "format": [],
-        "dim_limits": [
-          {
-            "min": 0,
-            "max": 0
-          },
-          {
-            "min": 0
-          },
-          {
-            "min": 0
-          }
-        ],
-        "description": ""
+    "configData": {
+      "id": "0007",
+      "meta": {
+        "name": "colab_pancreas",
+        "application_area": "Google CoLab",
+        "task": "Segmentation",
+        "task_extended": "Pancreas and pancreatic cancer segmentation",
+        "data_type": "Image/CT scan",
+        "framework": "Google CoLab, nnUnet and PyTorch",
+        "colab_link": "https://github.com/modelhub-ai/colab_pancreas/blob/main/nnunet_pancreas_mwe.ipynb",
+        "github_link": "https://github.com/MIC-DKFZ/nnUNet"
       },
-      "description": ""
+      "publication": {
+        "title": "nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation",
+        "source": "https://doi.org/10.1038/s41592-020-01008-z",
+        "year": 2021,
+        "authors": "Isensee, F., Jaeger, P.F., Kohl, S.A., Petersen, J. and Maier-Hein, K.H.",
+        "abstract": "Biomedical imaging is a driver of scientific discovery and a core component of medical care and is being stimulated by the field of deep learning. While semantic segmentation algorithms enable image analysis and quantification in many applications, the design of respective specialized solutions is non-trivial and highly dependent on dataset properties and hardware conditions. We developed nnU-Net, a deep learning-based segmentation method that automatically configures itself, including preprocessing, network architecture, training and post-processing for any new task. The key design choices in this process are modeled as a set of fixed parameters, interdependent rules and empirical decisions. Without manual intervention, nnU-Net surpasses most existing approaches, including highly specialized solutions on 23 public datasets used in international biomedical segmentation competitions. We make nnU-Net publicly available as an out-of-the-box tool, rendering state-of-the-art segmentation accessible to a broad audience by requiring neither expert knowledge nor computing resources beyond standard network training.",
+        "url": "https://doi.org/10.1038/s41592-020-01008-z",
+        "google_scholar": "https://scholar.google.com/scholar?cites=9470755338057003085&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@article{isensee2021nnu, title={nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation}, author={Isensee, Fabian and Jaeger, Paul F and Kohl, Simon AA and Petersen, Jens and Maier-Hein, Klaus H}, journal={Nature methods}, volume={18}, number={2}, pages={203--211}, year={2021}, publisher={Nature Publishing Group}}"
+      },
+      "model": {
+        "description": "This notebook provides a minimal working example of the non-small cell lung cancer segmentation nnU-Net models, a series of tools for the segmentation of such masses from chest CT images. The model was trained using 420 portal venous phase CT scans. The dataset is composed of images with variable volume sizes, field of view, and image acquisition settings. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the presence of the contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
+        "provenance": "",
+        "architecture": "pyTorch, nnUnet",
+        "learning_type": "",
+        "format": "",
+        "io": {
+          "input": {
+            "format": [],
+            "single": {
+              "format": [],
+              "dim_limits": [
+                {
+                  "min": 0,
+                  "max": 0
+                },
+                {
+                  "min": 0
+                },
+                {
+                  "min": 0
+                }
+              ],
+              "description": ""
+            },
+            "description": ""
+          },
+          "output": [
+            {
+              "name": "",
+              "type": "",
+              "description": ""
+            }
+          ]
+        }
+      },
+      "modelhub": {}
     }
   },
   "colab_platipy": {
-    "description": "This notebook provides a minimal working example of PlatiPy, a tool for the segmentation of the heart and 17 cardiac substructures from non-contrast CT images. The model leverages both Deep Learning and Atlas-based techniques, and was trained using a dataset of 20 all-female breast cancer patients. We test PlatiPy by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the hybrid pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the presence of a contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data, to data postprocessing, and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
-    "inputFormat": {
-      "format": [],
-      "single": {
-        "format": [],
-        "dim_limits": [
-          {
-            "min": 0,
-            "max": 0
-          },
-          {
-            "min": 0
-          },
-          {
-            "min": 0
-          }
-        ],
-        "description": ""
+    "configData": {
+      "id": "0009",
+      "meta": {
+        "name": "colab_platipy",
+        "application_area": "Google CoLab",
+        "task": "Segmentation",
+        "task_extended": "Cardiac substructures segmentation",
+        "data_type": "Image/CT scan",
+        "framework": "Google CoLab, nnUnet and PyTorch",
+        "colab_link": "https://github.com/modelhub-ai/colab_platipy/blob/main/platipy_mwe.ipynb",
+        "github_link": "https://github.com/MIC-DKFZ/nnUNet"
       },
-      "description": ""
+      "publication": {
+        "title": "nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation",
+        "source": "https://doi.org/10.1038/s41592-020-01008-z",
+        "year": 2021,
+        "authors": "Isensee, F., Jaeger, P.F., Kohl, S.A., Petersen, J. and Maier-Hein, K.H.",
+        "abstract": "Biomedical imaging is a driver of scientific discovery and a core component of medical care and is being stimulated by the field of deep learning. While semantic segmentation algorithms enable image analysis and quantification in many applications, the design of respective specialized solutions is non-trivial and highly dependent on dataset properties and hardware conditions. We developed nnU-Net, a deep learning-based segmentation method that automatically configures itself, including preprocessing, network architecture, training and post-processing for any new task. The key design choices in this process are modeled as a set of fixed parameters, interdependent rules and empirical decisions. Without manual intervention, nnU-Net surpasses most existing approaches, including highly specialized solutions on 23 public datasets used in international biomedical segmentation competitions. We make nnU-Net publicly available as an out-of-the-box tool, rendering state-of-the-art segmentation accessible to a broad audience by requiring neither expert knowledge nor computing resources beyond standard network training.",
+        "url": "https://doi.org/10.1038/s41592-020-01008-z",
+        "google_scholar": "https://scholar.google.com/scholar?cites=9470755338057003085&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@article{isensee2021nnu, title={nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation}, author={Isensee, Fabian and Jaeger, Paul F and Kohl, Simon AA and Petersen, Jens and Maier-Hein, Klaus H}, journal={Nature methods}, volume={18}, number={2}, pages={203--211}, year={2021}, publisher={Nature Publishing Group}}"
+      },
+      "model": {
+        "description": "This notebook provides a minimal working example of PlatiPy, a tool for the segmentation of the heart and 17 cardiac substructures from non-contrast CT images. The model leverages both Deep Learning and Atlas-based techniques, and was trained using a dataset of 20 all-female breast cancer patients. We test PlatiPy by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the hybrid pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the presence of a contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data, to data postprocessing, and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
+        "provenance": "",
+        "architecture": "pyTorch, nnUnet",
+        "learning_type": "",
+        "format": "",
+        "io": {
+          "input": {
+            "format": [],
+            "single": {
+              "format": [],
+              "dim_limits": [
+                {
+                  "min": 0,
+                  "max": 0
+                },
+                {
+                  "min": 0
+                },
+                {
+                  "min": 0
+                }
+              ],
+              "description": ""
+            },
+            "description": ""
+          },
+          "output": [
+            {
+              "name": "",
+              "type": "",
+              "description": ""
+            }
+          ]
+        }
+      },
+      "modelhub": {}
     }
   },
   "colab_prostate": {
-    "description": "This notebook provides a minimal working example of the prostate segmentation segmentation nnU-Net models, a series of tools for the segmentation of such anatomy from multi-parametric MR images. The model was trained using 48 multi-parametric MR images, where the annotations were computed using the transverse T2-weighted scans and apparent diffusion coefficient (ADC) maps. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of prostate transversal T2-weighted MRIs acquired at 3T. The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
-    "inputFormat": {
-      "format": [],
-      "single": {
-        "format": [],
-        "dim_limits": [
-          {
-            "min": 0,
-            "max": 0
-          },
-          {
-            "min": 0
-          },
-          {
-            "min": 0
-          }
-        ],
-        "description": ""
+    "configData": {
+      "id": "0006",
+      "meta": {
+        "name": "colab_prostate",
+        "application_area": "Google CoLab",
+        "task": "Segmentation",
+        "task_extended": "Prostate segmentation",
+        "data_type": "Image/CT scan",
+        "framework": "Google CoLab, nnUnet and PyTorch",
+        "colab_link": "https://github.com/modelhub-ai/colab_prostate/blob/main/nnunet_prostate_mwe.ipynb",
+        "github_link": "https://github.com/MIC-DKFZ/nnUNet"
       },
-      "description": ""
+      "publication": {
+        "title": "nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation",
+        "source": "https://doi.org/10.1038/s41592-020-01008-z",
+        "year": 2021,
+        "authors": "Isensee, F., Jaeger, P.F., Kohl, S.A., Petersen, J. and Maier-Hein, K.H.",
+        "abstract": "Biomedical imaging is a driver of scientific discovery and a core component of medical care and is being stimulated by the field of deep learning. While semantic segmentation algorithms enable image analysis and quantification in many applications, the design of respective specialized solutions is non-trivial and highly dependent on dataset properties and hardware conditions. We developed nnU-Net, a deep learning-based segmentation method that automatically configures itself, including preprocessing, network architecture, training and post-processing for any new task. The key design choices in this process are modeled as a set of fixed parameters, interdependent rules and empirical decisions. Without manual intervention, nnU-Net surpasses most existing approaches, including highly specialized solutions on 23 public datasets used in international biomedical segmentation competitions. We make nnU-Net publicly available as an out-of-the-box tool, rendering state-of-the-art segmentation accessible to a broad audience by requiring neither expert knowledge nor computing resources beyond standard network training.",
+        "url": "https://doi.org/10.1038/s41592-020-01008-z",
+        "google_scholar": "https://scholar.google.com/scholar?cites=9470755338057003085&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@article{isensee2021nnu, title={nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation}, author={Isensee, Fabian and Jaeger, Paul F and Kohl, Simon AA and Petersen, Jens and Maier-Hein, Klaus H}, journal={Nature methods}, volume={18}, number={2}, pages={203--211}, year={2021}, publisher={Nature Publishing Group}}"
+      },
+      "model": {
+        "description": "This notebook provides a minimal working example of the prostate segmentation segmentation nnU-Net models, a series of tools for the segmentation of such anatomy from multi-parametric MR images. The model was trained using 48 multi-parametric MR images, where the annotations were computed using the transverse T2-weighted scans and apparent diffusion coefficient (ADC) maps. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of prostate transversal T2-weighted MRIs acquired at 3T. The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
+        "provenance": "",
+        "architecture": "pyTorch, nnUnet",
+        "learning_type": "",
+        "format": "",
+        "io": {
+          "input": {
+            "format": [],
+            "single": {
+              "format": [],
+              "dim_limits": [
+                {
+                  "min": 0,
+                  "max": 0
+                },
+                {
+                  "min": 0
+                },
+                {
+                  "min": 0
+                }
+              ],
+              "description": ""
+            },
+            "description": ""
+          },
+          "output": [
+            {
+              "name": "",
+              "type": "",
+              "description": ""
+            }
+          ]
+        }
+      },
+      "modelhub": {}
     }
   },
   "colab_segthor": {
-    "description": "This notebook provides a minimal working example of the thoracic organs at risk nnU-Net models, a series of tools for the segmentation of such anatomies from chest CT images. The model was trained using 60 thoracic CT scans, acquired with or without intravenous contrast. The dataset is composed of images with variable volume sizes, field of view, and slice thickness. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the presence of the contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
-    "inputFormat": {
-      "format": [],
-      "single": {
-        "format": [],
-        "dim_limits": [
-          {
-            "min": 0,
-            "max": 0
-          },
-          {
-            "min": 0
-          },
-          {
-            "min": 0
-          }
-        ],
-        "description": ""
+    "configData": {
+      "id": "0004",
+      "meta": {
+        "name": "colab_segthor",
+        "application_area": "Google CoLab",
+        "task": "Segmentation",
+        "task_extended": "Thoracic organ segmentation",
+        "data_type": "Image/CT scan",
+        "framework": "Google CoLab, nnUnet and PyTorch",
+        "colab_link": "https://github.com/modelhub-ai/colab_segthor/blob/main/nnunet_segthor_mwe.ipynb",
+        "github_link": "https://github.com/MIC-DKFZ/nnUNet"
       },
-      "description": ""
+      "publication": {
+        "title": "nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation",
+        "source": "https://doi.org/10.1038/s41592-020-01008-z",
+        "year": 2021,
+        "authors": "Isensee, F., Jaeger, P.F., Kohl, S.A., Petersen, J. and Maier-Hein, K.H.",
+        "abstract": "Biomedical imaging is a driver of scientific discovery and a core component of medical care and is being stimulated by the field of deep learning. While semantic segmentation algorithms enable image analysis and quantification in many applications, the design of respective specialized solutions is non-trivial and highly dependent on dataset properties and hardware conditions. We developed nnU-Net, a deep learning-based segmentation method that automatically configures itself, including preprocessing, network architecture, training and post-processing for any new task. The key design choices in this process are modeled as a set of fixed parameters, interdependent rules and empirical decisions. Without manual intervention, nnU-Net surpasses most existing approaches, including highly specialized solutions on 23 public datasets used in international biomedical segmentation competitions. We make nnU-Net publicly available as an out-of-the-box tool, rendering state-of-the-art segmentation accessible to a broad audience by requiring neither expert knowledge nor computing resources beyond standard network training.",
+        "url": "https://doi.org/10.1038/s41592-020-01008-z",
+        "google_scholar": "https://scholar.google.com/scholar?cites=9470755338057003085&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@article{isensee2021nnu, title={nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation}, author={Isensee, Fabian and Jaeger, Paul F and Kohl, Simon AA and Petersen, Jens and Maier-Hein, Klaus H}, journal={Nature methods}, volume={18}, number={2}, pages={203--211}, year={2021}, publisher={Nature Publishing Group}}"
+      },
+      "model": {
+        "description": "This notebook provides a minimal working example of the thoracic organs at risk nnU-Net models, a series of tools for the segmentation of such anatomies from chest CT images. The model was trained using 60 thoracic CT scans, acquired with or without intravenous contrast. The dataset is composed of images with variable volume sizes, field of view, and slice thickness. We test the model by implementing an end-to-end (cloud-based) pipeline on publicly available chest CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI pipeline. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed of a wide variety of image types (from image acquisition settings, to the presence of the contrast agent, to the presence, location and size of a tumor mass). The way all the operations are executed - from pulling data to data postprocessing and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
+        "provenance": "",
+        "architecture": "pyTorch, nnUnet",
+        "learning_type": "",
+        "format": "",
+        "io": {
+          "input": {
+            "format": [],
+            "single": {
+              "format": [],
+              "dim_limits": [
+                {
+                  "min": 0,
+                  "max": 0
+                },
+                {
+                  "min": 0
+                },
+                {
+                  "min": 0
+                }
+              ],
+              "description": ""
+            },
+            "description": ""
+          },
+          "output": [
+            {
+              "name": "",
+              "type": "",
+              "description": ""
+            }
+          ]
+        }
+      },
+      "modelhub": {}
     }
   },
   "colab_totalsegmentator": {
-    "description": "This notebook provides a minimal working example of TotalSegmentator, a tool for the segmentation of 104 anatomical structures from CT images. The model was trained using a wide range of imaging CT data of different pathologies from several scanners, protocols and institutions. We test TotalSegmentator by implementing an end-to-end (cloud-based) pipeline on publicly available whole body CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI model. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed by a wide variety of image types (from the area covered by the scan, to the presence of contrast and various types of artefacts). The way all the operations are executed - from pulling data, to data postprocessing, and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
-    "inputFormat": {
-      "format": [],
-      "single": {
-        "format": [],
-        "dim_limits": [
-          {
-            "min": 0,
-            "max": 0
-          },
-          {
-            "min": 0
-          },
-          {
-            "min": 0
-          }
-        ],
-        "description": ""
+    "configData": {
+      "id": "0002",
+      "meta": {
+        "name": "colab_totalsegmentator",
+        "application_area": "Google CoLab",
+        "task": "Segmentation",
+        "task_extended": "Whole body segmentation",
+        "data_type": "Image/CT scan",
+        "framework": "Google CoLab and PyTorch",
+        "colab_link": "https://github.com/modelhub-ai/colab_totalsegmentator/blob/main/totalseg_all_mwe.ipynb",
+        "github_link": "https://github.com/wasserth/TotalSegmentator"
       },
-      "description": ""
+      "publication": {
+        "title": "TotalSegmentator: robust segmentation of 104 anatomical structures in CT images",
+        "source": "https://doi.org/10.48550/arXiv.2208.05868",
+        "year": 2022,
+        "authors": "Wasserthal, J., Meyer, M., Breit, H.C., Cyriac, J., Yang, S. and Segeroth, M.",
+        "abstract": "In this work we focus on automatic segmentation of multiple anatomical structures in (whole body) CT images. Many segmentation algorithms exist for this task. However, in most cases they suffer from 3 problems: 1. They are difficult to use (the code and data is not publicly available or difficult to use). 2. They do not generalize (often the training dataset was curated to only contain very clean images which do not reflect the image distribution found during clinical routine), 3. The algorithm can only segment one anatomical structure. For more structures several algorithms have to be used which increases the effort required to set up the system. In this work we publish a new dataset and segmentation toolkit which solves all three of these problems: In 1204 CT images we segmented 104 anatomical structures (27 organs, 59 bones, 10 muscles, 8 vessels) covering a majority of relevant classes for most use cases. We show an improved workflow for the creation of ground truth segmentations which speeds up the process by over 10x. The CT images were randomly sampled from clinical routine, thus representing a real world dataset which generalizes to clinical application. The dataset contains a wide range of different pathologies, scanners, sequences and sites. Finally, we train a segmentation algorithm on this new dataset. We call this algorithm TotalSegmentator and make it easily available as a pretrained python pip package (pip install totalsegmentator). Usage is as simple as TotalSegmentator -i ct.nii.gz -o seg and it works well for most CT images.",
+        "url": "https://doi.org/10.48550/arXiv.2208.05868",
+        "google_scholar": "https://scholar.google.com/scholar?cites=2693648639295449445&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@article{wasserthal2022totalsegmentator, title={TotalSegmentator: robust segmentation of 104 anatomical structures in CT images}, author={Wasserthal, Jakob and Meyer, Manfred and Breit, Hanns-Christian and Cyriac, Joshy and Yang, Shan and Segeroth, Martin}, journal={arXiv preprint arXiv:2208.05868}, year={2022}}"
+      },
+      "model": {
+        "description": "This notebook provides a minimal working example of TotalSegmentator, a tool for the segmentation of 104 anatomical structures from CT images. The model was trained using a wide range of imaging CT data of different pathologies from several scanners, protocols and institutions. We test TotalSegmentator by implementing an end-to-end (cloud-based) pipeline on publicly available whole body CT scans hosted on the Imaging Data Commons (IDC), starting from raw DICOM CT data and ending with a DICOM SEG object storing the segmentation masks generated by the AI model. The testing dataset we use is external and independent from the data used in the development phase of the model (training and validation) and is composed by a wide variety of image types (from the area covered by the scan, to the presence of contrast and various types of artefacts). The way all the operations are executed - from pulling data, to data postprocessing, and the standardisation of the results - have the goal of promoting transparency and reproducibility.",
+        "provenance": "",
+        "architecture": "pyTorch, nnUnet",
+        "learning_type": "",
+        "format": "",
+        "io": {
+          "input": {
+            "format": [],
+            "single": {
+              "format": [],
+              "dim_limits": [
+                {
+                  "min": 0,
+                  "max": 0
+                },
+                {
+                  "min": 0
+                },
+                {
+                  "min": 0
+                }
+              ],
+              "description": ""
+            },
+            "description": ""
+          },
+          "output": [
+            {
+              "name": "",
+              "type": "",
+              "description": ""
+            }
+          ]
+        }
+      },
+      "modelhub": {}
     }
   },
   "cxr-risk": {
-    "description": "CXR-Risk is a CNN that predicts the risk of 12-year all-cause mortality based on a chest radiograph image.",
-    "inputFormat": {
-      "format": [
-        "image/png"
-      ],
-      "single": {
-        "format": [
-          "image/png"
-        ],
-        "dim_limits": [
-          {
-            "min": 1,
-            "max": 4
+    "configData": {
+      "id": "ef562736-2539-43ec-81c0-40e0ff7d1f13",
+      "meta": {
+        "name": "cxr-risk",
+        "application_area": "Radiology",
+        "task": "Classification",
+        "task_extended": "Survival Classification from chest Xray",
+        "data_type": "X-ray",
+        "data_source": "https://biometry.nci.nih.gov/cdas/datasets/plco/21/"
+      },
+      "publication": {
+        "title": "Deep Learning to Assess Long-term Mortality From Chest Radiographs",
+        "source": "JAMA Network Open",
+        "year": 2019,
+        "authors": " Michael T. Lu, Alexander Ivanov, Thomas Mayrhofer, Ahmed Hosny, Hugo J.W.L. Aerts, Udo Hoffmann",
+        "email": "mlu@mgh.harvard.edu",
+        "abstract": "Importance:  Chest radiography is the most common diagnostic imaging test in medicine and may also provide information about longevity and prognosis. Objective:  To develop and test a convolutional neural network (CNN) (named CXR-risk) to predict long-term mortality, including noncancer death, from chest radiographs. Design, Setting, and Participants:  In this prognostic study, CXR-risk CNN development (n = 41 856) and testing (n = 10 464) used data from the screening radiography arm of the Prostate, Lung, Colorectal, and Ovarian Cancer Screening Trial (PLCO) (n = 52 320), a community cohort of asymptomatic nonsmokers and smokers (aged 55-74 years) enrolled at 10 US sites from November 8, 1993, through July 2, 2001. External testing used data from the screening radiography arm of the National Lung Screening Trial (NLST) (n = 5493), a community cohort of heavy smokers (aged 55-74 years) enrolled at 21 US sites from August 2002, through April 2004. Data analysis was performed from January 1, 2018, to May 23, 2019. Exposure:  Deep learning CXR-risk score (very low, low, moderate, high, and very high) based on CNN analysis of the enrollment radiograph. Main Outcomes and Measures:  All-cause mortality. Prognostic value was assessed in the context of radiologists diagnostic findings (eg, lung nodule) and standard risk factors (eg, age, sex, and diabetes) and for cause-specific mortality. Results:  Among 10 464 PLCO participants (mean (SD) age, 62.4 (5.4) years - 5405 men (51.6%) - median follow-up, 12.2 years (interquartile range, 10.5-12.9 years)) and 5493 NLST test participants (mean (SD) age, 61.7 (5.0) years - 3037 men (55.3%) - median follow-up, 6.3 years (interquartile range, 6.0-6.7 years)), there was a graded association between CXR-risk score and mortality. The very high-risk group had mortality of 53.0% (PLCO) and 33.9% (NLST), which was higher compared with the very low-risk group (PLCO: unadjusted hazard ratio (HR), 18.3 (95% CI, 14.5-23.2) - NLST: unadjusted HR, 15.2 (95% CI, 9.2-25.3) - both P < .001). This association was robust to adjustment for radiologists findings and risk factors (PLCO: adjusted HR (aHR), 4.8 (95% CI, 3.6-6.4) - NLST: aHR, 7.0 (95% CI, 4.0-12.1) - both P < .001). Comparable results were seen for lung cancer death (PLCO: aHR, 11.1 (95% CI, 4.4-27.8) - NLST: aHR, 8.4 (95% CI, 2.5-28.0) - both P ≤ .001) and for noncancer cardiovascular death (PLCO: aHR, 3.6 (95% CI, 2.1-6.2) - NLST: aHR, 47.8 (95% CI, 6.1-374.9) - both P < .001) and respiratory death (PLCO: aHR, 27.5 (95% CI, 7.7-97.8) - NLST: aHR, 31.9 (95% CI, 3.9-263.5) - both P ≤ .001).",
+        "url": "https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2738349",
+        "google_scholar": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=16182133894523406915",
+        "bibtex": "@article{10.1001/jamanetworkopen.2019.7416, author = {Lu, Michael T. and Ivanov, Alexander and Mayrhofer, Thomas and Hosny, Ahmed and Aerts, Hugo J. W. L. and Hoffmann, Udo}, title = '{Deep Learning to Assess Long-term Mortality From Chest Radiographs}', journal = {JAMA Network Open}, volume = {2}, number = {7}, pages = {e197416-e197416}, year = {2019}, month = {07}, issn = {2574-3805}, doi = {10.1001/jamanetworkopen.2019.7416}, url = {https://doi.org/10.1001/jamanetworkopen.2019.7416},}"
+      },
+      "model": {
+        "description": "CXR-Risk is a CNN that predicts the risk of 12-year all-cause mortality based on a chest radiograph image.",
+        "provenance": "Conrtibuted by author.",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".pth",
+        "io": {
+          "input": {
+            "format": [
+              "image/png"
+            ],
+            "single": {
+              "format": [
+                "image/png"
+              ],
+              "dim_limits": [
+                {
+                  "min": 1,
+                  "max": 4
+                },
+                {
+                  "min": 32
+                },
+                {
+                  "min": 32
+                }
+              ],
+              "description": "Png image of chest X-ray in portrait view."
+            }
           },
-          {
-            "min": 32
-          },
-          {
-            "min": 32
-          }
-        ],
-        "description": "Png image of chest X-ray in portrait view."
-      }
+          "output": [
+            {
+              "name": "probabilities",
+              "type": "label_list",
+              "description": "Survival probability."
+            }
+          ]
+        }
+      },
+      "modelhub": {}
     }
   },
   "deep-prognosis": {
-    "description": "This model predicts the survival likelihood of non-small cell lung cancer patients 2 years after the start of radiotherapy treatment.",
-    "inputFormat": {
-      "format": [
-        "application/octet-stream"
-      ],
-      "dim_limits": [
-        {
-          "min": 150,
-          "max": 150
-        },
-        {
-          "min": 150,
-          "max": 150
-        },
-        {
-          "min": 150,
-          "max": 150
+    "configData": {
+      "id": "9d6a816a-612c-4f50-90f6-8f043db2a775",
+      "meta": {
+        "name": "deep-prognosis",
+        "application_area": "Lung CT",
+        "task": "Prognosis",
+        "task_extended": "2-year survival of NSCLC patients",
+        "data_type": "Computed Tomography (CT)",
+        "data_source": "https://wiki.cancerimagingarchive.net/display/Public/NSCLC-Radiomics"
+      },
+      "publication": {
+        "title": "Deep learning for lung cancer prognostication: A retrospective multi-cohort radiomics study",
+        "source": "PLOS Medicine",
+        "year": 2018,
+        "authors": "Ahmed Hosny, Chintan Parmar, Thibaud P. Coroller, Patrick Grossmann, Roman Zeleznik, Avnish Kumar, Johan Bussink, Robert J. Gillies, Raymond H. Mak, Hugo J. W. L. Aerts",
+        "abstract": "Background: Non-small-cell lung cancer (NSCLC) patients often demonstrate varying clinical courses and outcomes, even within the same tumor stage. This study explores deep learning applications in medical imaging allowing for the automated quantification of radiographic characteristics and potentially improving patient stratification. Methods and findings: We performed an integrative analysis on 7 independent datasets across 5 institutions totaling 1,194 NSCLC patients (age median = 68.3 years [range 32.5–93.3], survival median = 1.7 years [range 0.0–11.7]). Using external validation in computed tomography (CT) data, we identified prognostic signatures using a 3D convolutional neural network (CNN) for patients treated with radiotherapy (n = 771, age median = 68.0 years [range 32.5–93.3], survival median = 1.3 years [range 0.0–11.7]). We then employed a transfer learning approach to achieve the same for surgery patients (n = 391, age median = 69.1 years [range 37.2–88.0], survival median = 3.1 years [range 0.0–8.8]). We found that the CNN predictions were significantly associated with 2-year overall survival from the start of respective treatment for radiotherapy (area under the receiver operating characteristic curve [AUC] = 0.70 [95% CI 0.63–0.78], p < 0.001) and surgery (AUC = 0.71 [95% CI 0.60–0.82], p < 0.001) patients. The CNN was also able to significantly stratify patients into low and high mortality risk groups in both the radiotherapy (p < 0.001) and surgery (p = 0.03) datasets. Additionally, the CNN was found to significantly outperform random forest models built on clinical parameters—including age, sex, and tumor node metastasis stage—as well as demonstrate high robustness against test–retest (intraclass correlation coefficient = 0.91) and inter-reader (Spearman’s rank-order correlation = 0.88) variations. To gain a better understanding of the characteristics captured by the CNN, we identified regions with the most contribution towards predictions and highlighted the importance of tumor-surrounding tissue in patient stratification. We also present preliminary findings on the biological basis of the captured phenotypes as being linked to cell cycle and transcriptional processes. Limitations include the retrospective nature of this study as well as the opaque black box nature of deep learning networks. Conclusions: Our results provide evidence that deep learning networks may be used for mortality risk stratification based on standard-of-care CT images from NSCLC patients. This evidence motivates future research into better deciphering the clinical and biological basis of deep learning networks as well as validation in prospective data.",
+        "url": "https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002711",
+        "google_scholar": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=8976487770990178044",
+        "bibtex": "@article{10.1371/journal.pmed.1002711, author = {Hosny, Ahmed AND Parmar, Chintan AND Coroller, Thibaud P. AND Grossmann, Patrick AND Zeleznik, Roman AND Kumar, Avnish AND Bussink, Johan AND Gillies, Robert J. AND Mak, Raymond H. AND Aerts, Hugo J. W. L.}, journal = {PLOS Medicine}, publisher = {Public Library of Science}, title = {Deep learning for lung cancer prognostication: A retrospective multi-cohort radiomics study}, year = {2018}, month = {11}, volume = {15}, url = {https://doi.org/10.1371/journal.pmed.1002711}, pages = {1-25}, abstract = {Hugo Aerts and colleagues evaluate the ability of deep learning networks to extract relevant features from computed tomography lung cancer images and stratify patients into low and high mortality risk groups.}, number = {11}, doi = {10.1371/journal.pmed.1002711}}"
+      },
+      "model": {
+        "description": "This model predicts the survival likelihood of non-small cell lung cancer patients 2 years after the start of radiotherapy treatment.",
+        "provenance": "contributed by author",
+        "architecture": "Convolutional neural network with fully connected layers.",
+        "learning_type": "Supervised learning",
+        "format": ".h5",
+        "io": {
+          "input": {
+            "format": [
+              "application/octet-stream"
+            ],
+            "dim_limits": [
+              {
+                "min": 150,
+                "max": 150
+              },
+              {
+                "min": 150,
+                "max": 150
+              },
+              {
+                "min": 150,
+                "max": 150
+              }
+            ],
+            "description": "numpy array (.npy) of the given dimensions centered around the tumor center of mass."
+          },
+          "output": [
+            {
+              "name": "Survival prediction",
+              "type": "label_list"
+            },
+            {
+              "name": "features",
+              "type": "label_list",
+              "description": "256 features from the penultimate fully connected layer"
+            }
+          ]
         }
-      ],
-      "description": "numpy array (.npy) of the given dimensions centered around the tumor center of mass."
+      },
+      "modelhub": {}
     }
   },
   "deepscan-brats": {
-    "description": "Densely-Connected CNNs",
-    "inputFormat": {
-      "format": [
-        "application/json"
-      ],
-      "t1": {
-        "format": [
-          "application/nii-gzip"
-        ],
-        "dim_limits": [
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          }
-        ]
+    "configData": {
+      "id": "20fb032f-7a5b-4a2b-9ab8-367ee53030ea",
+      "meta": {
+        "name": "deepscan-brats",
+        "application_area": "Medical Imaging, Segmentation",
+        "task": "Brain Tumor Segmentation",
+        "task_extended": "Brain tumor segmentation for the BraTS 18 challenge",
+        "data_type": "Nifti-1 volumes",
+        "data_source": "http://braintumorsegmentation.org/"
       },
-      "t1c": {
-        "format": [
-          "application/nii-gzip"
-        ],
-        "dim_limits": [
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          }
-        ]
+      "publication": {
+        "title": "Ensembles of Densely-Connected CNNs with Label-Uncertainty for Brain Tumor Segmentation",
+        "source": "International MICCAI Brainlesion Workshop",
+        "year": 2018,
+        "authors": "Richard McKinley, Raphael Meier, Roland Wiest",
+        "email": "richard.mckinley@gmail.com",
+        "abstract": "We introduce a new family of classifiers based on our previous DeepSCAN architecture, in which densely connected blocks of dilated convolutions are embedded in a shallow U-net-style structure of down/upsampling and skip connections. These networks are trained using a newly designed loss function which models label noise and uncertainty. We present results on the testing dataset of the Multimodal Brain Tumor Segmentation Challenge 2018.",
+        "url": "https://link.springer.com/chapter/10.1007/978-3-030-11726-9_40",
+        "google_scholar": "https://scholar.google.com/scholar?cites=9977684363503558221&as_sdt=2005&sciodt=0,5&hl=en",
+        "bibtex": "@inproceedings{mckinley2018ensembles,title={Ensembles of densely-connected CNNs with label-uncertainty for brain tumor segmentation},author={McKinley, Richard and Meier, Raphael and Wiest, Roland},booktitle={International MICCAI Brainlesion Workshop},pages={456--465},year={2018},organization={Springer}}"
       },
-      "t2": {
-        "format": [
-          "application/nii-gzip"
-        ],
-        "dim_limits": [
-          {
-            "min": 155,
-            "max": 240
+      "model": {
+        "description": "Densely-Connected CNNs",
+        "provenance": "",
+        "architecture": "CNN",
+        "learning_type": "Supervised",
+        "format": ".pth.tar",
+        "io": {
+          "input": {
+            "format": [
+              "application/json"
+            ],
+            "t1": {
+              "format": [
+                "application/nii-gzip"
+              ],
+              "dim_limits": [
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                }
+              ]
+            },
+            "t1c": {
+              "format": [
+                "application/nii-gzip"
+              ],
+              "dim_limits": [
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                }
+              ]
+            },
+            "t2": {
+              "format": [
+                "application/nii-gzip"
+              ],
+              "dim_limits": [
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                }
+              ]
+            },
+            "flair": {
+              "format": [
+                "application/nii-gzip"
+              ],
+              "dim_limits": [
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                }
+              ]
+            }
           },
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          }
-        ]
+          "output": [
+            {
+              "name": "Segmentation",
+              "type": "image",
+              "description": "Numpy array of shape (240,240,155) with labels. Needs header from one of the input images to save to file."
+            }
+          ]
+        }
       },
-      "flair": {
-        "format": [
-          "application/nii-gzip"
-        ],
-        "dim_limits": [
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          }
-        ]
-      }
+      "modelhub": {}
     }
   },
   "densenet": {
-    "description": "DenseNet increases the depth of convolutional networks by simplifying the connectivity pattern between layers. It exploits the full potential of the network through feature reuse.",
-    "inputFormat": {
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 4
-        },
-        {
-          "min": 32
-        },
-        {
-          "min": 32
+    "configData": {
+      "id": "c0048222-b29f-4719-be6b-cac790251a19",
+      "meta": {
+        "name": "densenet",
+        "application_area": "ImageNet",
+        "task": "Classification",
+        "task_extended": "ImageNet classification",
+        "data_type": "Image/Photo",
+        "data_source": "http://www.image-net.org/"
+      },
+      "publication": {
+        "title": "Densely Connected Convolutional Networks",
+        "source": "arXiv",
+        "year": 2016,
+        "authors": "Gao Huang, Zhuang Liu, Laurens van der Maaten, Kilian Q. Weinberger",
+        "email": "gh349@cornell.edu",
+        "abstract": "Recent work has shown that convolutional networks can be substantially deeper, more accurate, and efficient to train if they contain shorter connections between layers close to the input and those close to the output. In this paper, we embrace this observation and introduce the Dense Convolutional Network (DenseNet), which connects each layer to every other layer in a feed-forward fashion. Whereas traditional convolutional networks with L layers have L connections - one between each layer and its subsequent layer - our network has L(L+1)/2 direct connections. For each layer, the feature-maps of all preceding layers are used as inputs, and its own feature-maps are used as inputs into all subsequent layers. DenseNets have several compelling advantages: they alleviate the vanishing-gradient problem, strengthen feature propagation, encourage feature reuse, and substantially reduce the number of parameters. We evaluate our proposed architecture on four highly competitive object recognition benchmark tasks (CIFAR-10, CIFAR-100, SVHN, and ImageNet). DenseNets obtain significant improvements over the state-of-the-art on most of them, whilst requiring less computation to achieve high performance. Code and pre-trained models are available at this https URL.",
+        "url": "https://arxiv.org/abs/1608.06993",
+        "google_scholar": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=4205512852566836101",
+        "bibtex": "@article{DBLP:journals/corr/HuangLW16a, author = {Gao Huang and Zhuang Liu and Kilian Q. Weinberger}, title = {Densely Connected Convolutional Networks}, journal = {CoRR}, volume = {abs/1608.06993}, year = {2016}, url = {http://arxiv.org/abs/1608.06993}, archivePrefix = {arXiv}, eprint = {1608.06993}, timestamp = {Mon, 10 Sep 2018 15:49:32 +0200}, biburl = {https://dblp.org/rec/bib/journals/corr/HuangLW16a}, bibsource = {dblp computer science bibliography, https://dblp.org}}"
+      },
+      "model": {
+        "description": "DenseNet increases the depth of convolutional networks by simplifying the connectivity pattern between layers. It exploits the full potential of the network through feature reuse.",
+        "provenance": "https://github.com/flyyufelix/DenseNet-Keras",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".h5",
+        "io": {
+          "input": {
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 4
+              },
+              {
+                "min": 32
+              },
+              {
+                "min": 32
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "probabilities",
+              "type": "label_list",
+              "description": "Probabilities of the 1000 classes in the ImageNet dataset."
+            }
+          ]
         }
-      ]
+      },
+      "modelhub": {
+        "top": 5,
+        "sort": true
+      }
     }
   },
   "DentalArtifactModel": {
-    "description": "A PyTorch three-dimensional convolutional neural network with a depth of five",
-    "inputFormat": {
-      "format": [
-        "application/nrrd"
-      ],
-      "single": {
-        "format": [
-          "application/nrrd"
-        ],
-        "dim_limits": [
-          {
-            "min": 100,
-            "max": 256
-          },
-          {
-            "min": 256
-          },
-          {
-            "min": 256
-          }
-        ],
-        "description": "Single 3D nrrd image as input with minimal and maximal input size constraints."
+    "configData": {
+      "id": "f8063322-cbba-4dd4-85cc-3a939b1bb608",
+      "meta": {
+        "name": "DentalArtifactModel",
+        "application_area": "Head and Neck Computed Tomography Images",
+        "task": "Classification",
+        "task_extended": "Classification of dental artifact presence in H&N CT",
+        "data_type": "Image in form compatible with SimpleITK loading - .nrrd prefered",
+        "data_source": ""
       },
-      "description": ""
+      "publication": {
+        "title": "External validation and transfer learning of convolutional neural networks for computed tomography dental artifact classification",
+        "source": "Physics in Medicine & Biology",
+        "year": 2020,
+        "authors": "Mattea L Welch, Chris McIntosh, Alberto Traverso, Leonard Wee, Tom G Purdie, Andre Dekker, Benjamin Haibe-Kains and David A Jaffray",
+        "email": "",
+        "abstract": "Quality assurance of data prior to use in automated pipelines and image analysis would assist in safeguarding against biases and incorrect interpretation of results. Automation of quality assurance steps would further improve robustness and efficiency of these methods, motivating widespread adoption of techniques. Previous work by our group demonstrated the ability of convolutional neural networks (CNN) to efficiently classify head and neck (H&N) computed-tomography (CT) images for the presence of dental artifacts (DA) that obscure visualization of structures and the accuracy of Hounsfield units. In this work we demonstrate the generalizability of our previous methodology by validating CNNs on six external datasets, and the potential benefits of transfer learning with fine-tuning on CNN performance. 2112 H&N CT images from seven institutions were scored as DA positive or negative. 1538 images from a single institution were used to train three CNNs with resampling grid sizes of 64^3, 128^3 and 256^3. The remaining six external datasets were used in five-fold cross-validation with a data split of 20% training/fine-tuning and 80% validation. The three pre-trained models were each validated using the five-folds of the six external datasets. The pre-trained models also underwent transfer learning with fine-tuning using the 20% training/fine-tuning data, and validated using the corresponding validation datasets. The highest micro-averaged AUC for our pre-trained models across all external datasets occurred with a resampling grid of 256^3 (AUC  =  0.91  +/-  0.01). Transfer learning with fine-tuning improved generalizability when utilizing a resampling grid of 256^3 to a micro-averaged AUC of 0.92  +/-  0.01. Despite these promising results, transfer learning did not improve AUC when utilizing small resampling grids or small datasets. Our work demonstrates the potential of our previously developed automated quality assurance methods to generalize to external datasets. Additionally, we showed that transfer learning with fine-tuning using small portions of external datasets can be used to fine-tune models for improved performance when large variations in images are present.",
+        "url": "https://iopscience.iop.org/article/10.1088/1361-6560/ab63ba",
+        "google_scholar": "https://scholar.google.com/scholar?cites=13738449521892237227&as_sdt=2005&sciodt=0,5&hl=en",
+        "bibtex": "@article{welch2020external, title={External validation and transfer learning of convolutional neural networks for computed tomography dental artifact classification}, author={Welch, Mattea L and McIntosh, Chris and Traverso, Alberto and Wee, Leonard and Purdie, Tom G and Dekker, Andre and Haibe-Kains, Benjamin and Jaffray, David A},  journal={Physics in Medicine \\& Biology},  volume={65},  number={3},  pages={035017},  year={2020},  publisher={IOP Publishing}, doi={https://doi.org/10.1088/1361-6560/ab63ba}}"
+      },
+      "model": {
+        "description": "A PyTorch three-dimensional convolutional neural network with a depth of five",
+        "provenance": "Contributed by author",
+        "architecture": "A three-dimensional (3D) convolutional neural network (CNN).",
+        "learning_type": "Supervised Learning",
+        "format": ".pth.tar",
+        "io": {
+          "input": {
+            "format": [
+              "application/nrrd"
+            ],
+            "single": {
+              "format": [
+                "application/nrrd"
+              ],
+              "dim_limits": [
+                {
+                  "min": 100,
+                  "max": 256
+                },
+                {
+                  "min": 256
+                },
+                {
+                  "min": 256
+                }
+              ],
+              "description": "Single 3D nrrd image as input with minimal and maximal input size constraints."
+            },
+            "description": ""
+          },
+          "output": [
+            {
+              "name": "classification",
+              "type": "label_list",
+              "description": "returns softmax class prediction (array[0] = no dental artifact, array[1] = dental artifact"
+            }
+          ]
+        }
+      },
+      "modelhub": {}
     }
   },
   "duc-semantic": {
-    "description": "DUC is a semantic segmentation model. It is benchmarked using the mIOU (mean Intersection Over Union) score and can be used in any application requiring semantic segmentation. It is trained on the cityscapes dataset which contains images from urban street scenes. Hence, it can be used in self driving vehicle applications.",
-    "inputFormat": {
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 4
-        },
-        {
-          "min": 32
-        },
-        {
-          "min": 32
+    "configData": {
+      "id": "8154347c-a642-4e9e-91f1-ba800c0b532f",
+      "meta": {
+        "name": "duc-semantic",
+        "application_area": "Computer Vision",
+        "task": "Segmentation",
+        "task_extended": "Semantic Segmentation",
+        "data_type": "Image/Photo",
+        "data_source": "https://www.cityscapes-dataset.com/"
+      },
+      "publication": {
+        "title": "Understanding Convolution for Semantic Segmentation",
+        "source": "arxiv",
+        "year": 2018,
+        "authors": "Panqu Wang, Pengfei Chen, Ye Yuan, Ding Liu, Zehua Huang, Xiaodi Hou, Garrison Cottrell",
+        "email": "panqu.wang@tusimple.ai,",
+        "abstract": "Recent advances in deep learning, especially deep convolutional neural networks (CNNs), have led to significant improvement over previous semantic segmentation systems. Here we show how to improve pixel-wise semantic segmentation by manipulating convolution-related operations that are of both theoretical and practical value. First, we design dense upsampling convolution (DUC) to generate pixel-level prediction, which is able to capture and decode more detailed information that is generally missing in bilinear upsampling. Second, we propose a hybrid dilated convolution (HDC) framework in the encoding phase. This framework 1) effectively enlarges the receptive fields (RF) of the network to aggregate global information; 2) alleviates what we call the “gridding issue” caused by the standard dilated convolution operation. We evaluate our approaches thoroughly on the Cityscapes dataset, and achieve a state-of-art result of 80.1% mIOU in the test set at the time of submission. We also have achieved state-of-theart overall on the KITTI road estimation benchmark and the PASCAL VOC2012 segmentation task. Our source code can be found at https://github.com/TuSimple/TuSimple-DUC.",
+        "url": "https://arxiv.org/abs/1702.08502",
+        "google_scholar": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=14464615562378306377",
+        "bibtex": "@article{Wang2018UnderstandingCF, title={Understanding Convolution for Semantic Segmentation}, author={Panqu Wang and Pengfei Chen and Ye Yuan and Ding Liu and Zehua Huang and Xiaodi Hou and Garrison W. Cottrell}, journal={2018 IEEE Winter Conference on Applications of Computer Vision (WACV)}, year={2018}, pages={1451-1460}}"
+      },
+      "model": {
+        "description": "DUC is a semantic segmentation model. It is benchmarked using the mIOU (mean Intersection Over Union) score and can be used in any application requiring semantic segmentation. It is trained on the cityscapes dataset which contains images from urban street scenes. Hence, it can be used in self driving vehicle applications.",
+        "provenance": "https://github.com/onnx/models/tree/master/models/semantic_segmentation/DUC",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".onnx",
+        "io": {
+          "input": {
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 4
+              },
+              {
+                "min": 32
+              },
+              {
+                "min": 32
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "segmentation map",
+              "type": "mask_image",
+              "description": "Segmentation map showing color maps for the categories in the cityscapes dataset."
+            }
+          ]
         }
-      ]
+      },
+      "modelhub": {}
     }
   },
   "emotion-fer-plus": {
-    "description": "emotion-fer-plus is a deep convolutional neural network for emotion recognition in faces. It is trained on the FER+ dataset. The FER+ annotations provide a set of new labels for the standard Emotion FER dataset. In FER+, each image has been labeled by 10 crowd-sourced taggers, which provide better quality ground truth for still image emotion than the original FER labels. Having 10 taggers for each image enables researchers to estimate an emotion probability distribution per face. This allows constructing algorithms that produce statistical distributions or multi-label outputs instead of the conventional single-label output.",
-    "inputFormat": {
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 4
-        },
-        {
-          "min": 32
-        },
-        {
-          "min": 32
+    "configData": {
+      "id": "115053de-abe1-4073-b957-99213599e8a4",
+      "meta": {
+        "name": "emotion-fer-plus",
+        "application_area": "Computer Vision",
+        "task": "Recognition",
+        "task_extended": "Facial Expression Recognition",
+        "data_type": "Image/Photo",
+        "data_source": "https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data"
+      },
+      "publication": {
+        "title": "Training Deep Networks for Facial Expression Recognition with Crowd-Sourced Label Distribution",
+        "source": "arXiv",
+        "year": 2016,
+        "authors": "Emad Barsoum, Cha Zhang, Cristian C. Ferrer, Zhengyou Zhang",
+        "email": "ebarsoum@microsoft.com",
+        "abstract": "Crowd sourcing has become a widely adopted scheme to collect ground truth labels. However, it is a well-known problem that these labels can be very noisy. In this paper, we demonstrate how to learn a deep convolutional neural network (DCNN) from noisy labels, using facial expression recognition as an example. More specifically, we have 10 taggers to label each input image, and compare four different approaches to utilizing the multiple labels: majority voting, multi-label learning, probabilistic label drawing, and cross-entropy loss. We show that the traditional majority voting scheme does not perform as well as the last two approaches that fully leverage the label distribution. An enhanced FER+ data set with multiple labels for each face image will also be shared with the research community.",
+        "url": "https://arxiv.org/abs/1608.01041",
+        "google_scholar": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=7940149569384948015&as_sdt=5",
+        "bibtex": "@article{DBLP:journals/corr/BarsoumZCZ16, author    = {Emad Barsoum and Cha Zhang and Cristian Canton{-}Ferrer and Zhengyou Zhang}, title = {Training Deep Networks for Facial Expression Recognition with Crowd-Sourced Label Distribution}, journal = {CoRR}, volume = {abs/1608.01041}, year = {2016}, url = {http://arxiv.org/abs/1608.01041}, archivePrefix = {arXiv}, eprint = {1608.01041}, timestamp = {Mon, 13 Aug 2018 16:46:07 +0200}, biburl = {https://dblp.org/rec/bib/journals/corr/BarsoumZCZ16}, bibsource = {dblp computer science bibliography, https://dblp.org}}"
+      },
+      "model": {
+        "description": "emotion-fer-plus is a deep convolutional neural network for emotion recognition in faces. It is trained on the FER+ dataset. The FER+ annotations provide a set of new labels for the standard Emotion FER dataset. In FER+, each image has been labeled by 10 crowd-sourced taggers, which provide better quality ground truth for still image emotion than the original FER labels. Having 10 taggers for each image enables researchers to estimate an emotion probability distribution per face. This allows constructing algorithms that produce statistical distributions or multi-label outputs instead of the conventional single-label output.",
+        "provenance": "https://github.com/onnx/models/tree/master/emotion_ferplus",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".onnx",
+        "io": {
+          "input": {
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 4
+              },
+              {
+                "min": 32
+              },
+              {
+                "min": 32
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "emotion probabilities",
+              "type": "label_list",
+              "description": "Probabilities of the 8 facial expression classes."
+            }
+          ]
         }
-      ]
+      },
+      "modelhub": {
+        "top": 8,
+        "sort": true
+      }
     }
   },
   "googlenet": {
-    "description": "22 layers deep network. The main hallmark of this architecture is the improved utilization of the computing resources inside the network. By a carefully crafted design, we increased the depth and width of the network while keeping the computational budget constant.",
-    "inputFormat": {
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 4
-        },
-        {
-          "min": 32
-        },
-        {
-          "min": 32
+    "configData": {
+      "id": "948e93d7-bc36-4c39-9640-dc3345269fe7",
+      "meta": {
+        "name": "googlenet",
+        "application_area": "ImageNet",
+        "task": "Classification",
+        "task_extended": "ImageNet classification",
+        "data_type": "Image/Photo",
+        "data_source": "http://www.image-net.org/challenges/LSVRC/2014/"
+      },
+      "publication": {
+        "title": "Going Deeper With Convolutions",
+        "source": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+        "year": 2015,
+        "authors": "Christian Szegedy, Wei Liu, Yangqing Jia, Pierre Sermanet, Scott Reed, Dragomir Anguelov, Dumitru Erhan, Vincent Vanhoucke, Andrew Rabinovich",
+        "abstract": "We propose a deep convolutional neural network architecture codenamed Inception that achieves the new state of the art for classification and detection in the ImageNet Large-Scale Visual Recognition Challenge 2014 (ILSVRC14). The main hallmark of this architecture is the improved utilization of the computing resources inside the network. By a carefully crafted design, we increased the depth and width of the network while keeping the computational budget constant. To optimize quality, the architectural decisions were based on the Hebbian principle and the intuition of multi-scale processing. One particular incarnation used in our submission for ILSVRC14 is called GoogLeNet, a 22 layers deep network, the quality of which is assessed in the context of classification and detection.",
+        "url": "http://openaccess.thecvf.com/content_cvpr_2015/papers/Szegedy_Going_Deeper_With_2015_CVPR_paper.pdf",
+        "google_scholar": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=17799971764477278135&as_sdt=5",
+        "bibtex": "@INPROCEEDINGS{7298594, author={C. Szegedy and Wei Liu and Yangqing Jia and P. Sermanet and S. Reed and D. Anguelov and D. Erhan and V. Vanhoucke and A. Rabinovich}, booktitle={2015 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)}, title={Going deeper with convolutions}, year={2015}, volume={}, number={}, pages={1-9}, keywords={convolution;decision making;feature extraction;Hebbian learning;image classification;neural net architecture;resource allocation;convolutional neural network architecture;resource utilization;architectural decision;Hebbian principle;object classification;object detection;Computer architecture;Convolutional codes;Sparse matrices;Neural networks;Visualization;Object detection;Computer vision}, doi={10.1109/CVPR.2015.7298594}, ISSN={1063-6919}, month={June},}"
+      },
+      "model": {
+        "description": "22 layers deep network. The main hallmark of this architecture is the improved utilization of the computing resources inside the network. By a carefully crafted design, we increased the depth and width of the network while keeping the computational budget constant.",
+        "provevance": "https://github.com/BVLC/caffe/tree/master/models/bvlc_googlenet",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".prototxt",
+        "io": {
+          "input": {
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 4
+              },
+              {
+                "min": 32
+              },
+              {
+                "min": 32
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "probabilities",
+              "type": "label_list",
+              "description": "Probabilities of the 1000 classes in the ImageNet dataset."
+            }
+          ]
         }
-      ]
+      },
+      "modelhub": {
+        "top": 5,
+        "sort": true
+      }
     }
   },
   "inception-v3": {
-    "description": "Inception-v3 introduces a few upgrades over the previous inception networks. It reduces representational bottlenecks as well as utilize smart factorization methods making convolutions computationally efficient.",
-    "inputFormat": {
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 4
-        },
-        {
-          "min": 32
-        },
-        {
-          "min": 32
+    "configData": {
+      "id": "001bb1c9-bbaf-48ca-bf4a-505faca870dd",
+      "meta": {
+        "name": "inception-v3",
+        "application_area": "ImageNet",
+        "task": "Classification",
+        "task_extended": "ImageNet classification",
+        "data_type": "Image/Photo",
+        "data_source": "http://www.image-net.org/challenges/LSVRC/2012/"
+      },
+      "publication": {
+        "title": "Rethinking the Inception Architecture for Computer Vision",
+        "source": "Arxiv",
+        "year": 2015,
+        "authors": "Christian Szegedy, Vincent Vanhoucke, Sergey Ioffe, Jonathon Shlens, Zbigniew Wojna",
+        "abstract": "Convolutional networks are at the core of most state-of-the-art computer vision solutions for a wide variety of tasks. Since 2014 very deep convolutional networks started to become mainstream, yielding substantial gains in various benchmarks. Although increased model size and computational cost tend to translate to immediate quality gains for most tasks (as long as enough labeled data is provided for training), computational efficiency and low parameter count are still enabling factors for various use cases such as mobile vision and big-data scenarios. Here we explore ways to scale up networks in ways that aim at utilizing the added computation as efficiently as possible by suitably factorized convolutions and aggressive regularization. We benchmark our methods on the ILSVRC 2012 classification challenge validation set demonstrate substantial gains over the state of the art: 21.2% top-1 and 5.6% top-5 error for single frame evaluation using a network with a computational cost of 5 billion multiply-adds per inference and with using less than 25 million parameters. With an ensemble of 4 models and multi-crop evaluation, we report 3.5% top-5 error on the validation set (3.6% error on the test set) and 17.3% top-1 error on the validation set.",
+        "url": "https://arxiv.org/abs/1512.00567",
+        "google_scholar": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=1692140599533045894&as_sdt=5",
+        "bibtex": "@article{DBLP:journals/corr/SzegedyVISW15, author = {Christian Szegedy and Vincent Vanhoucke and Sergey Ioffe and Jonathon Shlens and Zbigniew Wojna}, title = {Rethinking the Inception Architecture for Computer Vision}, journal = {CoRR}, volume = {abs/1512.00567}, year = {2015}, url = {http://arxiv.org/abs/1512.00567}, archivePrefix = {arXiv}, eprint = {1512.00567}, timestamp = {Mon, 13 Aug 2018 16:49:07 +0200}, biburl    = {https://dblp.org/rec/bib/journals/corr/SzegedyVISW15}, bibsource = {dblp computer science bibliography, https://dblp.org}}"
+      },
+      "model": {
+        "description": "Inception-v3 introduces a few upgrades over the previous inception networks. It reduces representational bottlenecks as well as utilize smart factorization methods making convolutions computationally efficient.",
+        "provenance": "https://github.com/fchollet/deep-learning-models/blob/master/inception_v3.py",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".h5",
+        "io": {
+          "input": {
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 4
+              },
+              {
+                "min": 32
+              },
+              {
+                "min": 32
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "probabilities",
+              "type": "label_list",
+              "description": "Probabilities of the 1000 classes in the ImageNet dataset."
+            }
+          ]
         }
-      ]
+      },
+      "modelhub": {
+        "top": 5,
+        "sort": true
+      }
     }
   },
   "lfb-rwth-brats": {
-    "description": "Ensemble of two 3D U-Nets",
-    "inputFormat": {
-      "format": [
-        "application/json"
-      ],
-      "t1": {
-        "format": [
-          "application/nii-gzip"
-        ],
-        "dim_limits": [
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          }
-        ]
+    "configData": {
+      "id": "0314b397-3d19-446b-a1ec-2832e6444f67",
+      "meta": {
+        "name": "lfb-rwth-brats",
+        "application_area": "Medical Imaging, Segmentation",
+        "task": "Brain Tumor Segmentation",
+        "task_extended": "Brain tumor segmentation for the BraTS 18 challenge",
+        "data_type": "Nifti-1 volumes",
+        "data_source": "http://braintumorsegmentation.org/"
       },
-      "t1c": {
-        "format": [
-          "application/nii-gzip"
-        ],
-        "dim_limits": [
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          }
-        ]
+      "publication": {
+        "title": "Segmentation of Brain Tumors and Patient Survival Prediction: Methods for the BraTS 2018 Challenge",
+        "source": "International MICCAI Brainlesion Workshop",
+        "year": 2018,
+        "authors": "Weninger, Leon and Rippel, Oliver and Koppers, Simon and Merhof, Dorit",
+        "email": "leon.weninger@lfb.rwth-aachen.de",
+        "abstract": "Brain tumor localization and segmentation is an important step in the treatment of brain tumor patients. It is the base for later clinical steps, e.g., a possible resection of the tumor. Hence, an automatic segmentation algorithm would be preferable, as it does not suffer from inter-rater variability. On top, results could be available immediately after the brain imaging procedure. Using this automatic tumor segmentation, it could also be possible to predict the survival of patients. The BraTS 2018 challenge consists of these two tasks: tumor segmentation in 3D-MRI images of brain tumor patients and survival prediction based on these images. For the tumor segmentation, we utilize a two-step approach: First, the tumor is located using a 3D U-net. Second, another 3D U-net more complex, but with a smaller output size detects subtle differences in the tumor volume, i.e., it segments the located tumor into tumor core, enhanced tumor, and peritumoral edema. The survival prediction of the patients is done with a rather simple, yet accurate algorithm which outperformed other tested approaches on the train set when thoroughly cross-validated. This finding is consistent with our performance on the test set - we achieved 3rd place in the survival prediction task of the BraTS Challenge 2018.",
+        "url": "https://link.springer.com/chapter/10.1007/978-3-030-11726-9_1",
+        "google_scholar": "https://scholar.google.com/scholar?hl=en&as_sdt=0%2C22&q=Segmentation+of+Brain+Tumors+and+Patient+Survival+Prediction%3A+Methods+for+the+BraTS+2018+Challenge&btnG=",
+        "bibtex": "@inproceedings{weninger2018segmentation, title={Segmentation of Brain Tumors and Patient Survival Prediction: Methods for the BraTS 2018 Challenge}, author={Weninger, Leon and Rippel, Oliver and Koppers, Simon and Merhof, Dorit}, booktitle={International MICCAI Brainlesion Workshop}, pages={3--12}, year={2018}, organization={Springer}}"
       },
-      "t2": {
-        "format": [
-          "application/nii-gzip"
-        ],
-        "dim_limits": [
-          {
-            "min": 155,
-            "max": 240
+      "model": {
+        "description": "Ensemble of two 3D U-Nets",
+        "provenance": "",
+        "architecture": "CNN",
+        "learning_type": "Supervised",
+        "format": ".pth",
+        "io": {
+          "input": {
+            "format": [
+              "application/json"
+            ],
+            "t1": {
+              "format": [
+                "application/nii-gzip"
+              ],
+              "dim_limits": [
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                }
+              ]
+            },
+            "t1c": {
+              "format": [
+                "application/nii-gzip"
+              ],
+              "dim_limits": [
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                }
+              ]
+            },
+            "t2": {
+              "format": [
+                "application/nii-gzip"
+              ],
+              "dim_limits": [
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                }
+              ]
+            },
+            "flair": {
+              "format": [
+                "application/nii-gzip"
+              ],
+              "dim_limits": [
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                }
+              ]
+            }
           },
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          }
-        ]
+          "output": [
+            {
+              "name": "Segmentation",
+              "type": "mask_image",
+              "description": "Numpy array of shape (240,240,155) with labels. Needs header from one of the input images to save to file."
+            }
+          ]
+        }
       },
-      "flair": {
-        "format": [
-          "application/nii-gzip"
-        ],
-        "dim_limits": [
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          }
-        ]
-      }
+      "modelhub": {}
     }
   },
   "mic-dkfz-brats": {
-    "description": "nnU-Net",
-    "inputFormat": {
-      "format": [
-        "application/json"
-      ],
-      "t1": {
-        "format": [
-          "application/nii-gzip"
-        ],
-        "dim_limits": [
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          }
-        ]
+    "configData": {
+      "id": "14e79015-ae1d-49b7-9673-032f6e441d3d",
+      "meta": {
+        "name": "mic-dkfz-brats",
+        "application_area": "Medical Imaging, Segmentation",
+        "task": "Brain Tumor Segmentation",
+        "task_extended": "Brain tumor segmentation for the BraTS 18 challenge",
+        "data_type": "Nifti-1 volumes",
+        "data_source": "http://braintumorsegmentation.org/"
       },
-      "t1c": {
-        "format": [
-          "application/nii-gzip"
-        ],
-        "dim_limits": [
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          }
-        ]
+      "publication": {
+        "title": "No new-net",
+        "source": "International MICCAI Brainlesion Workshop",
+        "year": 2018,
+        "authors": "Fabian Isensee,Philipp Kickingereder, Wolfgang Wick, Martin Bendszus, Klaus H. Maier-Hein",
+        "email": "f.isensee@dkfz-heidelberg.de",
+        "abstract": "In this paper we demonstrate the effectiveness of a well trained U-Net in the context of the BraTS 2018 challenge. This endeavour is particularly interesting given that researchers are currently besting each other with architectural modifications that are intended to improve the segmentation performance. We instead focus on the training process arguing that a well trained U-Net is hard to beat. Our baseline U-Net, which has only minor modifications and is trained with a large patch size and a Dice loss function indeed achieved competitive Dice scores on the BraTS2018 validation data. By incorporating additional measures such as region based training, additional training data, a simple postprocessing technique and a combination of loss functions, we obtain Dice scores of 77.88, 87.81 and 80.62, and Hausdorff Distances (95th percentile) of 2.90, 6.03 and 5.08 for the enhancing tumor, whole tumor and tumor core, respectively on the test data. This setup achieved rank two in BraTS2018, with more than 60 teams participating in the challenge.",
+        "url": "https://link.springer.com/chapter/10.1007/978-3-030-11726-9_21",
+        "google_scholar": "https://scholar.google.com/scholar?cites=10467106438092249798&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@inproceedings{isensee2018no, title={No new-net},author={Isensee, Fabian and Kickingereder, Philipp and Wick, Wolfgang and Bendszus, Martin and Maier-Hein, Klaus H},booktitle={International MICCAI Brainlesion Workshop},pages={234--244},year={2018},organization={Springer}"
       },
-      "t2": {
-        "format": [
-          "application/nii-gzip"
-        ],
-        "dim_limits": [
-          {
-            "min": 155,
-            "max": 240
+      "model": {
+        "description": "nnU-Net",
+        "provenance": "",
+        "architecture": "CNN",
+        "learning_type": "Supervised",
+        "format": ".model",
+        "io": {
+          "input": {
+            "format": [
+              "application/json"
+            ],
+            "t1": {
+              "format": [
+                "application/nii-gzip"
+              ],
+              "dim_limits": [
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                }
+              ]
+            },
+            "t1c": {
+              "format": [
+                "application/nii-gzip"
+              ],
+              "dim_limits": [
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                }
+              ]
+            },
+            "t2": {
+              "format": [
+                "application/nii-gzip"
+              ],
+              "dim_limits": [
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                }
+              ]
+            },
+            "flair": {
+              "format": [
+                "application/nii-gzip"
+              ],
+              "dim_limits": [
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                },
+                {
+                  "min": 155,
+                  "max": 240
+                }
+              ]
+            }
           },
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          }
-        ]
+          "output": [
+            {
+              "name": "Segmentation",
+              "type": "mask_image",
+              "description": "Numpy array of shape (240,240,155) with labels. Needs header from one of the input images to save to file."
+            }
+          ]
+        }
       },
-      "flair": {
-        "format": [
-          "application/nii-gzip"
-        ],
-        "dim_limits": [
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          },
-          {
-            "min": 155,
-            "max": 240
-          }
-        ]
-      }
+      "modelhub": {}
     }
   },
   "mobilenet": {
-    "description": "MobileNet utilizes an inverted residual structure. Shortcut connections are placed between thin bottleneck layers. Intermediate expansion layer make use of depthwise convolutions to filter features. MobileNet also removes non-linearities in the narrow layers as a means to maintain representational power.",
-    "inputFormat": {
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 4
-        },
-        {
-          "min": 32
-        },
-        {
-          "min": 32
-        }
-      ]
-    }
-  },
-  "resnet-50": {
-    "description": "ResNet-50 is a 50 layer Residual deep convolutional network for image classification.",
-    "inputFormat": {
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 4
-        },
-        {
-          "min": 32
-        },
-        {
-          "min": 32
-        }
-      ]
-    }
-  },
-  "sfm-learner-pose": {
-    "description": "The model consists of two networks trained together, first one being single-view depth network and the second one pose-reliability network. Both of them have decoder-encoder design, a stack of convolutional networks.",
-    "inputFormat": {
-      "description": "The SFM-Learner input is an image that consists 3 consecutive frames in which the pose estimation will be applied on. Hence, a video can be fed to model by extracting the frames and patching each 3 of them into an image through sliding the frames for each image.",
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 3
-        },
-        {
-          "min": 128
-        },
-        {
-          "min": 416
-        }
-      ]
-    }
-  },
-  "squeezenet": {
-    "description": "SqueezeNet begins with a standalone convolution layer (conv1), followed by 8 Fire modules (fire2-9), ending with a final conv layer (conv10). We gradually increase the number of filters per fire module from the beginning to the end of the network. SqueezeNet performs max-pooling with a stride of 2 after layers conv1, fire4, fire8, and conv10",
-    "inputFormat": {
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 4
-        },
-        {
-          "min": 32
-        },
-        {
-          "min": 32
-        }
-      ]
-    }
-  },
-  "unet-2d": {
-    "description": "such a network can be trained end-to-end from very few images and outperforms the prior best method (a sliding-window convolutional network) on the ISBI challenge for segmentation of neuronal structures in electron microscopic stacks. ",
-    "inputFormat": {
-      "single": {
-        "format": [
-          "image/png",
-          "image/jpg",
-          "image/jpeg"
-        ],
-        "dim_limits": [
-          {
-            "min": 1,
-            "max": 4
+    "configData": {
+      "id": "016c5f2a-9b58-44a9-bc93-10dc67385035",
+      "meta": {
+        "name": "mobilenet",
+        "application_area": "ImageNet",
+        "task": "Classification",
+        "task_extended": "ImageNet classification",
+        "data_type": "Image/Photo",
+        "data_source": "http://www.image-net.org/"
+      },
+      "publication": {
+        "title": "MobileNetV2: Inverted Residuals and Linear Bottlenecks",
+        "source": "arXiv",
+        "year": 2018,
+        "authors": "Mark Sandler, Andrew Howard, Menglong Zhu, Andrey Zhmoginov, Liang-Chieh Chen",
+        "email": "sandler@google.com",
+        "abstract": "In this paper we describe a new mobile architecture, MobileNetV2, that improves the state of the art performance of mobile models on multiple tasks and benchmarks as well as across a spectrum of different model sizes. We also describe efficient ways of applying these mobile models to object detection in a novel framework we call SSDLite. Additionally, we demonstrate how to build mobile semantic segmentation models through a reduced form of DeepLabv3 which we call Mobile DeepLabv3. The MobileNetV2 architecture is based on an inverted residual structure where the input and output of the residual block are thin bottleneck layers opposite to traditional residual models which use expanded representations in the input an MobileNetV2 uses lightweight depthwise convolutions to filter features in the intermediate expansion layer. Additionally, we find that it is important to remove non-linearities in the narrow layers in order to maintain representational power. We demonstrate that this improves performance and provide an intuition that led to this design. Finally, our approach allows decoupling of the input/output domains from the expressiveness of the transformation, which provides a convenient framework for further analysis. We measure our performance on Imagenet classification, COCO object detection, VOC image segmentation. We evaluate the trade-offs between accuracy, and number of operations measured by multiply-adds (MAdd), as well as the number of parameters",
+        "url": "https://arxiv.org/abs/1801.04381",
+        "google_scholar": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=5034558864053164025&as_sdt=5",
+        "bibtex": "@article{DBLP:journals/corr/abs-1801-04381, author = {Mark Sandler and Andrew G. Howard and Menglong Zhu and Andrey Zhmoginov and Liang{-}Chieh Chen}, title = {Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation}, journal = {CoRR}, volume = {abs/1801.04381}, year = {2018}, url = {http://arxiv.org/abs/1801.04381}, archivePrefix = {arXiv}, eprint = {1801.04381}, timestamp = {Mon, 13 Aug 2018 16:48:30 +0200}, biburl = {https://dblp.org/rec/bib/journals/corr/abs-1801-04381}, bibsource = {dblp computer science bibliography, https://dblp.org}}"
+      },
+      "model": {
+        "description": "MobileNet utilizes an inverted residual structure. Shortcut connections are placed between thin bottleneck layers. Intermediate expansion layer make use of depthwise convolutions to filter features. MobileNet also removes non-linearities in the narrow layers as a means to maintain representational power.",
+        "provenance": "https://github.com/onnx/models/tree/master/models/image_classification/mobilenet",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".onnx",
+        "io": {
+          "input": {
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 4
+              },
+              {
+                "min": 32
+              },
+              {
+                "min": 32
+              }
+            ]
           },
-          {
-            "min": 32
-          },
-          {
-            "min": 32
-          }
-        ]
+          "output": [
+            {
+              "name": "probabilities",
+              "type": "label_list",
+              "description": "Probabilities of the 1000 classes in the ImageNet dataset."
+            }
+          ]
+        }
+      },
+      "modelhub": {
+        "top": 5,
+        "sort": true
       }
     }
   },
-  "vgg-19": {
-    "description": "VGG-19 is a convolutional neural network trained on more than a million images from the ImageNet database. It is 19 layers deep and can classify images into 1000 object categories. It took part in the ImageNet ILSVRC-2014 challenge, where it secured the first and the second places in the localisation and classification tasks respectively.",
-    "inputFormat": {
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 4
-        },
-        {
-          "min": 32
-        },
-        {
-          "min": 32
+  "resnet-50": {
+    "configData": {
+      "id": "8abbcaef-6bcf-4f1f-9159-85c17c38bd00",
+      "meta": {
+        "name": "resnet-50",
+        "application_area": "ImageNet",
+        "task": "Classification",
+        "task_extended": "ImageNet classification",
+        "data_type": "Image/Photo",
+        "data_source": "http://www.image-net.org/challenges/LSVRC/2015/"
+      },
+      "publication": {
+        "title": "Deep Residual Learning for Image Recognition",
+        "source": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+        "year": 2016,
+        "authors": "Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun",
+        "abstract": "Deeper neural networks are more difficult to train. We present a residual learning framework to ease the training of networks that are substantially deeper than those used previously. We explicitly reformulate the layers as learning residual functions with reference to the layer inputs, instead of learning unreferenced functions. We provide comprehensive empirical evidence showing that these residual networks are easier to optimize, and can gain accuracy from considerably increased depth. On the ImageNet dataset we evaluate residual nets with a depth of up to 152 layers---8x deeper than VGG nets but still having lower complexity. An ensemble of these residual nets achieves 3.57% error on the ImageNet test set. This result won the 1st place on the ILSVRC 2015 classification task. We also present analysis on CIFAR-10 with 100 and 1000 layers. The depth of representations is of central importance for many visual recognition tasks. Solely due to our extremely deep representations, we obtain a 28% relative improvement on the COCO object detection dataset. Deep residual nets are foundations of our submissions to ILSVRC & COCO 2015 competitions, where we also won the 1st places on the tasks of ImageNet detection, ImageNet localization, COCO detection, and COCO segmentation.",
+        "url": "https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/He_Deep_Residual_Learning_CVPR_2016_paper.pdf",
+        "google_scholar": "https://scholar.google.com/scholar?cites=9281510746729853742&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@inproceedings{he2016deep, title={Deep residual learning for image recognition}, author={He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian}, booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition}, pages={770--778}, year={2016} }"
+      },
+      "model": {
+        "description": "ResNet-50 is a 50 layer Residual deep convolutional network for image classification.",
+        "provenance": "https://github.com/onnx/models/tree/master/resnet50",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".onnx",
+        "io": {
+          "input": {
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 4
+              },
+              {
+                "min": 32
+              },
+              {
+                "min": 32
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "probabilities",
+              "type": "label_list",
+              "description": "Probabilities of the 1000 classes in the ImageNet dataset."
+            }
+          ]
         }
-      ]
+      },
+      "modelhub": {
+        "top": 5,
+        "sort": true
+      }
+    }
+  },
+  "sfm-learner-pose": {
+    "configData": {
+      "id": "ce585219-d617-4864-b225-06b52532ea95",
+      "meta": {
+        "name": "sfm-learner-pose",
+        "application_area": "Capsule Endoscopy",
+        "task": "Pose & Depth Estimation",
+        "task_extended": "Unsupervised Pose & Depth Estimation",
+        "data_type": "Image/Photo",
+        "data_source": "http://www.cvlibs.net/datasets/kitti/"
+      },
+      "publication": {
+        "title": "Unsupervised Odometry and Depth Learning for Endoscopic Capsule Robots",
+        "source": "arxiv",
+        "year": 2018,
+        "authors": "Turan Mehmet, Ornek E. Pinar, Ibrahimli Nail, Giracoglu Can, Almalioglu Yasin, Yanik M. Fatih, Sitti Metin",
+        "email": "turan@is.mpg.de",
+        "abstract": "In the last decade, many medical companies and research groups have tried to convert passive capsule endoscopes as an emerging and minimally invasive diagnostic technology into actively steerable endoscopic capsule robots which will provide more intuitive disease detection, targeted drug delivery and biopsy-like operations in the gastrointestinal(GI) tract. In this study, we introduce a fully unsupervised, real-time odometry and depth learner for monocular endoscopic capsule robots. We establish the supervision by warping view sequences and assigning the re-projection minimization to the loss function, which we adopt in multi-view pose estimation and single-view depth estimation network. Detailed quantitative and qualitative analyses of the proposed framework performed on non-rigidly deformable ex-vivo porcine stomach datasets proves the effectiveness of the method in terms of motion estimation and depth recovery.",
+        "url": "https://arxiv.org/abs/1803.01047",
+        "google_scholar": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=16480963845558763827&as_sdt=5",
+        "bibtex": "@ARTICLE{2018arXiv180301047T, author = {{Turan}, Mehmet and {Pinar Ornek}, Evin and {Ibrahimli}, Nail and {Giracoglu}, Can and {Almalioglu}, Yasin and {Yanik}, Mehmet Fatih and {Sitti}, Metin}, title = {Unsupervised Odometry and Depth Learning for Endoscopic Capsule Robots}, journal = {arXiv e-prints}, keywords = {Computer Science - Robotics}, year = 2018, month = Mar, eid = {arXiv:1803.01047}, pages = {arXiv:1803.01047}, archivePrefix = {arXiv}, eprint = {1803.01047}, primaryClass = {cs.RO}}"
+      },
+      "model": {
+        "description": "The model consists of two networks trained together, first one being single-view depth network and the second one pose-reliability network. Both of them have decoder-encoder design, a stack of convolutional networks.",
+        "provenance": "contributed by author",
+        "architecture": "Convolutional Neural Network(CNN), Decoder/Encoder",
+        "learning_type": "Unsupervised learning",
+        "format": ".pb",
+        "io": {
+          "input": {
+            "description": "The SFM-Learner input is an image that consists 3 consecutive frames in which the pose estimation will be applied on. Hence, a video can be fed to model by extracting the frames and patching each 3 of them into an image through sliding the frames for each image.",
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 3
+              },
+              {
+                "min": 128
+              },
+              {
+                "min": 416
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "Pose outputs",
+              "type": "vector",
+              "description": "The output consists of the estimated pose parameters: translation_x, translation_y, translation_z and the rotation values in a quaternion format."
+            }
+          ]
+        }
+      },
+      "modelhub": {}
+    }
+  },
+  "squeezenet": {
+    "configData": {
+      "id": "d50796da-87f2-4493-846e-6eeb498acc63",
+      "meta": {
+        "name": "squeezenet",
+        "application_area": "ImageNet",
+        "task": "Classification",
+        "task_extended": "ImageNet classification",
+        "data_type": "Image/Photo",
+        "data_source": "http://www.image-net.org/"
+      },
+      "publication": {
+        "title": "SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and <0.5MB model size",
+        "source": "arXiv",
+        "year": 2016,
+        "authors": "Forrest N. Iandola, Song Han, Matthew W. Moskewicz, Khalid Ashraf, William J. Dally, Kurt Keutzer",
+        "email": "forresti@eecs.berkeley.edu",
+        "abstract": "Recent research on deep neural networks has focused primarily on improving accuracy. For a given accuracy level, it is typically possible to identify multiple DNN architectures that achieve that accuracy level. With equivalent accuracy, smaller DNN architectures offer at least three advantages: (1) Smaller DNNs require less communication across servers during distributed training. (2) Smaller DNNs require less bandwidth to export a new model from the cloud to an autonomous car. (3) Smaller DNNs are more feasible to deploy on FPGAs and other hardware with limited memory. To provide all of these advantages, we propose a small DNN architecture called SqueezeNet. SqueezeNet achieves AlexNet-level accuracy on ImageNet with 50x fewer parameters. Additionally, with model compression techniques we are able to compress SqueezeNet to less than 0.5MB (510x smaller than AlexNet).",
+        "url": "https://arxiv.org/abs/1602.07360",
+        "google_scholar": "https://scholar.google.com/scholar?cites=17131899958223648583&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@article{iandola2016squeezenet, title={SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and< 0.5 MB model size}, author={Iandola, Forrest N and Han, Song and Moskewicz, Matthew W and Ashraf, Khalid and Dally, William J and Keutzer, Kurt}, journal={arXiv preprint arXiv:1602.07360}, year={2016}}"
+      },
+      "model": {
+        "description": "SqueezeNet begins with a standalone convolution layer (conv1), followed by 8 Fire modules (fire2-9), ending with a final conv layer (conv10). We gradually increase the number of filters per fire module from the beginning to the end of the network. SqueezeNet performs max-pooling with a stride of 2 after layers conv1, fire4, fire8, and conv10",
+        "provenance": "https://github.com/onnx/models/tree/master/squeezenet",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".onnx",
+        "io": {
+          "input": {
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 4
+              },
+              {
+                "min": 32
+              },
+              {
+                "min": 32
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "probabilities",
+              "type": "label_list",
+              "description": "Probabilities of the 1000 classes in the ImageNet dataset."
+            }
+          ]
+        }
+      },
+      "modelhub": {
+        "top": 5,
+        "sort": true
+      }
+    }
+  },
+  "unet-2d": {
+    "configData": {
+      "id": "7f91e01c-0b61-49d3-98ca-241dcb699802",
+      "meta": {
+        "name": "unet-2d",
+        "application_area": "cell segmentation",
+        "task": "cell segmentation",
+        "task_extended": "cell segmentation",
+        "data_type": "Image/Photo",
+        "data_source": "private"
+      },
+      "publication": {
+        "title": "U-Net: Convolutional Networks for Biomedical Image Segmentation",
+        "source": "arXiv",
+        "year": 2015,
+        "authors": "Olaf Ronneberger, Philipp Fischer, Thomas Brox",
+        "abstract": "There is large consent that successful training of deep networks requires many thousand annotated training samples. In this paper, we present a network and training strategy that relies on the strong use of data augmentation to use the available annotated samples more efficiently. The architecture consists of a contracting path to capture context and a symmetric expanding path that enables precise localization. We show that such a network can be trained end-to-end from very few images and outperforms the prior best method (a sliding-window convolutional network) on the ISBI challenge for segmentation of neuronal structures in electron microscopic stacks. Using the same network trained on transmitted light microscopy images (phase contrast and DIC) we won the ISBI cell tracking challenge 2015 in these categories by a large margin. Moreover, the network is fast. Segmentation of a 512x512 image takes less than a second on a recent GPU. The full implementation (based on Caffe) and the trained networks are available at this https://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/ . ",
+        "url": "https://arxiv.org/abs/1505.04597",
+        "google_scholar": "https://scholar.google.com/scholar?hl=en&as_sdt=0%2C22&q=U-net&btnG=",
+        "bibtex": "@inproceedings{ronneberger2015u,   title={U-net: Convolutional networks for biomedical image segmentation},  author={Ronneberger, Olaf and Fischer, Philipp and Brox, Thomas},  booktitle={International Conference on Medical image computing and computer-assisted intervention},  pages={234--241},  year={2015},  organization={Springer}}"
+      },
+      "model": {
+        "description": "such a network can be trained end-to-end from very few images and outperforms the prior best method (a sliding-window convolutional network) on the ISBI challenge for segmentation of neuronal structures in electron microscopic stacks. ",
+        "provevance": "https://github.com/zhixuhao/unet",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".prototxt",
+        "io": {
+          "input": {
+            "single": {
+              "format": [
+                "image/png",
+                "image/jpg",
+                "image/jpeg"
+              ],
+              "dim_limits": [
+                {
+                  "min": 1,
+                  "max": 4
+                },
+                {
+                  "min": 32
+                },
+                {
+                  "min": 32
+                }
+              ]
+            }
+          },
+          "output": [
+            {
+              "name": "segmented cell images",
+              "type": "ndarray",
+              "description": "segmented cell images"
+            }
+          ]
+        }
+      },
+      "modelhub": {}
+    }
+  },
+  "vgg-19": {
+    "configData": {
+      "id": "f7201cb5-37af-476b-86e0-4c8120d8235e",
+      "meta": {
+        "name": "vgg-19",
+        "application_area": "ImageNet",
+        "task": "Classification",
+        "task_extended": "ImageNet classification",
+        "data_type": "Image/Photo",
+        "data_source": "http://www.image-net.org/"
+      },
+      "publication": {
+        "title": "Very Deep Convolutional Networks for Large-Scale Image Recognition",
+        "source": "arXiv",
+        "year": 2015,
+        "authors": "Karen Simonyan, Andrew Zisserman",
+        "email": "karen@robots.ox.ac.uk",
+        "abstract": "In this work we investigate the effect of the convolutional network depth on its accuracy in the large-scale image recognition setting. Our main contribution is a thorough evaluation of networks of increasing depth using an architecture with very small (3x3) convolution filters, which shows that a significant improvement on the prior-art configurations can be achieved by pushing the depth to 16-19 weight layers. These findings were the basis of our ImageNet Challenge 2014 submission, where our team secured the first and the second places in the localisation and classification tracks respectively. We also show that our representations generalise well to other datasets, where they achieve state-of-the-art results. We have made our two best-performing ConvNet models publicly available to facilitate further research on the use of deep visual representations in computer vision.",
+        "url": "https://arxiv.org/abs/1409.1556",
+        "google_scholar": "https://scholar.google.com/scholar?cites=15993525775437884507&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@article{DBLP:journals/corr/SimonyanZ14a, author = {Karen Simonyan and Andrew Zisserman}, title     = {Very Deep Convolutional Networks for Large-Scale Image Recognition}, journal   = {CoRR}, volume = {abs/1409.1556}, year = {2014}, url = {http://arxiv.org/abs/1409.1556}, archivePrefix = {arXiv}, eprint = {1409.1556}, timestamp = {Mon, 13 Aug 2018 16:46:51 +0200}, biburl = {https://dblp.org/rec/bib/journals/corr/SimonyanZ14a}, bibsource = {dblp computer science bibliography, https://dblp.org}}"
+      },
+      "model": {
+        "description": "VGG-19 is a convolutional neural network trained on more than a million images from the ImageNet database. It is 19 layers deep and can classify images into 1000 object categories. It took part in the ImageNet ILSVRC-2014 challenge, where it secured the first and the second places in the localisation and classification tasks respectively.",
+        "provenance": "https://mxnet.apache.org/model_zoo/index.html",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".onnx",
+        "io": {
+          "input": {
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 4
+              },
+              {
+                "min": 32
+              },
+              {
+                "min": 32
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "probabilities",
+              "type": "label_list",
+              "description": "Probabilities of the 1000 classes in the ImageNet dataset."
+            }
+          ]
+        }
+      },
+      "modelhub": {
+        "top": 5,
+        "sort": true
+      }
     }
   },
   "xception": {
-    "description": "Xception is inspired by Inception and introduces modified depthwise separable convolutions.",
-    "inputFormat": {
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 4
-        },
-        {
-          "min": 32
-        },
-        {
-          "min": 32
+    "configData": {
+      "id": "dbf35840-9c8d-408f-8a36-b9fe2f8e5546",
+      "meta": {
+        "name": "xception",
+        "application_area": "ImageNet",
+        "task": "Classification",
+        "task_extended": "ImageNet classification",
+        "data_type": "Image/Photo",
+        "data_source": "http://www.image-net.org/challenges/LSVRC/2012/"
+      },
+      "publication": {
+        "title": "Xception: Deep Learning with Depthwise Separable Convolutions",
+        "source": "Arxiv",
+        "year": 2016,
+        "authors": "Francois Chollet",
+        "abstract": "We present an interpretation of Inception modules in convolutional neural networks as being an intermediate step in-between regular convolution and the depthwise separable convolution operation (a depthwise convolution followed by a pointwise convolution). In this light, a depthwise separable convolution can be understood as an Inception module with a maximally large number of towers. This observation leads us to propose a novel deep convolutional neural network architecture inspired by Inception, where Inception modules have been replaced with depthwise separable convolutions. We show that this architecture, dubbed Xception, slightly outperforms Inception V3 on the ImageNet dataset (which Inception V3 was designed for), and significantly outperforms Inception V3 on a larger image classification dataset comprising 350 million images and 17,000 classes. Since the Xception architecture has the same number of parameters as Inception V3, the performance gains are not due to increased capacity but rather to a more efficient use of model parameters.",
+        "url": "https://arxiv.org/abs/1610.02357",
+        "google_scholar": "https://scholar.google.com/scholar?oi=bibs&hl=en&cites=3110565860331647079",
+        "bibtex": "@article{DBLP:journals/corr/Chollet16a, author = {Francois Chollet}, title = {Xception: Deep Learning with Depthwise Separable Convolutions}, journal = {CoRR}, volume = {abs/1610.02357}, year = {2016}, url = {http://arxiv.org/abs/1610.02357}, archivePrefix = {arXiv}, eprint = {1610.02357}, timestamp = {Mon, 13 Aug 2018 16:46:20 +0200}, biburl = {https://dblp.org/rec/bib/journals/corr/Chollet16a}, bibsource = {dblp computer science bibliography, https://dblp.org}}"
+      },
+      "model": {
+        "description": "Xception is inspired by Inception and introduces modified depthwise separable convolutions.",
+        "provenance": "https://github.com/fchollet/deep-learning-models/blob/master/xception.py",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised learning",
+        "format": ".h5",
+        "io": {
+          "input": {
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 4
+              },
+              {
+                "min": 32
+              },
+              {
+                "min": 32
+              }
+            ]
+          },
+          "output": [
+            {
+              "name": "probabilities",
+              "type": "label_list",
+              "description": "Probabilities of the 1000 classes in the ImageNet dataset."
+            }
+          ]
         }
-      ]
+      },
+      "modelhub": {
+        "top": 5,
+        "sort": true
+      }
     }
   },
   "yolo-v3": {
-    "description": "You only look once (YOLO) is a state-of-the-art, real-time object detection system. ",
-    "inputFormat": {
-      "format": [
-        "image/png",
-        "image/jpg",
-        "image/jpeg"
-      ],
-      "dim_limits": [
-        {
-          "min": 1,
-          "max": 5
-        },
-        {
-          "min": 200
-        },
-        {
-          "min": 200
+    "configData": {
+      "id": "d9564b79-1f1a-4ac4-891d-2767a0d6bc95",
+      "meta": {
+        "name": "YOLOv3",
+        "application_area": "Object Detection",
+        "task": "Object Detection",
+        "task_extended": "Object Detection",
+        "data_type": "Image/Photo",
+        "data_source": "http://cocodataset.org/#download"
+      },
+      "publication": {
+        "title": "YOLOv3: An Incremental Improvement",
+        "source": "arXiv",
+        "year": 2018,
+        "authors": "Joseph Redmon, Ali Farhadi",
+        "email": "pjreddie@uw.edu",
+        "abstract": "We present some updates to YOLO! We made a bunch of little design changes to make it better. We also trained this new network that's pretty swell. It's a little bigger than last time but more accurate. It's still fast though, don't worry. At 320x320 YOLOv3 runs in 22 ms at 28.2 mAP, as accurate as SSD but three times faster. When we look at the old .5 IOU mAP detection metric YOLOv3 is quite good. It achieves 57.9 mAP@50 in 51 ms on a Titan X, compared to 57.5 mAP@50 in 198 ms by RetinaNet, similar performance but 3.8x faster. As always, all the code is online at this https URL",
+        "url": "https://arxiv.org/abs/1804.02767",
+        "google_scholar": "https://scholar.google.com/scholar?cites=12589619088479868341&as_sdt=40000005&sciodt=0,22&hl=en",
+        "bibtex": "@article{DBLP:journals/corr/abs-1804-02767, author    = {Joseph Redmon and Ali Farhadi}, title     = {YOLOv3: An Incremental Improvement},journal   = {CoRR}, volume    = {abs/1804.02767}, year      = {2018}, url       = {http://arxiv.org/abs/1804.02767}, archivePrefix = {arXiv}, eprint    = {1804.02767}, timestamp = {Mon, 13 Aug 2018 16:48:24 +0200}, biburl    = {https://dblp.org/rec/bib/journals/corr/abs-1804-02767}, bibsource = {dblp computer science bibliography, https://dblp.org}}"
+      },
+      "model": {
+        "description": "You only look once (YOLO) is a state-of-the-art, real-time object detection system. ",
+        "provenance": "https://github.com/experiencor/keras-yolo3",
+        "architecture": "Convolutional Neural Network (CNN)",
+        "learning_type": "Supervised Learning",
+        "format": ".h5",
+        "io": {
+          "input": {
+            "format": [
+              "image/png",
+              "image/jpg",
+              "image/jpeg"
+            ],
+            "dim_limits": [
+              {
+                "min": 1,
+                "max": 5
+              },
+              {
+                "min": 200
+              },
+              {
+                "min": 200
+              }
+            ],
+            "description": "Min input size for network input given"
+          },
+          "output": [
+            {
+              "name": "BB Locations and Class Probabilities",
+              "type": "custom",
+              "description": "A (13,13,255) numpy array where 255 = 3[Bounding Boxes per Cell]*(4[x,y,w,h of BB]+1[BB confidence score]+80[class probabilities] for each of the 13x13 grid cells. More desc in the sandbox.ipynb and here: https://towardsdatascience.com/review-yolov3-you-only-look-once-object-detection-eab75d7a1ba6"
+            }
+          ]
         }
-      ],
-      "description": "Min input size for network input given"
+      },
+      "modelhub": {
+        "top": 5,
+        "sort": true
+      }
     }
   }
 }
