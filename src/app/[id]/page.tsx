@@ -1,18 +1,13 @@
 "use client";
 
 import { ChatLayout } from "@/components/chat/chat-layout";
-import { ChatOllama } from "@langchain/community/chat_models/ollama";
-import { AIMessage, HumanMessage } from "@langchain/core/messages";
-import { BytesOutputParser } from "@langchain/core/output_parsers";
-import { ChatRequestOptions } from "ai";
 import { Message, useChat } from "ai/react";
 import React, { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { v4 as uuidv4 } from "uuid";
 
 export default function Page({ params }: { params: { id: string } }) {
   const {
-    messages,
+    messages = [],
     input,
     handleInputChange,
     handleSubmit,
@@ -21,7 +16,9 @@ export default function Page({ params }: { params: { id: string } }) {
     stop,
     setMessages,
     setInput,
+    addToolResult,
   } = useChat({
+    maxToolRoundtrips: 5,
     onResponse: (response) => {
       if (response) {
         setLoadingSubmit(false);
@@ -31,25 +28,31 @@ export default function Page({ params }: { params: { id: string } }) {
       setLoadingSubmit(false);
       toast.error("An error occurred. Please try again.");
     },
+    async onToolCall({ toolCall }) {
+      if (toolCall.toolName === "loadModel") {
+        console.log(toolCall);
+        return loadModels(toolCall);
+      }
+      if (toolCall.toolName === "makeModelPrediction") {
+        console.log(toolCall);
+        return predict(toolCall);
+      }
+    },
   });
-  const [chatId, setChatId] = React.useState<string>("");
-  const [selectedModel, setSelectedModel] = React.useState<string>(
-    localStorage.getItem("selectedModel") || "No model loaded",
-  );
-  const [ollama, setOllama] = React.useState<ChatOllama>();
-  const env = process.env.NODE_ENV;
-  const [loadingSubmit, setLoadingSubmit] = React.useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
 
-  useEffect(() => {
-    if (env === "production") {
-      const newOllama = new ChatOllama({
-        baseUrl: process.env.NEXT_PUBLIC_OLLAMA_URL || "http://localhost:11434",
-        model: selectedModel,
-      });
-      setOllama(newOllama);
+  const [chatId, setChatId] = useState<string>("");
+  const [selectedModel, setSelectedModel] = useState<string>("");
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [installedModels, setInstalledModels] = useState<string[]>([]);
+  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+
+  React.useEffect(() => {
+    if (!isLoading && !error && chatId && messages.length > 0) {
+      localStorage.setItem(`chat_${chatId}`, JSON.stringify(messages));
+      window.dispatchEvent(new Event("storage"));
     }
-  }, [selectedModel]);
+  }, [chatId, isLoading, error]);
 
   React.useEffect(() => {
     if (params.id) {
@@ -60,120 +63,86 @@ export default function Page({ params }: { params: { id: string } }) {
     }
   }, []);
 
-  const addMessage = (Message: any) => {
-    messages.push(Message);
-    window.dispatchEvent(new Event("storage"));
-    setMessages([...messages]);
-  };
-
-  // Function to handle chatting with Ollama in production (client side)
-  const handleSubmitProduction = async (
-    e: React.FormEvent<HTMLFormElement>,
-  ) => {
-    e.preventDefault();
-
-    addMessage({ role: "user", content: input, id: chatId });
-    setInput("");
-
-    if (ollama) {
+  const loadModels = async (toolCall: any) => {
+    if (toolCall.args) {
       try {
-        const parser = new BytesOutputParser();
-
-        const stream = await ollama
-          .pipe(parser)
-          .stream(
-            (messages as Message[]).map((m) =>
-              m.role == "user"
-                ? new HumanMessage(m.content)
-                : new AIMessage(m.content),
-            ),
-          );
-
-        const decoder = new TextDecoder();
-
-        let responseMessage = "";
-        for await (const chunk of stream) {
-          const decodedChunk = decoder.decode(chunk);
-          responseMessage += decodedChunk;
-          setLoadingSubmit(false);
-          setMessages([
-            ...messages,
-            { role: "assistant", content: responseMessage, id: chatId },
-          ]);
+        const modelName = toolCall.args.modelName;
+        if (!installedModels.includes(modelName)) {
+          console.log("Installing Model");
+          const response = await fetch("/api/installed-models", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ modelName: modelName }),
+          });
+    
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to install model");
+          }
+          const data = await response.json();
+          setInstalledModels([...installedModels, modelName]);
+          console.log("Model installed successfully:", data.message);
         }
-        addMessage({ role: "assistant", content: responseMessage, id: chatId });
-        setMessages([...messages]);
 
-        localStorage.setItem(`chat_${params.id}`, JSON.stringify(messages));
-        // Trigger the storage event to update the sidebar component
-        window.dispatchEvent(new Event("storage"));
+        console.log("Loading Model");
+        const response = await fetch("/api/models", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ action: "run", modelName }),
+        });
+    
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(`Error: ${error.message}`);
+        }
+
+        setSelectedModel(modelName);
+        const result = await response.json();
+        console.log("Model installed successfully:", result.result);
+        return "Model installed successfully. Response to user.";
       } catch (error) {
-        toast.error("An error occurred. Please try again.");
-        setLoadingSubmit(false);
+        console.error("Error:", error);
+        return "Model failed to install. Response to user.";
       }
     }
-  };
+  }
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoadingSubmit(true);
-
-    setMessages([...messages]);
-
-    // Prepare the options object with additional body data, to pass the model.
-    const requestOptions: ChatRequestOptions = {
-      options: {
-        body: {
-          selectedModel: selectedModel,
-        },
-      },
-    };
-
-    if (env === "production" && selectedModel !== "REST API") {
-      handleSubmitProduction(e);
-    } else {
-      // use the /api/chat route
-      // Call the handleSubmit function with the options
-      handleSubmit(e, requestOptions);
+  const predict = async (toolCall: any) => {
+    console.log(attachedFiles);
+    if (!selectedModel) {
+      return "No models loaded";
     }
-  };
-
-  // When starting a new chat, append the messages to the local storage
-  React.useEffect(() => {
-    if (!isLoading && !error && messages.length > 0) {
-      localStorage.setItem(`chat_${params.id}`, JSON.stringify(messages));
-      // Trigger the storage event to update the sidebar component
-      window.dispatchEvent(new Event("storage"));
+    if (!attachedFiles) {
+      return "No files attached";
     }
-  }, [messages, chatId, isLoading, error]);
-
-  const getLocalstorageChats = (): String[] => {
-    const chats = Object.keys(localStorage).filter((key) =>
-      key.startsWith("chat_"),
-    );
-    return chats;
-  };
-
-  useEffect(() => {
-    if (getLocalstorageChats().length < 2 && messages.length < 2) {
-      console.log("print messages");
-      addMessage({
-        role: "user",
-        content: "userMessage\n\n\n\n\nn\n\n\n\\n\n\n\n\n\n\n\n\n",
-        id: chatId,
+    try {
+      console.log("Predicting");
+      const formData = new FormData();
+      formData.append('file', attachedFiles[0]);
+      console.log("Form data:", formData);
+      const res = await fetch(`http://localhost:80/api/predict`, {
+        method: 'POST',
+        body: formData,
       });
-      addMessage({
-        role: "assistant",
-        content: "responseMessage\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-        id: chatId,
-      });
+      const result = await res.json();
+      console.log("Prediction result:", result);
+      setAttachedFiles([]);
+      return JSON.stringify(result["output"]);
+    } catch (error) {
+      console.error("Error:", error);
+      return "Failure";
     }
-  }, []);
+  }
 
   return (
-    <main className="flex h-[calc(100dvh)] flex-col items-center">
+    <main className="flex h-[calc(100dvh)] flex-col items-center ">
       <ChatLayout
         chatId={chatId}
+        selectedModel={selectedModel}
         setSelectedModel={setSelectedModel}
         messages={messages}
         input={input}
@@ -186,6 +155,11 @@ export default function Page({ params }: { params: { id: string } }) {
         formRef={formRef}
         setInput={setInput}
         setMessages={setMessages}
+        addToolResult={addToolResult}
+        installedModels={installedModels}
+        setInstalledModels={setInstalledModels}
+        attachedFiles={attachedFiles}
+        setAttachedFiles={setAttachedFiles}
       />
     </main>
   );
