@@ -25,16 +25,16 @@ export default function UninstalledModelList({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ action: "install", modelName: modelToInstall }),
+        body: JSON.stringify({ modelName: modelToInstall }),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to install model");
       }
-      setInstalledModels([...installedModels, modelToInstall]);
-
+  
       const data = await response.json();
+      setInstalledModels([...installedModels, modelToInstall]);
       console.log("Model installed successfully:", data.message);
     } catch (error) {
       console.error("Error installing model:", error);

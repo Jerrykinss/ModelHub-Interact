@@ -37,6 +37,7 @@ export default function ChatList({
 }: ChatListProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [chatToDelete, setChatToDelete] = useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
 
   const handleDeleteChat = (chatId: string) => {
     localStorage.removeItem(chatId);
@@ -51,6 +52,7 @@ export default function ChatList({
   const closeDeleteDialog = () => {
     setChatToDelete(null);
     setIsDeleteDialogOpen(false);
+    setDropdownOpen(null);
   };
 
   const confirmDeleteChat = async () => {
@@ -82,7 +84,7 @@ export default function ChatList({
             localChats.map(({ chatId, messages }, index) => (
               <Link
                 key={index}
-                href={`/${chatId.substr(5)}`}
+                href={`/${chatId.slice(5)}`}
                 className={cn(
                   {
                     [buttonVariants({ variant: "secondaryLink" })]:
@@ -90,8 +92,14 @@ export default function ChatList({
                     [buttonVariants({ variant: "ghost" })]:
                       chatId.substring(5) !== selectedChatId,
                   },
-                  "flex justify-between w-full h-10 text-base font-normal items-center",
+                  "flex justify-between w-full h-10 text-base font-normal items-center pr-0",
                 )}
+                onClick={(e) => {
+                  // Check if the target is the dropdown button and stop propagation if so
+                  if (e.target.closest('button')) {
+                    e.preventDefault();
+                  }
+                }}
               >
                 <div className="flex gap-3 items-center truncate">
                   <div className="flex flex-col">
@@ -100,11 +108,11 @@ export default function ChatList({
                     </span>
                   </div>
                 </div>
-                <DropdownMenu>
+                <DropdownMenu open={dropdownOpen === chatId} onOpenChange={(isOpen) => setDropdownOpen(isOpen ? chatId : null)}>
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="flex justify-end items-center pr-0 pl-4"
+                      className="flex justify-content-center align-items-center"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <MoreHorizontal size={15} className="shrink-0" />

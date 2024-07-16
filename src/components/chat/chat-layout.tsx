@@ -22,13 +22,13 @@ export interface ChatProps {
   error: undefined | Error;
   stop: () => void;
   formRef: React.RefObject<HTMLFormElement>;
-  setInput?: React.Dispatch<React.SetStateAction<string>>;
-  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setInput: React.Dispatch<React.SetStateAction<string>>;
+  setMessages: (messages: Message[]) => void
   addToolResult: (result: { toolCallId: string; result: any }) => void;
   installedModels: string[];
   setInstalledModels: (models: string[]) => void;
+  attachedFiles: File[];
+  setAttachedFiles: (files: File[]) => void;
 }
 
 export function ChatLayout({
@@ -46,11 +46,11 @@ export function ChatLayout({
   formRef,
   setInput,
   setMessages,
-  open,
-  setOpen,
   addToolResult,
   installedModels,
   setInstalledModels,
+  attachedFiles,
+  setAttachedFiles,
 }: ChatProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isChatListCollapsed, setIsChatListCollapsed] = useState(false);
@@ -129,8 +129,6 @@ export function ChatLayout({
             setSelectedModel={setSelectedModel}
             isLoading={isLoading}
             toggleSidebar={toggleSidebar}
-            open={open}
-            setOpen={setOpen}
             models={models}
             installedModels={installedModels}
             setInstalledModels={setInstalledModels}
@@ -138,29 +136,23 @@ export function ChatLayout({
         </div>
         <div className="flex flex-col justify-between w-full max-w-4xl h-full mx-auto overflow-hidden">
           <ChatList
-            setSelectedModel={setSelectedModel}
             messages={messages}
-            input={input}
             handleInputChange={handleInputChange}
-            handleSubmit={handleSubmit}
             isLoading={isLoading}
             loadingSubmit={loadingSubmit}
-            error={error}
-            stop={stop}
             formRef={formRef}
             addToolResult={addToolResult}
           />
           <ChatBottombar
-            setSelectedModel={setSelectedModel}
-            messages={messages}
             input={input}
             handleInputChange={handleInputChange}
             handleSubmit={handleSubmit}
             isLoading={isLoading}
-            error={error}
             stop={stop}
-            formRef={formRef}
             setInput={setInput}
+            selectedModel={selectedModel}
+            attachedFiles={attachedFiles}
+            setAttachedFiles={setAttachedFiles}
           />
         </div>
       </div>

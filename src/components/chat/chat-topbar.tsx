@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { CaretSortIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { Message } from "ai/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -70,8 +69,6 @@ export default function ChatTopbar({
   };
 
   const handleStopModel = async () => {
-    setSelectedModel(null);
-    localStorage.removeItem("selectedModel");
     if (!selectedModel) return;
     try {
       const response = await fetch("/api/models", {
@@ -89,7 +86,7 @@ export default function ChatTopbar({
       const result = await response.json();
       if (response.ok) {
         console.log("Model stopped successfully", result);
-        setSelectedModel(null);
+        setSelectedModel("");
         if (typeof window !== "undefined") {
           localStorage.removeItem("selectedModel");
         }
