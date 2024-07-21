@@ -7,23 +7,26 @@ import { z } from "zod";
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { messages, data } = await req.json();
   console.log(messages);
+  console.log(data);
 
-  const response = await fetch("/api/models");
+  const host = req.headers.get('host');
+  const protocol = req.headers.get('x-forwarded-proto') || 'http'; // Determine protocol (http or https)
+  const response = await fetch(`${protocol}://${host}/api/models`);
+
   let modelInfo;
   if (response.ok) {
     modelInfo = await response.json();
   } else {
-    modelInfo = {"Models": "Error fetching models"};
+    modelInfo = { "Models": "Error fetching models" };
     console.error("Failed to fetch models");
   }
+  console.log(`You are ModelHub, an LLM chatbot that has been provided with tools that allow you to utilize other machine learning models. When asking user for permission to perform a tool call, use the askForConfirmation tool. Before calling a tool, including the askForConfirmation tool, communicate to the user what you are doing and why. After a tool call is completed, tell the user what happened, even if the output is a simple success or failure. Your toolInvocation calls should always have text content to go with it. The currently selected model is: ${data && data.selectedModel ? data.selectedModel : 'None Selected'}.`);
 
-  // console.log(`You are ModelHub, an LLM chatbot that has been provided with tools that allow you to utilize other machine learning models. The following are your provided models and their descriptions:\n${JSON.stringify(modelInfo, null, 2)}`);
-  
   const result = await streamText({
     model: openai("gpt-4o"),
-    system: `You are ModelHub, an LLM chatbot that has been provided with tools that allow you to utilize other machine learning models. The following are your provided models and their descriptions:\n${JSON.stringify(modelInfo, null, 2)}`,
+    system: `You are ModelHub, an LLM chatbot that has been provided with tools that allow you to utilize other machine learning models. When asking user for permission to perform a tool call, use the askForConfirmation tool. Before calling a tool, including the askForConfirmation tool, communicate to the user what you are doing and why. After a tool call is completed, tell the user what happened, even if the output is a simple success or failure. Your toolInvocation calls should always have text content to go with it. The currently selected model is: ${data && data.selectedModel ? data.selectedModel : 'None Selected'}. The following are your provided models and their descriptions:\n${JSON.stringify(modelInfo, null, 2)}`,
     messages: convertToCoreMessages(messages),
     tools: {
       askForConfirmation: {
@@ -39,7 +42,7 @@ export async function POST(req: Request) {
       },
       makeModelPrediction: {
         description:
-          "Make a prediction. You must have used loadModel first in order to use this tool. Always ask for confirmation before using this tool using the askForConfirmation tool.",
+          "Make a prediction using the loaded model. Always ask for confirmation before using this tool using the askForConfirmation tool. You do not need to pass the file input, it is handled elsewhere.",
         parameters: z.object({}),
       },
     },

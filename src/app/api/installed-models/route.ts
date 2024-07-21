@@ -40,21 +40,20 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  export async function POST(req: NextRequest) {
-    try {
-      const { searchParams } = new URL(req.url);
-      const modelName = searchParams.get('modelName');
-      const modelDirectory = process.env.MODEL_DIRECTORY;
-      if (!modelDirectory || !modelName) {
-        throw new Error('Incorrect parameters provided');
-      }
-      await installModel(modelName, modelDirectory);
-      return NextResponse.json({ message: 'Model installed successfully' });
-    } catch (error) {
-      console.error('Error installing models:', error);
-      return NextResponse.json(
-        { message: 'Failed to install model', error },
-        { status: 500 }
-      );
+export async function POST(req: NextRequest) {
+  try {
+    const { modelName } = await req.json();
+    const modelDirectory = process.env.MODEL_DIRECTORY;
+    if (!modelDirectory || !modelName) {
+      throw new Error('Incorrect parameters provided');
     }
+    await installModel(modelName, modelDirectory);
+    return NextResponse.json({ message: 'Model installed successfully' });
+  } catch (error) {
+    console.error('Error installing models:', error);
+    return NextResponse.json(
+      { message: 'Failed to install model', error: error.message },
+      { status: 500 }
+    );
   }
+}
