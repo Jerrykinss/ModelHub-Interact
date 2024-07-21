@@ -164,14 +164,17 @@ export const runModel = (modelName: string) => {
   const contribSrc = `-v "${contribSrcPath.replace(/\\/g, "/")}:/contrib_src"`;
   const dockerId = getInitValue(modelName, "docker_id", modelDirectory);
 
-  const command = `docker run --rm ${port} ${contribSrc} ${dockerId}`;
+  const command = `docker run -d --rm ${port} ${contribSrc} ${dockerId}`;
 
   return new Promise((resolve, reject) => {
+    console.log(`Executing command: ${command}`); // Log the command
     exec(command, (error, stdout, stderr) => {
       if (error) {
+        console.error(`Error executing command: ${stderr}`); // Log stderr
         reject(stderr);
       } else {
-        resolve(stdout);
+        console.log(`Command output: ${stdout}`); // Log stdout
+        resolve(stdout.trim()); // Return the container ID
       }
     });
   });

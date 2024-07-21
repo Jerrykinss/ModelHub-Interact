@@ -25,11 +25,11 @@ export async function POST(req: NextRequest) {
 
   try {
     if (action === 'run') {
-      const result = await runModel(modelName);
-      console.log(result);
-      return NextResponse.json({ result }, { status: 200 });
+      const containerId = await runModel(modelName);
+      console.log(`Container started with ID: ${containerId}`);
+      return NextResponse.json({ containerId }, { status: 200 });
     } else if (action === 'stop') {
-      stopModel(containerId);
+      await stopModel(containerId);
       return NextResponse.json({ message: 'Model stopped successfully' });
     } else {
       return NextResponse.json({ message: 'Invalid action' }, { status: 400 });
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.log('Error:', error);
     return NextResponse.json(
-      { message: `Failed to ${action} model`, error },
+      { message: `Failed to ${action} model`, error: error.message },
       { status: 500 }
     );
   }
