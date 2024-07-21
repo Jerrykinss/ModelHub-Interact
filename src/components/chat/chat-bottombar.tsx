@@ -7,6 +7,7 @@ import { StopIcon } from "@radix-ui/react-icons";
 import { Mic, SendHorizonal, Paperclip, X } from "lucide-react";
 
 export interface ChatBottombarProps {
+  selectedModel: string;
   input: string;
   handleInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleSubmit: (
@@ -16,17 +17,21 @@ export interface ChatBottombarProps {
   isLoading: boolean;
   stop: () => void;
   setInput: React.Dispatch<React.SetStateAction<string>>;
+  attachedFiles: File[];
+  setAttachedFiles: (files: File[]) => void;
 }
 
 export default function ChatBottombar({
+  selectedModel,
   input,
   handleInputChange,
   handleSubmit,
   isLoading,
   stop,
   setInput,
+  attachedFiles,
+  setAttachedFiles,
 }: ChatBottombarProps) {
-  const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
   const updatedInputRef = useRef('');
 
@@ -43,9 +48,9 @@ export default function ChatBottombar({
     }
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files);
-    setAttachedFiles((prevFiles) => [...prevFiles, ...files]);
+    setAttachedFiles((prevFiles: File[]) => [...prevFiles, ...files]);
   };
 
   const handleDetachFile = (fileName) => {
@@ -54,55 +59,26 @@ export default function ChatBottombar({
     );
   };
 
+  useEffect(() => {
+    console.log(attachedFiles);
+  }, [attachedFiles]);
+
   const handleButtonClick = () => {
     document.getElementById("fileInput")?.click();
   };
 
-  const uploadFiles = async () => {
-    const formData = new FormData();
-    attachedFiles.forEach((file) => {
-      formData.append("files", file);
-    });
-
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const data = await response.json();
-    return data.filePaths;
-  };
-
   useEffect(() => {
     if (updatedInputRef.current !== '') {
-      handleSubmit({ preventDefault: () => {} } as React.FormEvent<HTMLFormElement>);
-      // Clear the input and attached files after submission
+      handleSubmit({ preventDefault: () => {} } as React.FormEvent<HTMLFormElement>, { data: { selectedModel, attachedFiles } });
       setInput('');
-      setAttachedFiles([]);
       updatedInputRef.current = '';
     }
   }, [input]);
   
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
-    let updatedInput = input;
-  
-    if (attachedFiles.length > 0) {
-      const filePaths = await uploadFiles();
-      updatedInput += `\nAttached files:\n${filePaths.join('\n')}`;
-      console.log(updatedInput);
-  
-      // Store the updated input in the ref
-      updatedInputRef.current = updatedInput;
-      setInput(updatedInput);
-    } else {
-      handleSubmit(e);
-  
-      // Clear the input and attached files after submission
-      setInput('');
-      setAttachedFiles([]);
-    }
+    handleSubmit(e, { data: { selectedModel, attachedFiles } });
+    setInput('');
   };
 
   return (
@@ -119,7 +95,7 @@ export default function ChatBottombar({
                 <Button
                   className="shrink-0 rounded-full p-1"
                   variant="ghost"
-                  size="icon-sm"
+                  size="iconSm"
                   onClick={() => handleDetachFile(file.name)}
                 >
                   <X className="w-4 h-4" />

@@ -159,25 +159,24 @@ export default function ChatList({
                       className="object-contain dark:invert"
                     />
                   </Avatar>
-                  <span className="bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">
-                    {message.content}
-                    {isLoading &&
-                      messages.indexOf(message) === messages.length - 1 && (
+                  <div className="flex flex-col gap-2 bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">
+                    <span>
+                      {message.content}
+                      {isLoading && messages.indexOf(message) === messages.length - 1 && (
                         <span className="animate-pulse" aria-label="Typing">
                           ...
                         </span>
                       )}
-                  </span>
-                  {message.toolInvocations?.map(
-                    (toolInvocation: ToolInvocation) => {
+                    </span>
+                    {message.toolInvocations?.map((toolInvocation: ToolInvocation) => {
                       const toolCallId = toolInvocation.toolCallId;
 
-                      // render confirmation tool (client-side tool with user interaction)
+                      // Render confirmation tool (client-side tool with user interaction)
                       if (toolInvocation.toolName === "askForConfirmation") {
                         return (
                           <div key={toolCallId} className="text-muted-foreground">
                             {toolInvocation.args.message}
-                            <div className="flex flex-col gap-2 mt-4"> {/* Added flex-col and mt-4 for spacing */}
+                            <div className="flex flex-col gap-2 mt-4">
                               {"result" in toolInvocation ? (
                                 <b>{toolInvocation.result}</b>
                               ) : (
@@ -213,19 +212,18 @@ export default function ChatList({
                         );
                       }
 
-                      // other tools:
+                      // Other tools:
                       return "result" in toolInvocation ? (
                         <div key={toolCallId} className="text-muted-foreground">
-                          Tool call {`${toolInvocation.toolName}: `}
-                          {toolInvocation.result}
+                          Tool call {`${toolInvocation.toolName}: Complete`}
                         </div>
                       ) : (
                         <div key={toolCallId} className="text-muted-foreground">
                           Calling {toolInvocation.toolName}...
                         </div>
                       );
-                    },
-                  )}
+                    })}
+                  </div>
                 </div>
               )}
             </div>
