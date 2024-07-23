@@ -59,10 +59,6 @@ export default function ChatBottombar({
     );
   };
 
-  useEffect(() => {
-    console.log(attachedFiles);
-  }, [attachedFiles]);
-
   const handleButtonClick = () => {
     document.getElementById("fileInput")?.click();
   };
@@ -77,7 +73,26 @@ export default function ChatBottombar({
   
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleSubmit(e, { data: { selectedModel, attachedFiles } });
+    console.log(attachedFiles);
+  
+    let readableFiles = [];
+  
+    if (attachedFiles && attachedFiles.length > 0) {
+      readableFiles = attachedFiles.map((file) => {
+        return {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          lastModified: file.lastModified,
+          lastModifiedDate: file.lastModifiedDate ? file.lastModifiedDate.toLocaleString() : 'n/a',
+          webkitRelativePath: file.webkitRelativePath || 'n/a'
+        };
+      });
+  
+      readableFiles.forEach(fileInfo => console.log(JSON.stringify(fileInfo, null, 2))); // Print each file's info as JSON
+    }
+  
+    handleSubmit(e, { data: { selectedModel, attachedFiles: readableFiles } });
     setInput('');
   };
 

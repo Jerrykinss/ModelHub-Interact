@@ -21,15 +21,14 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { action, modelName, containerId } = await req.json();
+  const { action, modelName } = await req.json();
 
   try {
     if (action === 'run') {
-      const containerId = await runModel(modelName);
-      console.log(`Container started with ID: ${containerId}`);
-      return NextResponse.json({ containerId }, { status: 200 });
+      await runModel(modelName);
+      return NextResponse.json({ message: 'Model started successfully' });
     } else if (action === 'stop') {
-      await stopModel(containerId);
+      await stopModel(modelName);
       return NextResponse.json({ message: 'Model stopped successfully' });
     } else {
       return NextResponse.json({ message: 'Invalid action' }, { status: 400 });

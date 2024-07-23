@@ -116,6 +116,7 @@ export function ChatLayout({
           setInstalledModels={setInstalledModels}
           selectedModel={selectedModel}
           setSelectedModel={setSelectedModel}
+          setAttachedFiles={setAttachedFiles}
         />
       </div>
       <div

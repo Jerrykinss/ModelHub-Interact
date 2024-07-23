@@ -3,6 +3,8 @@ import fs from "fs";
 import path from "path";
 import { exec, execSync } from "child_process";
 
+const modelContainers = {};
+
 export const getModelIndex = async (): Promise<any[]> => {
   const indexUrl = "https://raw.githubusercontent.com/modelhub-ai/modelhub/master/models.json";
   try {
@@ -24,11 +26,6 @@ export const getInstalledModels = () => {
     .filter((file) =>
       fs.statSync(path.join(modelDirectory, file)).isDirectory(),
     );
-};
-
-export const stopModel = (containerId: string) => {
-  const dockerStopCommand = `docker stop ${containerId}`;
-  execSync(dockerStopCommand);
 };
 
 
@@ -166,7 +163,7 @@ export const runModel = (modelName: string) => {
 
   const command = `docker run -d --rm ${port} ${contribSrc} ${dockerId}`;
 
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     console.log(`Executing command: ${command}`); // Log the command
     exec(command, (error, stdout, stderr) => {
       if (error) {
@@ -174,8 +171,21 @@ export const runModel = (modelName: string) => {
         reject(stderr);
       } else {
         console.log(`Command output: ${stdout}`); // Log stdout
-        resolve(stdout.trim()); // Return the container ID
+        const containerId = stdout.trim();
+        console.log(`Container started with ID: ${containerId}`);
+        modelContainers[modelName] = containerId; // Save the container ID in the dictionary
+        resolve(); // Resolve the promise without returning the container ID
       }
     });
   });
+};
+
+export const stopModel = (modelName: string) => {
+  const containerId = modelContainers[modelName];
+  if (!containerId) {
+    throw new Error(`No container ID found for model ${modelName}. Make sure the model is running.`);
+  }
+  const dockerStopCommand = `docker stop ${containerId}`;
+  execSync(dockerStopCommand);
+  delete modelContainers[modelName]; // Remove the container ID after stopping
 };

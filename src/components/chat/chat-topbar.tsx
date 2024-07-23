@@ -78,8 +78,7 @@ export default function ChatTopbar({
         },
         body: JSON.stringify({
           action: "stop",
-          modelName: selectedModel,
-          containerId: "your-container-id",
+          modelName: selectedModel
         }),
       });
 

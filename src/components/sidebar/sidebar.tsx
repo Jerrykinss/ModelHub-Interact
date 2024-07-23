@@ -16,6 +16,7 @@ interface SidebarProps {
   setInstalledModels: (models: string[]) => void;
   selectedModel: string;
   setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
+  setAttachedFiles: (files: File[]) => void;
 }
 
 export default function Sidebar({
@@ -29,6 +30,7 @@ export default function Sidebar({
   setInstalledModels,
   selectedModel,
   setSelectedModel,
+  setAttachedFiles,
 }: SidebarProps) {
   const router = useRouter();
   const [localChats, setLocalChats] = useState<
@@ -85,6 +87,7 @@ export default function Sidebar({
           onClick={() => {
             router.push("/");
             setMessages([]);
+            setAttachedFiles([]);
           }}
           variant="ghost"
           className="flex justify-between w-full h-14 text-sm xl:text-lg font-normal items-center"
