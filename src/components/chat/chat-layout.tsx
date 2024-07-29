@@ -64,7 +64,7 @@ export function ChatLayout({
   useEffect(() => {
     const fetchModels = async () => {
       try {
-        const modelsResponse = await fetch("/api/models");
+        const modelsResponse = await fetch("/api/model-data");
         if (modelsResponse.ok) {
           const modelInfo = await modelsResponse.json();
           setModels(Object.keys(modelInfo));
@@ -77,24 +77,6 @@ export function ChatLayout({
     };
 
     fetchModels();
-  }, []);
-
-  useEffect(() => {
-    const fetchInstalledModels = async () => {
-      try {
-        const installedResponse = await fetch("/api/installed-models");
-        if (installedResponse.ok) {
-          const installedModels = await installedResponse.json();
-          setInstalledModels(installedModels);
-        } else {
-          console.error("Failed to fetch models");
-        }
-      } catch (error) {
-        console.error("Error fetching installed models");
-      }
-    };
-
-    fetchInstalledModels();
   }, []);
 
 
