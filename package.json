@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-ollama-local-ai",
+  "name": "modelhub-interact",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -26,6 +26,7 @@
     "@radix-ui/react-scroll-area": "^1.0.5",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-toast": "^1.2.1",
     "@radix-ui/react-tooltip": "^1.0.7",
     "ai": "^3.2.5",
     "axios": "^1.7.2",

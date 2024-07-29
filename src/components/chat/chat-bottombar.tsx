@@ -73,7 +73,6 @@ export default function ChatBottombar({
   
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(attachedFiles);
   
     let readableFiles = [];
   

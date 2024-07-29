@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { INITIAL_QUESTIONS } from "@/utils/initial-questions";
 import { Button } from "../ui/button";
+import ReactMarkdown from 'react-markdown';
+
 
 interface ChatListProps {
   messages: Message[];
@@ -28,7 +30,6 @@ export default function ChatList({
   const [name, setName] = React.useState<string>("");
   const [localStorageIsLoading, setLocalStorageIsLoading] =
     React.useState(true);
-  const [initialQuestions, setInitialQuestions] = React.useState<Message[]>([]);
 
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -39,46 +40,12 @@ export default function ChatList({
   }, [messages]);
 
   useEffect(() => {
-    const username = localStorage.getItem("ollama_user");
+    const username = localStorage.getItem("user");
     if (username) {
       setName(username);
       setLocalStorageIsLoading(false);
     }
   }, []);
-
-  useEffect(() => {
-    // Fetch 4 initial questions
-    if (messages.length === 0) {
-      setInitialQuestions(
-        INITIAL_QUESTIONS.sort(() => Math.random() - 0.5)
-          .slice(0, 2)
-          .map((message) => {
-            return {
-              id: "1",
-              role: "user",
-              content: message.content,
-            };
-          }),
-      );
-    }
-  }, [messages.length]);
-
-  const onClickQuestion = (value: string, e: React.MouseEvent) => {
-    e.preventDefault();
-
-    handleInputChange({
-      target: { value },
-    } as React.ChangeEvent<HTMLTextAreaElement>);
-
-    setTimeout(() => {
-      formRef.current?.dispatchEvent(
-        new Event("submit", {
-          cancelable: true,
-          bubbles: true,
-        }),
-      );
-    }, 1);
-  };
 
   if (messages.length === 0) {
     return (
@@ -89,24 +56,6 @@ export default function ChatList({
             <p className="text-center text-lg text-muted-foreground">
               How can I help you today?
             </p>
-          </div>
-
-          <div className="absolute bottom-3 w-full px-4 sm:max-w-3xl grid gap-2 sm:grid-cols-2 sm:gap-4 text-sm">
-            {/* Only display 4 random questions */}
-            {initialQuestions.length > 0 &&
-              initialQuestions.map((message) => {
-                return (
-                  <Button
-                    key={message.content}
-                    type="button"
-                    variant="outline"
-                    className="sm:text-start px-4 py-8 flex w-full justify-center sm:justify-start items-center text-sm whitespace-pre-wrap"
-                    onClick={(e) => onClickQuestion(message.content, e)}
-                  >
-                    {message.content}
-                  </Button>
-                );
-              })}
           </div>
         </div>
       </div>
@@ -161,7 +110,7 @@ export default function ChatList({
                   </Avatar>
                   <div className="flex flex-col gap-2 bg-accent p-3 rounded-md max-w-xs sm:max-w-2xl overflow-x-auto">
                     <span>
-                      {message.content}
+                      <ReactMarkdown>{message.content}</ReactMarkdown>
                       {isLoading && messages.indexOf(message) === messages.length - 1 && (
                         <span className="animate-pulse" aria-label="Typing">
                           ...

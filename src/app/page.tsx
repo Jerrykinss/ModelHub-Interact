@@ -3,7 +3,6 @@
 import { ChatLayout } from "@/components/chat/chat-layout";
 import { Message, useChat } from "ai/react";
 import React, { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import {
   Dialog,
@@ -12,6 +11,7 @@ import {
   DialogContent,
 } from "@/components/ui/dialog";
 import UserForm from "@/components/windows/user-form";
+import { useToast } from '@/components/ui/use-toast';
 
 export default function Home() {
   const {
@@ -34,12 +34,12 @@ export default function Home() {
     },
     onError: (error) => {
       setLoadingSubmit(false);
-      toast.error("An error occurred. Please try again.");
+      toast( { description: "An error occurred. Please try again." });
     },
     async onToolCall({ toolCall }) {
       if (toolCall.toolName === "loadModel") {
         console.log(toolCall);
-        return loadModels(toolCall);
+        return loadOrInstallModel(toolCall);
       }
       if (toolCall.toolName === "makeModelPrediction") {
         console.log(toolCall);
@@ -52,6 +52,7 @@ export default function Home() {
     },
   });
 
+  const { toast } = useToast();
   const [chatId, setChatId] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
   const [open, setOpen] = useState(false); // Default to false
@@ -59,6 +60,10 @@ export default function Home() {
   const formRef = useRef<HTMLFormElement>(null);
   const [installedModels, setInstalledModels] = useState<string[]>([]);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+
+  useEffect(() => {
+    toast({ description: "Test Toast..." });
+  }, []);
 
   useEffect(() => {
     if (messages.length < 1) {
@@ -84,45 +89,79 @@ export default function Home() {
     }
   }, [chatId, isLoading, error]);
 
+  useEffect(() => {
+    const fetchInstalledModels = async () => {
+      try {
+        const installedResponse = await fetch("/api/installed-models");
+        if (installedResponse.ok) {
+          const installedModels = await installedResponse.json();
+          setInstalledModels(installedModels);
+        } else {
+          console.error("Failed to fetch models");
+        }
+      } catch (error) {
+        console.error("Error fetching installed models");
+      }
+    };
+
+    fetchInstalledModels();
+  }, []);
+
   const onOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
   };
 
-  const loadModels = async (toolCall: any) => {
+  const loadOrInstallModel = async (toolCall: any) => {
     if (toolCall.args) {
-      try {
-        const modelName = toolCall.args.modelName;
-        if (!installedModels.includes(modelName)) {
-          installModel(modelName);
-        }
-
-        console.log("Loading Model");
-        const response = await fetch("/api/models", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ action: "run", modelName }),
-        });
-    
-        if (!response.ok) {
-          const error = await response.json();
-          throw new Error(`Error: ${error.message}`);
-        }
-
-        setSelectedModel(modelName);
-        const result = await response.json();
-        console.log("Model installed successfully:", result.result);
-        return "Model installed successfully. Respond to user.";
-      } catch (error) {
-        console.error("Error:", error);
-        return "Model failed to install. Respond to user.";
+      const modelName = toolCall.args.modelName;
+      if (!installedModels.includes(modelName)) {
+        return installModel(modelName);
       }
+      else { 
+        return loadModels(modelName);
+      }
+    }
+  };
+
+  const loadModels = async (modelName: string) => {
+    try {
+      console.log("Loading Model");
+      const response = await fetch("/api/models", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ action: "run", modelName }),
+      });
+  
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(`Error: ${error.message}`);
+      }
+
+      setSelectedModel(modelName);
+      const result = await response.json();
+      console.log("Model loaded successfully:", result.result);
+      return "Model installed successfully. Respond to user.";
+    } catch (error) {
+      console.error("Error:", error);
+      return "Model failed to install. Respond to user.";
     }
   }
 
   const installModel = async (modelName: string) => {
-    console.log("Installing Model");
+    try {
+      console.log("Installing Model:", modelName);
+      installModelFiles(modelName);
+      monitorModelStatus(modelName);
+      return "Model was not downloaded. Model begun installation. Respond to user.";
+    } catch (error) {
+      console.error("Error:", error);
+      return "Model was not downloaded. Model failed to install. Respond to user.";
+    }
+  }
+
+  const installModelFiles = async (modelName: string) => {
     const response = await fetch("/api/installed-models", {
       method: "POST",
       headers: {
@@ -135,10 +174,58 @@ export default function Home() {
       const errorData = await response.json();
       throw new Error(errorData.message || "Failed to install model");
     }
+
+    const result = await response.json();
+    console.log("Model finished file installations:", result.result);
+  };
+
+  const checkModelStatus = async (modelName: string) => {
+    const response = await fetch(`/api/model-status?modelName=${modelName}`);
     const data = await response.json();
-    setInstalledModels([...installedModels, modelName]);
-    console.log("Model installed successfully:", data.message);
-  }
+  
+    if (response.ok) {
+      return { status: data.status };
+    } else {
+      return { error: data.error };
+    }
+  };
+  
+  const monitorModelStatus = async (modelName: string) => {
+    let actionTakenForDownloading = false;
+    let actionTakenForPulling = false;
+
+    const checkStatus = async () => {
+        const result = await checkModelStatus(modelName);
+
+        if (result.error) {
+            toast({ description: result.error });
+            clearInterval(intervalId);
+            return result.error;
+        }
+
+        const status = result.status;
+
+        if (status === 'Downloading files' && !actionTakenForDownloading) {
+            toast({ description: `Downloading files for ${modelName}...` });
+            actionTakenForDownloading = true;
+        } else if (status === 'Pulling Docker image' && !actionTakenForPulling) {
+            toast({ description: `Pulling Docker image for ${modelName}...` });
+            actionTakenForPulling = true;
+        } else if (status === 'Ready') {
+            toast({ description: `Model ${modelName} is now ready` });
+            clearInterval(intervalId);
+        } else if (status === 'Install failed') {
+            toast({ description: `Model ${modelName} install failed` });
+            clearInterval(intervalId);
+        }
+    };
+
+    // Perform the first check immediately
+    await checkStatus();
+
+    // Set up the interval for subsequent checks
+    const intervalId = setInterval(checkStatus, 5000);
+};
 
   const predict = async (toolCall: any) => {
     console.log(attachedFiles);
