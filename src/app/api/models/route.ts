@@ -1,31 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {
-  runModel,
-  stopModel,
-} from '../services/modelService';
-import fs from 'fs';
-
-export async function GET(req: NextRequest) {
-  try {
-    const filePath = './public/model-data.json';
-    const jsonData = fs.readFileSync(filePath, 'utf8');
-    let modelInfo = JSON.parse(jsonData);
-    return NextResponse.json(modelInfo);
-  } catch (error) {
-    console.error('Error fetching models:', error);
-    return NextResponse.json(
-      { message: 'Failed to fetch models', error },
-      { status: 500 }
-    );
-  }
-}
+import { startModel, stopModel } from '@/services/modelManager';
 
 export async function POST(req: NextRequest) {
   const { action, modelName } = await req.json();
 
   try {
     if (action === 'run') {
-      await runModel(modelName);
+      await startModel(modelName);
       return NextResponse.json({ message: 'Model started successfully' });
     } else if (action === 'stop') {
       await stopModel(modelName);

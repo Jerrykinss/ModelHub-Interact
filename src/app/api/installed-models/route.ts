@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getInstalledModels, deleteModel, installModel } from '../services/modelService';
+import { getInstalledModels, deleteModel, installModel } from '@/services/modelInstallManager';
 
 export async function GET(req: NextRequest) {
     try {
