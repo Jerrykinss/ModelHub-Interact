@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     }
   
     try {
-      const success = deleteModel(modelName);
+      const success = deleteModel(modelName.toLowerCase());
       if (success) {
         return NextResponse.json({ message: 'Model deleted successfully' });
       } else {
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     if (!modelDirectory || !modelName) {
       throw new Error('Incorrect parameters provided');
     }
-    await installModel(modelName, modelDirectory);
+    await installModel(modelName.toLowerCase(), modelDirectory);
     return NextResponse.json({ message: 'Model installed successfully' });
   } catch (error) {
     console.error('Error installing models:', error);

@@ -25,6 +25,7 @@ export default function Home() {
     setMessages,
     setInput,
     addToolResult,
+    append,
   } = useChat({
     maxToolRoundtrips: 5,
     onResponse: (response) => {
@@ -49,21 +50,18 @@ export default function Home() {
         console.log(toolCall);
         return stopModel(toolCall);
       }
+      fetchInstalledModels();
     },
   });
 
   const { toast } = useToast();
   const [chatId, setChatId] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
-  const [open, setOpen] = useState(false); // Default to false
+  const [open, setOpen] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const [installedModels, setInstalledModels] = useState<string[]>([]);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
-
-  useEffect(() => {
-    toast({ description: "Test Toast..." });
-  }, []);
 
   useEffect(() => {
     if (messages.length < 1) {
@@ -89,22 +87,25 @@ export default function Home() {
     }
   }, [chatId, isLoading, error]);
 
-  useEffect(() => {
-    const fetchInstalledModels = async () => {
-      try {
-        const installedResponse = await fetch("/api/installed-models");
-        if (installedResponse.ok) {
-          const installedModels = await installedResponse.json();
-          setInstalledModels(installedModels);
-        } else {
-          console.error("Failed to fetch models");
-        }
-      } catch (error) {
-        console.error("Error fetching installed models");
+  const fetchInstalledModels = async () => {
+    try {
+      const installedResponse = await fetch("/api/installed-models");
+      if (installedResponse.ok) {
+        const installedModels = await installedResponse.json();
+        setInstalledModels(installedModels);
+      } else {
+        console.error("Failed to fetch models");
       }
-    };
+    } catch (error) {
+      console.error("Error fetching installed models");
+    }
+  };
 
+  useEffect(() => {
     fetchInstalledModels();
+    const intervalId = setInterval(fetchInstalledModels, 20000); // 10 seconds interval
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const onOpenChange = (isOpen: boolean) => {
@@ -213,6 +214,7 @@ export default function Home() {
             actionTakenForPulling = true;
         } else if (status === 'Ready') {
             toast({ description: `Model ${modelName} is now ready` });
+            notifyAssistant(`Model ${modelName} has now been installed. Ask the user if they want it loaded and running.`);
             clearInterval(intervalId);
         } else if (status === 'Install failed') {
             toast({ description: `Model ${modelName} install failed` });
@@ -220,12 +222,15 @@ export default function Home() {
         }
     };
 
-    // Perform the first check immediately
     await checkStatus();
 
     // Set up the interval for subsequent checks
     const intervalId = setInterval(checkStatus, 5000);
-};
+  };
+
+  const notifyAssistant = async (message: string) => {
+    append({ role: "assistant", content: "",  toolInvocations: [{ toolCallId: "call_123", toolName: "modelInstallUpdate", args: {}, result: message }] });
+  };
 
   const predict = async (toolCall: any) => {
     console.log(attachedFiles);
@@ -247,11 +252,49 @@ export default function Home() {
       const result = await res.json();
       console.log("Prediction result:", result);
       setAttachedFiles([]);
-      return `The following is the results. Interpret it and provide your findings to the user:\n\n${JSON.stringify(result["output"])}`;
+      return await processPredictionResult(selectedModel.toLowerCase(), result);
     } catch (error) {
       console.error("Error:", error);
       return "Failed to predict. Respond to user.";
     }
+  };
+
+  const processPredictionResult = async (model: string, result: any) => {
+    const response = await fetch('/api/model-data');
+    if (response.ok) {
+      const modelData = await response.json();
+      const modelInfo = modelData[model];
+      const predictionResult = result.output[0].prediction;
+      const predictionType = modelInfo.configData.model.io.output[0].type;
+
+      if (predictionType === 'label_list') {
+        return await handleLabelList(predictionResult);
+      } else {
+        return predictionResult;
+      }
+    }
+    else {
+      return "Failed to process prediction result. Respond to user.";
+    }
+  };
+
+  const handleLabelList = async (result: any) => {
+    // Find the first numeric field in the objects
+    let numericField = null;
+    const keys = Object.keys(result[0]);
+  
+    for (const key of keys) {
+      if (typeof result[0][key] === 'number') {
+        numericField = key;
+        break; // Stop once the first numeric field is found
+      }
+    }
+  
+    // If no numeric field found, default to the last field
+    const sortField = numericField || keys[keys.length - 1];
+  
+    result.sort((a, b) => b[sortField] - a[sortField]);
+    return `The following are the top 10 results. Interpret it and provide your findings to the user. You don't need to display the whole thing to the user if unnecessary, only provide the most important info.:\n\n${JSON.stringify(result.slice(0, 10), null, 2)}`;
   }
 
   const stopModel = async (toolCall: any) => {
@@ -281,7 +324,7 @@ export default function Home() {
       console.error("Error:", error);
       return "Model failed to stop. Respond to user.";
     }
-  }
+  };
 
   return (
     <main className="flex h-[calc(100dvh)] flex-col items-center ">

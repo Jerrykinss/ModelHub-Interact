@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readModelDataFile, writeModelDataFile } from '@/utils/local-model-data-manager';
+import { readLocalModelDataFile, writeLocalModelDataFile } from '@/utils/local-model-data-manager';
 
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
@@ -8,11 +8,10 @@ export async function GET(request: NextRequest) {
     if (!modelName) {
         return NextResponse.json({ error: 'Model name is required' }, { status: 400 });
     }
+    const modelData = readLocalModelDataFile();
 
-    const modelData = readModelDataFile();
-
-    if (modelData[modelName]) {
-        return NextResponse.json({ status: modelData[modelName].status });
+    if (modelData[modelName.toLowerCase()]) {
+        return NextResponse.json({ status: modelData[modelName.toLowerCase()].status });
     } else {
         return NextResponse.json({ error: 'Model not found' }, { status: 404 });
     }
@@ -26,11 +25,11 @@ export async function DELETE(request: NextRequest) {
         return NextResponse.json({ error: 'Model name is required' }, { status: 400 });
     }
 
-    const modelData = readModelDataFile();
+    const modelData = readLocalModelDataFile();
 
-    if (modelData[modelName]) {
-        delete modelData[modelName];
-        writeModelDataFile(modelData);
+    if (modelData[modelName.toLowerCase()]) {
+        delete modelData[modelName.toLowerCase()];
+        writeLocalModelDataFile(modelData);
         return NextResponse.json({ message: 'Model deleted successfully' }, { status: 200 });
     } else {
         return NextResponse.json({ error: 'Model not found' }, { status: 404 });
