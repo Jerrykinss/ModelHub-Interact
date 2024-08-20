@@ -9,6 +9,8 @@ interface ModelListProps {
   setInstalledModels: (models: string[]) => void;
   selectedModel: string;
   setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
+  installModelFiles: (modelName: string) => Promise<void>;
+  monitorModelStatus: (modelName: string) => void;
 }
 
 export default function ModelList({
@@ -17,6 +19,8 @@ export default function ModelList({
   setInstalledModels,
   selectedModel,
   setSelectedModel,
+  installModelFiles,
+  monitorModelStatus
 }: ModelListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [showInstalledOnly, setShowInstalledOnly] = useState(false);
@@ -65,6 +69,8 @@ export default function ModelList({
               models={filteredModels}
               installedModels={installedModels}
               setInstalledModels={setInstalledModels}
+              installModelFiles={installModelFiles}
+              monitorModelStatus={monitorModelStatus}
             />
           </>
         ) : (

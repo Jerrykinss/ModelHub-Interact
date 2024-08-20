@@ -17,6 +17,8 @@ interface SidebarProps {
   selectedModel: string;
   setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
   setAttachedFiles: (files: File[]) => void;
+  installModelFiles: (modelName: string) => Promise<void>;
+  monitorModelStatus: (modelName: string) => void;
 }
 
 export default function Sidebar({
@@ -31,6 +33,8 @@ export default function Sidebar({
   selectedModel,
   setSelectedModel,
   setAttachedFiles,
+  installModelFiles,
+  monitorModelStatus
 }: SidebarProps) {
   const router = useRouter();
   const [localChats, setLocalChats] = useState<
@@ -112,6 +116,8 @@ export default function Sidebar({
           setInstalledModels={setInstalledModels}
           selectedModel={selectedModel}
           setSelectedModel={setSelectedModel}
+          installModelFiles={installModelFiles}
+          monitorModelStatus={monitorModelStatus}
         />
       </div>
     </div>

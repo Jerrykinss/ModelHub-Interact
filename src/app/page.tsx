@@ -297,6 +297,11 @@ export default function Home() {
     return `The following are the top 10 results. Interpret it and provide your findings to the user. You don't need to display the whole thing to the user if unnecessary, only provide the most important info.:\n\n${JSON.stringify(result.slice(0, 10), null, 2)}`;
   }
 
+  const handleImage = async (result: any) => {
+    // Display the image to the user
+    return result;
+  }
+
   const stopModel = async (toolCall: any) => {
     if (!selectedModel) {
       return "No models loaded";
@@ -349,6 +354,8 @@ export default function Home() {
           setInstalledModels={setInstalledModels}
           attachedFiles={attachedFiles}
           setAttachedFiles={setAttachedFiles}
+          installModelFiles={installModelFiles}
+          monitorModelStatus={monitorModelStatus}
         />
         <DialogContent className="flex flex-col space-y-4">
           <DialogHeader className="space-y-2">

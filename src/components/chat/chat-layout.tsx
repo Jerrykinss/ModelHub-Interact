@@ -29,6 +29,8 @@ export interface ChatProps {
   setInstalledModels: (models: string[]) => void;
   attachedFiles: File[];
   setAttachedFiles: (files: File[]) => void;
+  installModelFiles: (modelName: string) => Promise<void>;
+  monitorModelStatus: (modelName: string) => void;
 }
 
 export function ChatLayout({
@@ -51,6 +53,8 @@ export function ChatLayout({
   setInstalledModels,
   attachedFiles,
   setAttachedFiles,
+  installModelFiles,
+  monitorModelStatus
 }: ChatProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isChatListCollapsed, setIsChatListCollapsed] = useState(false);
@@ -99,6 +103,8 @@ export function ChatLayout({
           selectedModel={selectedModel}
           setSelectedModel={setSelectedModel}
           setAttachedFiles={setAttachedFiles}
+          installModelFiles={installModelFiles}
+          monitorModelStatus={monitorModelStatus}
         />
       </div>
       <div

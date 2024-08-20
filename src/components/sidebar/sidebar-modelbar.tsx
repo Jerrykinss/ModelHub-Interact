@@ -27,6 +27,8 @@ interface ModelBarProps {
   setInstalledModels: (models: string[]) => void;
   selectedModel: string;
   setSelectedModel: React.Dispatch<React.SetStateAction<string>>;
+  installModelFiles: (modelName: string) => Promise<void>;
+  monitorModelStatus: (modelName: string) => void;
 }
 
 export default function ModelBar({
@@ -35,6 +37,8 @@ export default function ModelBar({
   setInstalledModels,
   selectedModel,
   setSelectedModel,
+  installModelFiles,
+  monitorModelStatus
 }: ModelBarProps) {
   return (
     <DropdownMenu>
@@ -66,6 +70,8 @@ export default function ModelBar({
                 setInstalledModels={setInstalledModels}
                 selectedModel={selectedModel}
                 setSelectedModel={setSelectedModel}
+                installModelFiles={installModelFiles}
+                monitorModelStatus={monitorModelStatus}
               />
             </DialogHeader>
           </DialogContent>

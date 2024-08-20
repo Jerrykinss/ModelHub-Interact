@@ -9,31 +9,24 @@ interface UninstalledModelListProps {
   models: string[];
   installedModels: string[];
   setInstalledModels: (models: string[]) => void;
+  installModelFiles: (modelName: string) => Promise<void>;
+  monitorModelStatus: (modelName: string) => void;
 }
 
 export default function UninstalledModelList({
   models,
   installedModels,
   setInstalledModels,
+  installModelFiles,
+  monitorModelStatus
 }: UninstalledModelListProps) {
   const [modelToInstall, setModelToInstall] = useState<string>("");
 
   const handleInstallModel = async () => {
     try {
-      const response = await fetch("/api/installed-models", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ modelName: modelToInstall }),
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to install model");
-      }
-  
-      const data = await response.json();
+      console.log("Installing Model:", modelToInstall);
+      installModelFiles(modelToInstall);
+      monitorModelStatus(modelToInstall);
       setInstalledModels([...installedModels, modelToInstall]);
       console.log("Model installed successfully:", data.message);
     } catch (error) {
